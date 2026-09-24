@@ -1,8 +1,6 @@
 @model KameRequest.Models.UsuarioFormulario
-@{
-    ViewData.TemplateInfo.HtmlFieldPrefix = "Datos";
-}
 <form method="post" class="card shadow-sm p-4">
+    <input type="hidden" asp-for="IdUsuario" />
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
     <div class="row">
         <div class="col-md-6 mb-3"><label asp-for="NombreCompleto" class="form-label"></label><input asp-for="NombreCompleto" class="form-control" /><span asp-validation-for="NombreCompleto" class="text-danger"></span></div>

@@ -18,13 +18,13 @@
     <div class="table-responsive">
         <table class="table table-hover mb-0">
             <thead>
-                <tr><th>Nombre</th><th>Usuario</th><th>Correo</th><th>Tipo</th><th>Estado</th><th></th></tr>
+                <tr><th>Id</th><th>Nombre</th><th>Usuario</th><th>Correo</th><th>Tipo</th><th>Estado</th><th></th></tr>
             </thead>
             <tbody>
             @foreach (var usuario in Model.Usuarios)
             {
                 <tr>
-                    <td>@usuario.NombreCompleto</td>
+                    <td>@usuario.IdUsuario</td><td>@usuario.NombreCompleto</td>
                     <td>@usuario.NombreUsuario</td>
                     <td>@usuario.Correo</td>
                     <td>@usuario.TipoUsuario</td>
@@ -50,3 +50,4 @@
         </ul>
     </nav>
 }
+
