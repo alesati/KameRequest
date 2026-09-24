@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,41 +8,45 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">KameRequest</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Inicio</a>
-                        </li>
-                    </ul>
-                    @if (User.Identity?.IsAuthenticated == true)
-                    {
-                        <form method="post" asp-page="/Cuenta/CerrarSesion">
-                            <button type="submit" class="btn btn-outline-secondary btn-sm">Cerrar sesion</button>
-                        </form>
-                    }
-                </div>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="estructura-sistema">
+            <aside class="menu-lateral">
+                <a class="marca-sistema" asp-page="/Index">
+                    <span class="icono-sistema" aria-hidden="true">✓</span>
+                    <span>KameRequest</span>
+                </a>
+
+                <nav class="opciones-menu">
+                    <a asp-page="/Index">Inicio</a>
+                </nav>
+
+                <form method="post" asp-page="/Cuenta/CerrarSesion" class="mt-auto">
+                    <button type="submit" class="boton-salir">Cerrar sesion</button>
+                </form>
+            </aside>
+
+            <div class="contenido-sistema">
+                <header class="encabezado-sistema">
+                    <div class="datos-usuario">
+                        <span>@User.Identity.Name</span>
+                        <span class="avatar-usuario" aria-label="Avatar de usuario">👤</span>
+                    </div>
+                </header>
+
+                <main role="main" class="contenido-principal">
+                    @RenderBody()
+                </main>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+        </div>
+    }
+    else
+    {
+        <main role="main" class="contenedor-acceso">
             @RenderBody()
         </main>
-    </div>
+    }
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - KameRequest
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

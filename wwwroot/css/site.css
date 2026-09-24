@@ -8,15 +8,143 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
+html,
+body {
   min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+  margin: 0;
+  background: #f5f7fb;
+  color: #334155;
 }
+
+.estructura-sistema {
+  display: flex;
+  min-height: 100vh;
+}
+
+.menu-lateral {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  min-height: 100vh;
+  padding: 24px 16px;
+  background: #102d54;
+}
+
+.marca-sistema {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 36px;
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.marca-sistema:hover {
+  color: #ffffff;
+}
+
+.icono-sistema {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 8px;
+  background: #ff8a24;
+  color: #102d54;
+  font-weight: 700;
+}
+
+.opciones-menu a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.opciones-menu a:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.boton-salir {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #dce3ec;
+  border-radius: 6px;
+  background: transparent;
+  color: #ffffff;
+  text-align: left;
+}
+
+.contenido-sistema {
+  flex: 1;
+  min-width: 0;
+}
+
+.encabezado-sistema {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 68px;
+  padding: 0 32px;
+  border-bottom: 1px solid #dce3ec;
+  background: #ffffff;
+}
+
+.datos-usuario {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.avatar-usuario {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50%;
+  background: #f49ab8;
+  font-size: 1.1rem;
+}
+
+.contenido-principal {
+  padding: 32px;
+}
+
+.contenedor-acceso {
+  min-height: 100vh;
+}
+
+@media (max-width: 700px) {
+  .menu-lateral {
+    width: 76px;
+    padding: 18px 10px;
+  }
+
+  .marca-sistema span:last-child,
+  .opciones-menu a,
+  .boton-salir {
+    font-size: 0;
+  }
+
+  .opciones-menu a::before {
+    content: "Inicio";
+    font-size: 0;
+  }
+
+  .contenido-principal {
+    padding: 20px;
+  }
+
+  .encabezado-sistema {
+    padding: 0 20px;
+  }
+}
+
