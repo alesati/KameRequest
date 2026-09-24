@@ -1,0 +1,6 @@
+bin/
+obj/
+.vs/
+.dotnet/
+.nuget/
+appsettings.Development.json
