@@ -148,3 +148,9 @@ body {
   }
 }
 
+
+.logo-bienvenida {
+  max-width: 260px;
+  width: 100%;
+  height: auto;
+}
