@@ -96,6 +96,91 @@ public class UsuarioSeguridadService(IConfiguration configuracion)
         return ResultadoAcceso.CredencialesInvalidas;
     }
 
+    public IEnumerable<Usuario> ListarUsuarios()
+    {
+        using var conexion = CrearConexion();
+        return conexion.Query<Usuario>("""
+            SELECT IdUsuario, NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado, IntentosFallidos
+            FROM Usuarios
+            ORDER BY NombreCompleto
+            """);
+    }
+
+    public UsuarioFormulario? ObtenerUsuario(int idUsuario)
+    {
+        using var conexion = CrearConexion();
+        return conexion.QuerySingleOrDefault<UsuarioFormulario>("""
+            SELECT IdUsuario, NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado
+            FROM Usuarios WHERE IdUsuario = @idUsuario
+            """, new { idUsuario });
+    }
+
+    public bool CrearUsuario(UsuarioFormulario datos, out string? error)
+    {
+        if (string.IsNullOrWhiteSpace(datos.Contrasena))
+        {
+            error = "Digite una contraseña";
+            return false;
+        }
+
+        using var conexion = CrearConexion();
+        var existe = conexion.ExecuteScalar<int>("""
+            SELECT COUNT(*) FROM Usuarios
+            WHERE NombreUsuario = @NombreUsuario OR Correo = @Correo
+            """, datos) > 0;
+        if (existe)
+        {
+            error = "El nombre de usuario o correo ya existe";
+            return false;
+        }
+
+        var cifrado = Cifrar(datos.Contrasena);
+        conexion.Execute("""
+            INSERT INTO Usuarios (NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado,
+                ContrasenaCifrada, Nonce, EtiquetaAutenticacion, IntentosFallidos)
+            VALUES (@NombreCompleto, @NombreUsuario, @Correo, @TipoUsuario, @Estado,
+                @ContrasenaCifrada, @Nonce, @EtiquetaAutenticacion, 0)
+            """, new { datos.NombreCompleto, datos.NombreUsuario, datos.Correo, datos.TipoUsuario, datos.Estado,
+                cifrado.ContrasenaCifrada, cifrado.Nonce, cifrado.EtiquetaAutenticacion });
+        error = null;
+        return true;
+    }
+
+    public bool ActualizarUsuario(UsuarioFormulario datos, out string? error)
+    {
+        using var conexion = CrearConexion();
+        var existe = conexion.ExecuteScalar<int>("""
+            SELECT COUNT(*) FROM Usuarios
+            WHERE (NombreUsuario = @NombreUsuario OR Correo = @Correo) AND IdUsuario <> @IdUsuario
+            """, datos) > 0;
+        if (existe)
+        {
+            error = "El nombre de usuario o correo ya existe";
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(datos.Contrasena))
+        {
+            conexion.Execute("""
+                UPDATE Usuarios SET NombreCompleto = @NombreCompleto, NombreUsuario = @NombreUsuario,
+                Correo = @Correo, TipoUsuario = @TipoUsuario, Estado = @Estado
+                WHERE IdUsuario = @IdUsuario
+                """, datos);
+        }
+        else
+        {
+            var cifrado = Cifrar(datos.Contrasena);
+            conexion.Execute("""
+                UPDATE Usuarios SET NombreCompleto = @NombreCompleto, NombreUsuario = @NombreUsuario,
+                Correo = @Correo, TipoUsuario = @TipoUsuario, Estado = @Estado,
+                ContrasenaCifrada = @ContrasenaCifrada, Nonce = @Nonce, EtiquetaAutenticacion = @EtiquetaAutenticacion
+                WHERE IdUsuario = @IdUsuario
+                """, new { datos.NombreCompleto, datos.NombreUsuario, datos.Correo, datos.TipoUsuario, datos.Estado,
+                    datos.IdUsuario, cifrado.ContrasenaCifrada, cifrado.Nonce, cifrado.EtiquetaAutenticacion });
+        }
+        error = null;
+        return true;
+    }
     // Cifra la contraseña antes de guardarla en la base de datos
     private (string ContrasenaCifrada, string Nonce, string EtiquetaAutenticacion) Cifrar(string contrasena)
     {
@@ -127,5 +212,6 @@ public class UsuarioSeguridadService(IConfiguration configuracion)
         return Encoding.UTF8.GetString(textoPlano);
     }
 }
+
 
 
