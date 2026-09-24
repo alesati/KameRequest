@@ -24,6 +24,35 @@ public class UsuarioSeguridadService(IConfiguration configuracion)
         return new MySqlConnection(cadena);
     }
 
+    // Crea una cuenta inicial solamente cuando la tabla aun no tiene usuarios
+    public void CrearAdministradorInicialSiHaceFalta()
+    {
+        using var conexion = CrearConexion();
+        if (conexion.ExecuteScalar<int>("SELECT COUNT(*) FROM Usuarios") > 0)
+        {
+            return;
+        }
+
+        var contrasena = configuracion["UsuarioInicial:Contrasena"] ?? "Admin123*";
+        var cifrado = Cifrar(contrasena);
+        conexion.Execute("""
+            INSERT INTO Usuarios
+                (NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado,
+                 ContrasenaCifrada, Nonce, EtiquetaAutenticacion, IntentosFallidos)
+            VALUES
+                (@NombreCompleto, @NombreUsuario, @Correo, 'Administrador', 'Activo',
+                 @ContrasenaCifrada, @Nonce, @EtiquetaAutenticacion, 0)
+            """, new
+        {
+            NombreCompleto = configuracion["UsuarioInicial:Nombre"] ?? "Administrador",
+            NombreUsuario = configuracion["UsuarioInicial:Usuario"] ?? "admin",
+            Correo = configuracion["UsuarioInicial:Correo"] ?? "admin@kamerequest.local",
+            cifrado.ContrasenaCifrada,
+            cifrado.Nonce,
+            cifrado.EtiquetaAutenticacion
+        });
+    }
+
     public ResultadoAcceso ValidarAcceso(InicioSesion datos, out Usuario? usuario)
     {
         using var conexion = CrearConexion();
@@ -67,6 +96,21 @@ public class UsuarioSeguridadService(IConfiguration configuracion)
         return ResultadoAcceso.CredencialesInvalidas;
     }
 
+    // Cifra la contraseña antes de guardarla en la base de datos
+    private (string ContrasenaCifrada, string Nonce, string EtiquetaAutenticacion) Cifrar(string contrasena)
+    {
+        var claveTexto = configuracion["Seguridad:ClaveAes"]
+            ?? throw new InvalidOperationException("Falta configurar Seguridad:ClaveAes");
+        var clave = Convert.FromBase64String(claveTexto);
+        var nonce = RandomNumberGenerator.GetBytes(12);
+        var texto = Encoding.UTF8.GetBytes(contrasena);
+        var cifrado = new byte[texto.Length];
+        var etiqueta = new byte[16];
+
+        using var aes = new AesGcm(clave, etiqueta.Length);
+        aes.Encrypt(nonce, texto, cifrado, etiqueta);
+        return (Convert.ToBase64String(cifrado), Convert.ToBase64String(nonce), Convert.ToBase64String(etiqueta));
+    }
     // La clave se guarda en configuracion y debe tener 32 bytes para AES GCM 256
     private string Descifrar(Usuario usuario)
     {
@@ -83,3 +127,5 @@ public class UsuarioSeguridadService(IConfiguration configuracion)
         return Encoding.UTF8.GetString(textoPlano);
     }
 }
+
+
