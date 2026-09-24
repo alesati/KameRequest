@@ -96,6 +96,22 @@ public class UsuarioSeguridadService(IConfiguration configuracion)
         return ResultadoAcceso.CredencialesInvalidas;
     }
 
+    public int ContarUsuarios()
+    {
+        using var conexion = CrearConexion();
+        return conexion.ExecuteScalar<int>("SELECT COUNT(*) FROM Usuarios");
+    }
+
+    public IEnumerable<Usuario> ListarUsuarios(int pagina, int tamanoPagina)
+    {
+        using var conexion = CrearConexion();
+        return conexion.Query<Usuario>("""
+            SELECT IdUsuario, NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado, IntentosFallidos
+            FROM Usuarios
+            ORDER BY NombreCompleto
+            LIMIT @tamanoPagina OFFSET @desplazamiento
+            """, new { tamanoPagina, desplazamiento = (pagina - 1) * tamanoPagina });
+    }
     public IEnumerable<Usuario> ListarUsuarios()
     {
         using var conexion = CrearConexion();
@@ -212,6 +228,8 @@ public class UsuarioSeguridadService(IConfiguration configuracion)
         return Encoding.UTF8.GetString(textoPlano);
     }
 }
+
+
 
 
 
