@@ -1,61 +1,55 @@
+@using System.Security.Claims
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - KameRequest</title>
+    <link rel="icon" type="image/png" href="~/img/logo-kamerequest.png" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
     @if (User.Identity?.IsAuthenticated == true)
     {
-        <div class="estructura-sistema">
-            <aside class="menu-lateral">
-                <a class="marca-sistema" asp-page="/Index">
-                    <span class="icono-sistema" aria-hidden="true">✓</span>
+        <div class="app-shell">
+            <aside class="sidebar">
+                <a asp-page="/Index" class="brand">
+                    <img src="~/img/logo-kamerequest.png" alt="KameRequest" />
                     <span>KameRequest</span>
                 </a>
-
-                <nav class="opciones-menu">
+                <nav class="sidebar-nav">
                     <a asp-page="/Index">Inicio</a>
                     @if (User.IsInRole("Administrador"))
                     {
                         <a asp-page="/Usuarios/Index">Usuarios</a>
                     }
+                    <a asp-page="/Solicitudes/Index">Solicitudes</a>
+                    <a asp-page="/Mantenimientos/Index">Mantenimientos</a>
+                    <a asp-page="/Reportes/Index">Reportes</a>
+                    <a asp-page="/Bitacora/Index">Bitácora</a>
                 </nav>
-
-                <form method="post" asp-page="/Cuenta/CerrarSesion" class="mt-auto">
-                    <button type="submit" class="boton-salir">Cerrar sesion</button>
-                </form>
             </aside>
-
-            <div class="contenido-sistema">
-                <header class="encabezado-sistema">
-                    <div class="datos-usuario">
-                        <span>@User.Identity.Name</span>
-                        <span class="avatar-usuario" aria-label="Avatar de usuario">👤</span>
+            <div class="main-area">
+                <header class="topbar">
+                    <div></div>
+                    <div class="user-info">
+                        <span class="avatar" aria-label="Avatar del usuario">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z" /></svg>
+                        </span>
+                        <span>@User.FindFirstValue(ClaimTypes.GivenName)</span>
+                        <form method="post" asp-page="/Cuenta/CerrarSesion"><button class="btn btn-sm btn-outline-secondary">Salir</button></form>
                     </div>
                 </header>
-
-                <main role="main" class="contenido-principal">
-                    @RenderBody()
-                </main>
+                <main class="content">@RenderBody()</main>
             </div>
         </div>
     }
     else
     {
-        <main role="main" class="contenedor-acceso">
-            @RenderBody()
-        </main>
+        <main>@RenderBody()</main>
     }
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-

@@ -1,156 +1,38 @@
-html {
-  font-size: 14px;
+:root {
+    --azul: #102D54;
+    --naranja: #FF8A24;
+    --turquesa: #10ADC0;
+    --rosa: #F49AB8;
+    --fondo: #F5F7FB;
+    --texto: #334155;
+    --borde: #DCE3EC;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
+html, body { min-height: 100%; }
+body { margin: 0; background: var(--fondo); color: var(--texto); }
+.app-shell { display: flex; min-height: 100vh; }
+.sidebar { width: 245px; background: var(--azul); color: white; padding: 1.25rem; }
+.brand { display: flex; align-items: center; gap: .75rem; color: white; text-decoration: none; font-size: 1.25rem; font-weight: 700; }
+.brand img { width: 52px; height: 52px; object-fit: contain; background: white; border-radius: 50%; }
+.sidebar-nav { display: grid; gap: .4rem; margin-top: 2rem; }
+.sidebar-nav a { color: white; text-decoration: none; padding: .7rem .85rem; border-radius: .5rem; }
+.sidebar-nav a:hover { background: rgba(255,255,255,.14); }
+.main-area { flex: 1; min-width: 0; }
+.topbar { min-height: 72px; display: flex; align-items: center; justify-content: space-between; padding: .75rem 1.5rem; background: white; border-bottom: 1px solid var(--borde); }
+.user-info { display: flex; align-items: center; gap: .75rem; }
+.avatar { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; background: var(--rosa); color: var(--azul); font-weight: 700; }
+.avatar svg { width: 23px; height: 23px; fill: currentColor; }
+.content { padding: 0 1rem; }
+.btn-primary { background: var(--naranja); border-color: var(--naranja); }
+.btn-primary:hover { background: #e97818; border-color: #e97818; }
+h1, h2, h3 { color: var(--azul); }
+.login-page { min-height: 100vh; display: grid; place-items: center; padding: 1rem; }
+.login-card { width: min(420px, 100%); padding: 2rem; border: 1px solid var(--borde); border-radius: 1rem; background: white; box-shadow: 0 12px 35px rgba(16,45,84,.12); }
+.login-logo { display: block; width: 150px; margin: 0 auto 1rem; }
 
-html,
-body {
-  min-height: 100%;
-}
-
-body {
-  margin: 0;
-  background: #f5f7fb;
-  color: #334155;
-}
-
-.estructura-sistema {
-  display: flex;
-  min-height: 100vh;
-}
-
-.menu-lateral {
-  display: flex;
-  flex-direction: column;
-  width: 240px;
-  min-height: 100vh;
-  padding: 24px 16px;
-  background: #102d54;
-}
-
-.marca-sistema {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 36px;
-  color: #ffffff;
-  font-size: 1.3rem;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.marca-sistema:hover {
-  color: #ffffff;
-}
-
-.icono-sistema {
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border-radius: 8px;
-  background: #ff8a24;
-  color: #102d54;
-  font-weight: 700;
-}
-
-.opciones-menu a {
-  display: block;
-  padding: 10px 12px;
-  border-radius: 6px;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-.opciones-menu a:hover {
-  background: rgba(255, 255, 255, 0.14);
-  color: #ffffff;
-}
-
-.boton-salir {
-  width: 100%;
-  padding: 9px 12px;
-  border: 1px solid #dce3ec;
-  border-radius: 6px;
-  background: transparent;
-  color: #ffffff;
-  text-align: left;
-}
-
-.contenido-sistema {
-  flex: 1;
-  min-width: 0;
-}
-
-.encabezado-sistema {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  min-height: 68px;
-  padding: 0 32px;
-  border-bottom: 1px solid #dce3ec;
-  background: #ffffff;
-}
-
-.datos-usuario {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-}
-
-.avatar-usuario {
-  display: grid;
-  width: 36px;
-  height: 36px;
-  place-items: center;
-  border-radius: 50%;
-  background: #f49ab8;
-  font-size: 1.1rem;
-}
-
-.contenido-principal {
-  padding: 32px;
-}
-
-.contenedor-acceso {
-  min-height: 100vh;
-}
-
-@media (max-width: 700px) {
-  .menu-lateral {
-    width: 76px;
-    padding: 18px 10px;
-  }
-
-  .marca-sistema span:last-child,
-  .opciones-menu a,
-  .boton-salir {
-    font-size: 0;
-  }
-
-  .opciones-menu a::before {
-    content: "Inicio";
-    font-size: 0;
-  }
-
-  .contenido-principal {
-    padding: 20px;
-  }
-
-  .encabezado-sistema {
-    padding: 0 20px;
-  }
-}
-
-
-.logo-bienvenida {
-  max-width: 260px;
-  width: 100%;
-  height: auto;
+@media (max-width: 768px) {
+    .app-shell { display: block; }
+    .sidebar { width: 100%; }
+    .sidebar-nav { grid-template-columns: repeat(2, 1fr); margin-top: 1rem; }
+    .topbar { padding: .75rem 1rem; }
 }
