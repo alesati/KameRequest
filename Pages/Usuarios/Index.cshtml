@@ -1,0 +1,33 @@
+@page
+@model KameRequest.Pages.Usuarios.IndexModel
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Usuarios</h1>
+    <a asp-page="Crear" class="btn btn-primary">Nuevo usuario</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr><th>Nombre</th><th>Usuario</th><th>Correo</th><th>Tipo</th><th>Estado</th><th></th></tr>
+            </thead>
+            <tbody>
+            @foreach (var usuario in Model.Usuarios)
+            {
+                <tr>
+                    <td>@usuario.NombreCompleto</td>
+                    <td>@usuario.NombreUsuario</td>
+                    <td>@usuario.Correo</td>
+                    <td>@usuario.TipoUsuario</td>
+                    <td><span class="badge @(usuario.Estado == "Activo" ? "bg-success" : "bg-secondary")">@usuario.Estado</span></td>
+                    <td><a asp-page="Editar" asp-route-id="@usuario.IdUsuario" class="btn btn-sm btn-outline-primary">Editar</a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

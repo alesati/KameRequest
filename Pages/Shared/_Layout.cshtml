@@ -19,6 +19,10 @@
 
                 <nav class="opciones-menu">
                     <a asp-page="/Index">Inicio</a>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <a asp-page="/Usuarios/Index">Usuarios</a>
+                    }
                 </nav>
 
                 <form method="post" asp-page="/Cuenta/CerrarSesion" class="mt-auto">
@@ -53,3 +57,5 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
