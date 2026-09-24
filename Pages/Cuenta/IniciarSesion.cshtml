@@ -1,0 +1,35 @@
+@page
+@model KameRequest.Pages.Cuenta.IniciarSesionModel
+@{
+    ViewData["Title"] = "Iniciar sesion";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 text-center mb-4">KameRequest</h1>
+                <p class="text-center text-muted">Inicie sesion para continuar</p>
+
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <div class="mb-3">
+                        <label asp-for="Datos.NombreUsuario" class="form-label"></label>
+                        <input asp-for="Datos.NombreUsuario" class="form-control" autocomplete="username" />
+                        <span asp-validation-for="Datos.NombreUsuario" class="text-danger"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="Datos.Contrasena" class="form-label"></label>
+                        <input asp-for="Datos.Contrasena" class="form-control" autocomplete="current-password" />
+                        <span asp-validation-for="Datos.Contrasena" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
