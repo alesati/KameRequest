@@ -38,6 +38,7 @@ public class IniciarSesionModel(UsuarioSeguridadService seguridad) : PageModel
             {
                 new(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
                 new(ClaimTypes.Name, usuario.NombreCompleto),
+                new(ClaimTypes.GivenName, usuario.NombreCompleto),
                 new(ClaimTypes.Role, usuario.TipoUsuario)
             };
             var identidad = new ClaimsIdentity(datosUsuario, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -61,3 +62,5 @@ public class IniciarSesionModel(UsuarioSeguridadService seguridad) : PageModel
         _ => "Usuario o contraseña incorrectos"
     };
 }
+
+
