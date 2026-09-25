@@ -77,3 +77,18 @@ h1, h2, h3 { color: var(--azul); }
     .logo-bienvenida { width: min(190px, 72vw); max-height: 190px; margin: 0 auto 1.25rem; }
 }
 
+
+.maintenance-list {
+    max-width: 680px;
+}
+
+.maintenance-list a {
+    display: grid;
+    gap: .2rem;
+    padding: 1rem;
+}
+
+.maintenance-list span {
+    color: #64748b;
+    font-size: .94rem;
+}
