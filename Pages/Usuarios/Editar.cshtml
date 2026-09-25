@@ -3,6 +3,65 @@
 @{
     ViewData["Title"] = "Editar usuario";
 }
-<h1 class="h3 mb-4">Editar usuario</h1>
-<p class="text-muted">Deje la contraseña vacia si no desea cambiarla</p>
-<partial name="_FormularioUsuario" for="Datos" />
+
+<div class="container py-4">
+    <h1>Editar usuario</h1>
+
+    <form method="post" class="card card-body">
+        <input asp-for="Datos.IdUsuario" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.NombreUsuario" class="form-label">Nombre de usuario</label>
+            <input asp-for="Datos.NombreUsuario" class="form-control" />
+            <span asp-validation-for="Datos.NombreUsuario" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.NombreCompleto" class="form-label">Nombre completo</label>
+            <input asp-for="Datos.NombreCompleto" class="form-control" />
+            <span asp-validation-for="Datos.NombreCompleto" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.Correo" class="form-label">Correo</label>
+            <input asp-for="Datos.Correo" type="email" class="form-control" />
+            <span asp-validation-for="Datos.Correo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.TipoUsuario" class="form-label">Tipo de usuario</label>
+            <select asp-for="Datos.TipoUsuario" class="form-select">
+                <option value="Usuario">Usuario</option>
+                <option value="Administrador">Administrador</option>
+            </select>
+            <span asp-validation-for="Datos.TipoUsuario" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.Estado" class="form-label">Estado</label>
+            <select asp-for="Datos.Estado" class="form-select">
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+                <option value="Bloqueado">Bloqueado</option>
+            </select>
+            <span asp-validation-for="Datos.Estado" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.Contrasena" class="form-label">Nueva contraseña</label>
+            <input asp-for="Datos.Contrasena" class="form-control" />
+            <div class="form-text">Déjela vacía para conservar la contraseña actual.</div>
+            <span asp-validation-for="Datos.Contrasena" class="text-danger"></span>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
