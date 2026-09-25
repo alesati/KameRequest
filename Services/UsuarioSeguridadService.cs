@@ -197,6 +197,42 @@ public class UsuarioSeguridadService(IConfiguration configuracion)
         error = null;
         return true;
     }
+    public bool CambiarEstadoUsuario(int idUsuario, string estado, out string? error)
+    {
+        var estadosValidos = new[] { "Activo", "Inactivo", "Bloqueado" };
+        if (!estadosValidos.Contains(estado))
+        {
+            error = "El estado seleccionado no es valido";
+            return false;
+        }
+
+        using var conexion = CrearConexion();
+        var actualizados = conexion.Execute("""
+            UPDATE Usuarios
+            SET Estado = @estado,
+                IntentosFallidos = IF(@estado = 'Activo', 0, IntentosFallidos)
+            WHERE IdUsuario = @idUsuario
+            """, new { idUsuario, estado });
+
+        error = actualizados == 0 ? "No se encontro el usuario" : null;
+        return actualizados > 0;
+    }
+
+    public bool EliminarUsuario(int idUsuario, out string? error)
+    {
+        using var conexion = CrearConexion();
+        try
+        {
+            var eliminados = conexion.Execute("DELETE FROM Usuarios WHERE IdUsuario = @idUsuario", new { idUsuario });
+            error = eliminados == 0 ? "No se encontro el usuario" : null;
+            return eliminados > 0;
+        }
+        catch (MySqlException ex) when (ex.Number == 1451)
+        {
+            error = "No se puede eliminar un registro con datos relacionados.";
+            return false;
+        }
+    }
     // Cifra la contraseña antes de guardarla en la base de datos
     private (string ContrasenaCifrada, string Nonce, string EtiquetaAutenticacion) Cifrar(string contrasena)
     {
@@ -228,6 +264,7 @@ public class UsuarioSeguridadService(IConfiguration configuracion)
         return Encoding.UTF8.GetString(textoPlano);
     }
 }
+
 
 
 
