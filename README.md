@@ -53,7 +53,7 @@ git pull origin develop
 git checkout -b feature/nombre-del-modulo
 ```
 
-Cada modulo debe agregar solo sus propias paginas, modelos, servicios y cambios de base de datos. Si tiene operaciones de crear, editar o eliminar, debe usar `BitacoraService` para registrar la accion.
+Cada modulo debe agregar solo sus propias paginas, modelos, servicios y cambios de base de datos.
 
 Antes de entregar una rama se debe compilar y probar.
 
@@ -65,3 +65,4 @@ git push -u origin feature/nombre-del-modulo
 ```
 
 Al terminar, la persona encargada de integrar une la rama en `develop`. `main` se usa solamente para la entrega final aprobada.
+
