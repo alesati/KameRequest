@@ -109,13 +109,3 @@ CREATE TABLE IF NOT EXISTS Tareas (
     CONSTRAINT ck_tareas_horas CHECK (HorasInvertidas >= 0)
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS Bitacoras (
-    IdBitacora INT NOT NULL AUTO_INCREMENT,
-    Fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    IdUsuario INT NULL,
-    Descripcion LONGTEXT NOT NULL,
-    PRIMARY KEY (IdBitacora),
-    CONSTRAINT fk_bitacoras_usuario
-        FOREIGN KEY (IdUsuario) REFERENCES Usuarios (IdUsuario)
-        ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB;
