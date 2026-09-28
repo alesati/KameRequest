@@ -4,3 +4,4 @@ obj/
 .dotnet/
 .nuget/
 appsettings.Development.json
+appsettings.json

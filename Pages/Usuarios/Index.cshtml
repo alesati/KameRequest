@@ -1,0 +1,99 @@
+@page
+@model KameRequest.Pages.Usuarios.IndexModel
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Usuarios</h1>
+        <a asp-page="Crear" class="btn btn-primary">Nuevo usuario</a>
+    </div>
+
+    @if (TempData["Mensaje"] is string mensaje)
+    {
+        <div class="alert alert-success">@mensaje</div>
+    }
+    @if (TempData["Error"] is string error)
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Usuario</th>
+                    <th>Correo</th>
+                    <th>Tipo</th>
+                    <th>Intentos</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var usuario in Model.Usuarios)
+                {
+                    <tr>
+                        <td>@usuario.NombreCompleto</td>
+                        <td>@usuario.NombreUsuario</td>
+                        <td>@usuario.Correo</td>
+                        <td>@usuario.TipoUsuario</td>
+                        <td>@usuario.IntentosFallidos</td>
+                        <td>
+                            <form method="post" asp-page-handler="CambiarEstado">
+                                <input type="hidden" name="idUsuario" value="@usuario.IdUsuario" />
+                                <select name="estado" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="Activo" selected="@(usuario.Estado == "Activo")">Activo</option>
+                                    <option value="Inactivo" selected="@(usuario.Estado == "Inactivo")">Inactivo</option>
+                                    <option value="Bloqueado" selected="@(usuario.Estado == "Bloqueado")">Bloqueado</option>
+                                </select>
+                            </form>
+                        </td>
+                        <td class="text-nowrap">
+                            <a asp-page="Editar" asp-route-id="@usuario.IdUsuario" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarUsuario-@usuario.IdUsuario">Eliminar</button>
+
+                            <div class="modal fade" id="eliminarUsuario-@usuario.IdUsuario" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title fs-5">Eliminar usuario</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                        </div>
+                                        <div class="modal-body">¿Realmente desea eliminar el elemento seleccionado?</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No, cancelar</button>
+                                            <form method="post" asp-page-handler="Eliminar">
+                                                <input type="hidden" name="idUsuario" value="@usuario.IdUsuario" />
+                                                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.TotalPaginas > 1)
+    {
+        <nav aria-label="Paginacion de usuarios">
+            <ul class="pagination">
+                @for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++)
+                {
+                    <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")">
+                        <a class="page-link" asp-route-pagina="@pagina">@pagina</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+
+    <a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary mt-2">Regresar a mantenimientos</a>
+</div>
+

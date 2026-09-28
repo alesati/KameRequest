@@ -1,0 +1,65 @@
+@page
+@model KameRequest.Pages.Usuarios.CrearModel
+@{
+    ViewData["Title"] = "Crear usuario";
+}
+
+<div class="container py-4">
+    <h1>Crear usuario</h1>
+
+    <form method="post" class="card card-body">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.NombreCompleto" class="form-label">Nombre completo</label>
+            <input asp-for="Datos.NombreCompleto" class="form-control" />
+            <span asp-validation-for="Datos.NombreCompleto" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.NombreUsuario" class="form-label">Nombre de usuario</label>
+            <input asp-for="Datos.NombreUsuario" class="form-control" />
+            <span asp-validation-for="Datos.NombreUsuario" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.Correo" class="form-label">Correo electrónico</label>
+            <input asp-for="Datos.Correo" class="form-control" />
+            <span asp-validation-for="Datos.Correo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.Contrasena" class="form-label">Contraseña</label>
+            <input asp-for="Datos.Contrasena" class="form-control" />
+            <span asp-validation-for="Datos.Contrasena" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.TipoUsuario" class="form-label">Tipo de usuario</label>
+            <select asp-for="Datos.TipoUsuario" class="form-select">
+                <option value="Usuario">Usuario</option>
+                <option value="Administrador">Administrador</option>
+            </select>
+            <span asp-validation-for="Datos.TipoUsuario" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.Estado" class="form-label">Estado</label>
+            <select asp-for="Datos.Estado" class="form-select">
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+                <option value="Bloqueado">Bloqueado</option>
+            </select>
+            <span asp-validation-for="Datos.Estado" class="text-danger"></span>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
