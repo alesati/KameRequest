@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Usuarios;
 
 [Authorize(Roles = "Administrador")]
-public class IndexModel(UsuarioSeguridadService seguridad) : PageModel
+public class IndexModel(UsuarioSeguridadService seguridad, BitacoraService bitacora) : PageModel
 {
     private const int TamanoPagina = 10;
     public IEnumerable<Usuario> Usuarios { get; private set; } = [];
@@ -22,11 +22,22 @@ public class IndexModel(UsuarioSeguridadService seguridad) : PageModel
 
     public IActionResult OnPostCambiarEstado(int idUsuario, string estado)
     {
+        var anterior = seguridad.ObtenerUsuario(idUsuario);
+        if (anterior is null)
+        {
+            TempData["Error"] = "No se encontro el usuario";
+            return RedirectToPage();
+        }
+
         if (!seguridad.CambiarEstadoUsuario(idUsuario, estado, out var error))
         {
             TempData["Error"] = error;
             return RedirectToPage();
         }
+
+        bitacora.RegistrarActualizacion(User, "estado de usuario",
+            new { anterior.IdUsuario, anterior.NombreUsuario, anterior.Estado },
+            new { anterior.IdUsuario, anterior.NombreUsuario, Estado = estado });
 
         TempData["Mensaje"] = "El estado del usuario se actualizo";
         return RedirectToPage();
@@ -41,11 +52,28 @@ public class IndexModel(UsuarioSeguridadService seguridad) : PageModel
             return RedirectToPage();
         }
 
+        var eliminado = seguridad.ObtenerUsuario(idUsuario);
+        if (eliminado is null)
+        {
+            TempData["Error"] = "No se encontro el usuario";
+            return RedirectToPage();
+        }
+
         if (!seguridad.EliminarUsuario(idUsuario, out var error))
         {
             TempData["Error"] = error;
             return RedirectToPage();
         }
+
+        bitacora.RegistrarEliminacion(User, "usuario", new
+        {
+            eliminado.IdUsuario,
+            eliminado.NombreCompleto,
+            eliminado.NombreUsuario,
+            eliminado.Correo,
+            eliminado.TipoUsuario,
+            eliminado.Estado
+        });
 
         TempData["Mensaje"] = "El usuario se elimino correctamente";
         return RedirectToPage();
@@ -59,3 +87,4 @@ public class IndexModel(UsuarioSeguridadService seguridad) : PageModel
         Usuarios = seguridad.ListarUsuarios(PaginaActual, TamanoPagina);
     }
 }
+
