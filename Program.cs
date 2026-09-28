@@ -5,7 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<UsuarioSeguridadService>();
-builder.Services.AddScoped<BitacoraService>();
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(opciones =>
@@ -34,29 +33,5 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.Use(async (contexto, siguiente) =>
-{
-    try
-    {
-        await siguiente();
-    }
-    catch (Exception ex)
-    {
-        try
-        {
-            using var alcance = contexto.RequestServices.CreateScope();
-            var bitacora = alcance.ServiceProvider.GetRequiredService<BitacoraService>();
-            bitacora.RegistrarErrorTecnico(contexto.User, contexto.Request.Path, ex);
-        }
-        catch
-        {
-        }
-
-        throw;
-    }
-});
 app.MapRazorPages();
 app.Run();
-
-

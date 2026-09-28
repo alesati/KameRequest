@@ -117,6 +117,5 @@ CREATE TABLE IF NOT EXISTS Bitacoras (
     PRIMARY KEY (IdBitacora),
     CONSTRAINT fk_bitacoras_usuario
         FOREIGN KEY (IdUsuario) REFERENCES Usuarios (IdUsuario)
-        ON DELETE SET NULL ON UPDATE RESTRICT
+        ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB;
-
