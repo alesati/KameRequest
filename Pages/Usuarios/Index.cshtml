@@ -27,7 +27,6 @@
                     <th>Usuario</th>
                     <th>Correo</th>
                     <th>Tipo</th>
-                    <th>Intentos</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
@@ -40,7 +39,6 @@
                         <td>@usuario.NombreUsuario</td>
                         <td>@usuario.Correo</td>
                         <td>@usuario.TipoUsuario</td>
-                        <td>@usuario.IntentosFallidos</td>
                         <td>
                             <form method="post" asp-page-handler="CambiarEstado">
                                 <input type="hidden" name="idUsuario" value="@usuario.IdUsuario" />
