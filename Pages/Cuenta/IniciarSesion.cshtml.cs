@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using KameRequest.Models;
-using KameRequest.Services;
+using KameRequest.Clases;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KameRequest.Pages.Cuenta;
 
-public class IniciarSesionModel(UsuarioSeguridadService seguridad) : PageModel
+public class IniciarSesionModel(UsuarioSeguridad seguridad) : PageModel
 {
     [BindProperty]
     public InicioSesion Datos { get; set; } = new();

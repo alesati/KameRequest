@@ -1,5 +1,5 @@
 using KameRequest.Models;
-using KameRequest.Services;
+using KameRequest.Clases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Usuarios;
 
 [Authorize(Roles = "Administrador")]
-public class CrearModel(UsuarioSeguridadService seguridad) : PageModel
+public class CrearModel(UsuarioSeguridad seguridad) : PageModel
 {
     [BindProperty]
     public UsuarioFormulario Datos { get; set; } = new();
