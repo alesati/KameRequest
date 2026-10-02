@@ -25,6 +25,9 @@ namespace KameRequest.Pages.Solicitudes
         [BindProperty]
         public DesgloseSolicitud NuevoDesglose { get; set; } = new DesgloseSolicitud();
 
+        [BindProperty]
+        public DesgloseSolicitud DesgloseEditar { get; set; } = new DesgloseSolicitud();
+
         public IActionResult OnGet(int id)
         {
             if (id <= 0) return RedirectToPage("/Solicitudes/Index");
@@ -70,7 +73,6 @@ namespace KameRequest.Pages.Solicitudes
         {
             var conexionString = _configuration.GetConnectionString("MySql");
 
-            // Cálculo automático de IVA y Total
             decimal ivaCalculado = NuevoDesglose.Monto * 0.13m;
             decimal totalCalculado = NuevoDesglose.Monto + ivaCalculado;
 
@@ -96,6 +98,47 @@ namespace KameRequest.Pages.Solicitudes
                 });
 
                 // TODO BITACORA: Registrar inserción de desglose
+            }
+
+            return RedirectToPage(new { id = idSolicitud });
+        }
+
+        // POST: Editar Desglose Existente
+        public IActionResult OnPostEditar(int idSolicitud)
+        {
+            var conexionString = _configuration.GetConnectionString("MySql");
+
+            decimal ivaCalculado = DesgloseEditar.Monto * 0.13m;
+            decimal totalCalculado = DesgloseEditar.Monto + ivaCalculado;
+
+            using (var conexion = new MySqlConnection(conexionString))
+            {
+                string sqlUpdate = @"
+                    UPDATE DesglosesSolicitud 
+                    SET Mes = @Mes, 
+                        Anio = @Anio, 
+                        Horas = @Horas, 
+                        Monto = @Monto, 
+                        Iva = @Iva, 
+                        Total = @Total, 
+                        PorcentajeCobro = @PorcentajeCobro, 
+                        Observaciones = @Observaciones
+                    WHERE IdDesglose = @IdDesglose";
+
+                conexion.Execute(sqlUpdate, new
+                {
+                    IdDesglose = DesgloseEditar.IdDesglose,
+                    Mes = DesgloseEditar.Mes,
+                    Anio = DesgloseEditar.Anio,
+                    Horas = DesgloseEditar.Horas,
+                    Monto = DesgloseEditar.Monto,
+                    Iva = ivaCalculado,
+                    Total = totalCalculado,
+                    PorcentajeCobro = DesgloseEditar.PorcentajeCobro,
+                    Observaciones = DesgloseEditar.Observaciones
+                });
+
+                // TODO BITACORA: Registrar actualización de desglose
             }
 
             return RedirectToPage(new { id = idSolicitud });
