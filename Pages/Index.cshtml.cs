@@ -7,6 +7,7 @@ namespace KameRequest.Pages;
 [Authorize]
 public class IndexModel : PageModel
 {
+    // El layout y la vista muestran los datos de la bienvenida
     public void OnGet()
     {
     }

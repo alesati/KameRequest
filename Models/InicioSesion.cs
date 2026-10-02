@@ -5,6 +5,7 @@ namespace KameRequest.Models;
 // Datos que se reciben en el formulario para iniciar sesion
 public class InicioSesion
 {
+    // Los atributos validan los dos campos antes de intentar el login
     [Required(ErrorMessage = "Digite su nombre de usuario")]
     [Display(Name = "Usuario")]
     public string NombreUsuario { get; set; } = string.Empty;

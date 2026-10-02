@@ -1,15 +1,57 @@
 @model KameRequest.Models.UsuarioFormulario
+
+@* Formulario reutilizable para crear o editar datos de un usuario *@
 <form method="post" class="card shadow-sm p-4">
     <input type="hidden" asp-for="IdUsuario" />
+
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
     <div class="row">
-        <div class="col-md-6 mb-3"><label asp-for="NombreCompleto" class="form-label"></label><input asp-for="NombreCompleto" class="form-control" /><span asp-validation-for="NombreCompleto" class="text-danger"></span></div>
-        <div class="col-md-6 mb-3"><label asp-for="NombreUsuario" class="form-label"></label><input asp-for="NombreUsuario" class="form-control" /><span asp-validation-for="NombreUsuario" class="text-danger"></span></div>
-        <div class="col-md-6 mb-3"><label asp-for="Correo" class="form-label"></label><input asp-for="Correo" class="form-control" /><span asp-validation-for="Correo" class="text-danger"></span></div>
-        <div class="col-md-3 mb-3"><label asp-for="TipoUsuario" class="form-label"></label><select asp-for="TipoUsuario" class="form-select"><option>Usuario</option><option>Administrador</option></select></div>
-        <div class="col-md-3 mb-3"><label asp-for="Estado" class="form-label"></label><select asp-for="Estado" class="form-select"><option>Activo</option><option>Inactivo</option><option>Bloqueado</option></select></div>
-        <div class="col-md-6 mb-3"><label asp-for="Contrasena" class="form-label"></label><input asp-for="Contrasena" class="form-control" /><span asp-validation-for="Contrasena" class="text-danger"></span></div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="NombreCompleto" class="form-label"></label>
+            <input asp-for="NombreCompleto" class="form-control" />
+            <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="NombreUsuario" class="form-label"></label>
+            <input asp-for="NombreUsuario" class="form-control" />
+            <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Correo" class="form-label"></label>
+            <input asp-for="Correo" class="form-control" />
+            <span asp-validation-for="Correo" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label asp-for="TipoUsuario" class="form-label"></label>
+            <select asp-for="TipoUsuario" class="form-select">
+                <option>Usuario</option>
+                <option>Administrador</option>
+            </select>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label asp-for="Estado" class="form-label"></label>
+            <select asp-for="Estado" class="form-select">
+                <option>Activo</option>
+                <option>Inactivo</option>
+                <option>Bloqueado</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="Contrasena" class="form-label"></label>
+            <input asp-for="Contrasena" class="form-control" />
+            <span asp-validation-for="Contrasena" class="text-danger"></span>
+        </div>
     </div>
-    <div><button class="btn btn-primary">Guardar</button><a asp-page="Index" class="btn btn-outline-secondary ms-2">Cancelar</a></div>
+
+    <div>
+        <button class="btn btn-primary">Guardar</button>
+        <a asp-page="Index" class="btn btn-outline-secondary ms-2">Cancelar</a>
+    </div>
 </form>
 

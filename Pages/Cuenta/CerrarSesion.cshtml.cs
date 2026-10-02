@@ -12,6 +12,7 @@ public class CerrarSesionModel : PageModel
     // El cierre se recibe por POST para no cerrar la sesion al abrir una direccion
     public async Task<IActionResult> OnPostAsync()
     {
+        // Borra la cookie actual antes de devolver al usuario al login
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToPage("/Cuenta/IniciarSesion");
     }
