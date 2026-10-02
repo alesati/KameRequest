@@ -8,6 +8,7 @@ namespace KameRequest.Clases;
 
 public enum ResultadoAcceso
 {
+    // Posibles resultados que devuelve el intento de login
     Correcto,
     CredencialesInvalidas,
     UsuarioInactivo,
@@ -17,6 +18,7 @@ public enum ResultadoAcceso
 // Consulta el usuario y valida la contraseña antes de crear la sesion
 public class UsuarioSeguridad(IConfiguration configuracion)
 {
+    // Lee la conexion configurada y crea una conexion nueva con MySql
     private MySqlConnection CrearConexion()
     {
         var cadena = configuracion.GetConnectionString("MySql")
@@ -56,6 +58,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
     public ResultadoAcceso ValidarAcceso(InicioSesion datos, out Usuario? usuario)
     {
         using var conexion = CrearConexion();
+        // Busca solamente la cuenta que tiene el usuario escrito en el login
         usuario = conexion.QuerySingleOrDefault<Usuario>("""
             SELECT IdUsuario, NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado,
                    ContrasenaCifrada, Nonce, EtiquetaAutenticacion, IntentosFallidos
@@ -68,11 +71,13 @@ public class UsuarioSeguridad(IConfiguration configuracion)
             return ResultadoAcceso.CredencialesInvalidas;
         }
 
+        // No permite ingresar si el administrador bloqueo la cuenta
         if (usuario.Estado == "Bloqueado")
         {
             return ResultadoAcceso.UsuarioBloqueado;
         }
 
+        // Tampoco permite ingresar cuando el usuario esta inactivo
         if (usuario.Estado != "Activo")
         {
             return ResultadoAcceso.UsuarioInactivo;
@@ -80,11 +85,13 @@ public class UsuarioSeguridad(IConfiguration configuracion)
 
         if (Descifrar(usuario) == datos.Contrasena)
         {
+            // Al ingresar bien se reinician los intentos fallidos anteriores
             conexion.Execute("UPDATE Usuarios SET IntentosFallidos = 0 WHERE IdUsuario = @IdUsuario", usuario);
             return ResultadoAcceso.Correcto;
         }
 
         var intentos = usuario.IntentosFallidos + 1;
+        // Despues de 3 fallos se deja el usuario bloqueado
         var estado = intentos >= 3 ? "Bloqueado" : "Activo";
         conexion.Execute("""
             UPDATE Usuarios
@@ -99,12 +106,14 @@ public class UsuarioSeguridad(IConfiguration configuracion)
     public int ContarUsuarios()
     {
         using var conexion = CrearConexion();
+        // Este total se usa para calcular cuantos botones de pagina se muestran
         return conexion.ExecuteScalar<int>("SELECT COUNT(*) FROM Usuarios");
     }
 
     public IEnumerable<Usuario> ListarUsuarios(int pagina, int tamanoPagina)
     {
         using var conexion = CrearConexion();
+        // LIMIT muestra solo una parte de la lista y OFFSET indica desde donde inicia
         return conexion.Query<Usuario>("""
             SELECT IdUsuario, NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado, IntentosFallidos
             FROM Usuarios
@@ -115,6 +124,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
     public IEnumerable<Usuario> ListarUsuarios()
     {
         using var conexion = CrearConexion();
+        // Esta version devuelve todos los usuarios cuando otra pantalla lo necesita
         return conexion.Query<Usuario>("""
             SELECT IdUsuario, NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado, IntentosFallidos
             FROM Usuarios
@@ -125,6 +135,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
     public UsuarioFormulario? ObtenerUsuario(int idUsuario)
     {
         using var conexion = CrearConexion();
+        // Busca un solo usuario para cargar sus datos en el formulario de editar
         return conexion.QuerySingleOrDefault<UsuarioFormulario>("""
             SELECT IdUsuario, NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado
             FROM Usuarios WHERE IdUsuario = @idUsuario
@@ -133,6 +144,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
 
     public bool CrearUsuario(UsuarioFormulario datos, out string? error)
     {
+        // La contraseña es obligatoria solamente cuando se crea una cuenta
         if (string.IsNullOrWhiteSpace(datos.Contrasena))
         {
             error = "Digite una contraseña";
@@ -140,6 +152,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
         }
 
         using var conexion = CrearConexion();
+        // Evita que se repita un usuario o correo que ya esta registrado
         var existe = conexion.ExecuteScalar<int>("""
             SELECT COUNT(*) FROM Usuarios
             WHERE NombreUsuario = @NombreUsuario OR Correo = @Correo
@@ -151,6 +164,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
         }
 
         var cifrado = Cifrar(datos.Contrasena);
+        // Guarda la contraseña cifrada, nunca la contraseña original
         conexion.Execute("""
             INSERT INTO Usuarios (NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado,
                 ContrasenaCifrada, Nonce, EtiquetaAutenticacion, IntentosFallidos)
@@ -165,6 +179,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
     public bool ActualizarUsuario(UsuarioFormulario datos, out string? error)
     {
         using var conexion = CrearConexion();
+        // Revisa repetidos sin comparar el mismo registro que se esta editando
         var existe = conexion.ExecuteScalar<int>("""
             SELECT COUNT(*) FROM Usuarios
             WHERE (NombreUsuario = @NombreUsuario OR Correo = @Correo) AND IdUsuario <> @IdUsuario
@@ -177,6 +192,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
 
         if (string.IsNullOrWhiteSpace(datos.Contrasena))
         {
+            // Si se deja vacia conserva la contraseña que ya tenia el usuario
             conexion.Execute("""
                 UPDATE Usuarios SET NombreCompleto = @NombreCompleto, NombreUsuario = @NombreUsuario,
                 Correo = @Correo, TipoUsuario = @TipoUsuario, Estado = @Estado
@@ -185,6 +201,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
         }
         else
         {
+            // Si se escribe una nueva se cifra antes de actualizarla
             var cifrado = Cifrar(datos.Contrasena);
             conexion.Execute("""
                 UPDATE Usuarios SET NombreCompleto = @NombreCompleto, NombreUsuario = @NombreUsuario,
@@ -199,6 +216,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
     }
     public bool CambiarEstadoUsuario(int idUsuario, string estado, out string? error)
     {
+        // Solo permite los estados definidos para las cuentas
         var estadosValidos = new[] { "Activo", "Inactivo", "Bloqueado" };
         if (!estadosValidos.Contains(estado))
         {
@@ -207,6 +225,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
         }
 
         using var conexion = CrearConexion();
+        // Cuando vuelve a Activo tambien borra los intentos fallidos del login
         var actualizados = conexion.Execute("""
             UPDATE Usuarios
             SET Estado = @estado,
@@ -223,12 +242,14 @@ public class UsuarioSeguridad(IConfiguration configuracion)
         using var conexion = CrearConexion();
         try
         {
+            // DELETE devuelve la cantidad de filas que realmente se eliminaron
             var eliminados = conexion.Execute("DELETE FROM Usuarios WHERE IdUsuario = @idUsuario", new { idUsuario });
             error = eliminados == 0 ? "No se encontro el usuario" : null;
             return eliminados > 0;
         }
         catch (MySqlException ex) when (ex.Number == 1451)
         {
+            // MySql devuelve 1451 cuando otra tabla tiene datos relacionados
             error = "No se puede eliminar un registro con datos relacionados.";
             return false;
         }
@@ -238,13 +259,16 @@ public class UsuarioSeguridad(IConfiguration configuracion)
     {
         var claveTexto = configuracion["Seguridad:ClaveAes"]
             ?? throw new InvalidOperationException("Falta configurar Seguridad:ClaveAes");
+        // Convierte la clave guardada como texto base64 a bytes para AES
         var clave = Convert.FromBase64String(claveTexto);
+        // El nonce cambia en cada cifrado para que no se repita el resultado
         var nonce = RandomNumberGenerator.GetBytes(12);
         var texto = Encoding.UTF8.GetBytes(contrasena);
         var cifrado = new byte[texto.Length];
         var etiqueta = new byte[16];
 
         using var aes = new AesGcm(clave, etiqueta.Length);
+        // AES GCM genera el texto cifrado y una etiqueta para validar los datos
         aes.Encrypt(nonce, texto, cifrado, etiqueta);
         return (Convert.ToBase64String(cifrado), Convert.ToBase64String(nonce), Convert.ToBase64String(etiqueta));
     }
@@ -254,12 +278,14 @@ public class UsuarioSeguridad(IConfiguration configuracion)
         var claveTexto = configuracion["Seguridad:ClaveAes"]
             ?? throw new InvalidOperationException("Falta configurar Seguridad:ClaveAes");
         var clave = Convert.FromBase64String(claveTexto);
+        // Convierte los valores que vienen de la base otra vez a bytes
         var cifrado = Convert.FromBase64String(usuario.ContrasenaCifrada);
         var nonce = Convert.FromBase64String(usuario.Nonce);
         var etiqueta = Convert.FromBase64String(usuario.EtiquetaAutenticacion);
         var textoPlano = new byte[cifrado.Length];
 
         using var aes = new AesGcm(clave, etiqueta.Length);
+        // Recupera el texto para poder compararlo con la contraseña digitada
         aes.Decrypt(nonce, cifrado, etiqueta, textoPlano);
         return Encoding.UTF8.GetString(textoPlano);
     }
