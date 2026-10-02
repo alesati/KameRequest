@@ -1,0 +1,195 @@
+﻿@page "{id:int?}"
+@model KameRequest.Pages.Solicitudes.TareasModel
+@{
+    ViewData["Title"] = "Gestión de Tareas";
+}
+
+<div class="container-fluid mt-4 px-4">
+    <a asp-page="/Solicitudes/Index" class="btn btn-outline-secondary mb-3">
+        ← Volver a Solicitudes
+    </a>
+
+    @if (!string.IsNullOrEmpty(Model.MensajeError))
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            @Model.MensajeError
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- ENCABEZADO SOLICITUD -->
+    @if (Model.SolicitudActual != null)
+    {
+        <div class="card bg-light mb-4 shadow-sm">
+            <div class="card-body">
+                <small class="text-muted fw-bold">Oficio: @Model.SolicitudActual.Consecutivo</small>
+                <h3 class="card-title text-primary mt-1">@Model.SolicitudActual.Titulo</h3>
+                <p class="card-text">@Model.SolicitudActual.Descripcion</p>
+                <hr />
+                <div class="row text-center text-md-start">
+                    <div class="col-md-3"><strong>Representante:</strong> @Model.SolicitudActual.Representante</div>
+                    <div class="col-md-3"><strong>Fecha Ingreso:</strong> @Model.SolicitudActual.FechaIngreso.ToString("dd/MM/yyyy")</div>
+                    <div class="col-md-3"><strong>Fecha Respuesta:</strong> @(Model.SolicitudActual.FechaRespuesta.HasValue ? Model.SolicitudActual.FechaRespuesta.Value.ToString("dd/MM/yyyy") : "N/A")</div>
+                    <div class="col-md-3"><strong>Fecha Inicio:</strong> @(Model.SolicitudActual.FechaInicio.HasValue ? Model.SolicitudActual.FechaInicio.Value.ToString("dd/MM/yyyy") : "N/A")</div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- TABLA DE TAREAS -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Tareas Asociadas</h5>
+            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevaTarea">
+                + Agregar Tarea
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle text-center">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Fecha</th>
+                            <th class="text-start">Descripción</th>
+                            <th>Usuario</th>
+                            <th>Horas Invertidas</th>
+                            <th style="width: 140px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListaTareas.Any())
+                        {
+                            @foreach (var item in Model.ListaTareas)
+                            {
+                                <tr>
+                                    <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-start">@item.Descripcion</td>
+                                    <td><span class="badge bg-info text-dark">@item.Usuario</span></td>
+                                    <td class="fw-bold">@item.HorasInvertidas.ToString("N2")</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-1">
+                                            <!-- Botón Editar -->
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                    onclick="abrirModalEditar(@item.IdTarea, '@item.Descripcion.Replace("'", "\\'").Replace("\r\n", " ")', '@item.Fecha.ToString("yyyy-MM-dd")', '@item.Usuario', @item.HorasInvertidas.ToString(System.Globalization.CultureInfo.InvariantCulture))">
+                                                Editar
+                                            </button>
+
+                                            <!-- Botón Eliminar -->
+                                            <form method="post" asp-page-handler="Eliminar" onsubmit="return confirm('¿Desea eliminar esta tarea?');">
+                                                <input type="hidden" name="idTarea" value="@item.IdTarea" />
+                                                <input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">X</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-3 text-muted">No hay tareas registradas para esta solicitud.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PARA AGREGAR TAREA -->
+<div class="modal fade" id="modalNuevaTarea" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Agregar">
+                <input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" />
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Agregar Tarea</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Descripción de la Tarea</label>
+                        <textarea asp-for="NuevaTarea.Descripcion" class="form-control" rows="3" required placeholder="Escriba el detalle del trabajo realizado..."></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" asp-for="NuevaTarea.Fecha" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Usuario</label>
+                            <input type="text" asp-for="NuevaTarea.Usuario" class="form-control" required value="@(User.Identity?.Name ?? "UsuarioSistema")" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Horas Invertidas</label>
+                            <input type="number" step="0.01" asp-for="NuevaTarea.HorasInvertidas" class="form-control" required placeholder="0.00" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Tarea</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PARA EDITAR TAREA -->
+<div class="modal fade" id="modalEditarTarea" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Editar">
+                <input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" />
+                <input type="hidden" id="editIdTarea" asp-for="TareaEditar.IdTarea" />
+
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Editar Tarea</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Descripción de la Tarea</label>
+                        <textarea id="editDescripcion" asp-for="TareaEditar.Descripcion" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" id="editFecha" asp-for="TareaEditar.Fecha" class="form-control" required />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Usuario</label>
+                            <input type="text" id="editUsuario" asp-for="TareaEditar.Usuario" class="form-control" required />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Horas Invertidas</label>
+                            <input type="number" step="0.01" id="editHorasInvertidas" asp-for="TareaEditar.HorasInvertidas" class="form-control" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Actualizar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function abrirModalEditar(idTarea, descripcion, fecha, usuario, horas) {
+            document.getElementById('editIdTarea').value = idTarea;
+            document.getElementById('editDescripcion').value = descripcion;
+            document.getElementById('editFecha').value = fecha;
+            document.getElementById('editUsuario').value = usuario;
+            document.getElementById('editHorasInvertidas').value = horas;
+
+            var modalElement = document.getElementById('modalEditarTarea');
+            var bootstrapModal = new bootstrap.Modal(modalElement);
+            bootstrapModal.show();
+        }
+    </script>
+}

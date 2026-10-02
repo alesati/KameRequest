@@ -42,11 +42,10 @@
                                             Desglose
                                         </a>
 
-                                        <!-- Botón Tarea (Carga modal de Tarea) -->
-                                        <button type="button" class="btn btn-sm btn-warning"
-                                                onclick="abrirModalTarea(@item.IdSolicitud, '@item.Consecutivo', '@item.Titulo', '@item.Descripcion', '@item.FechaIngreso.ToString("dd/MM/yyyy")', '@(item.FechaRespuesta.HasValue ? item.FechaRespuesta.Value.ToString("dd/MM/yyyy") : "N/A")', '@(item.FechaInicio.HasValue ? item.FechaInicio.Value.ToString("dd/MM/yyyy") : "N/A")')">
+                                        <!-- Enlace directo a la nueva página independiente de Tareas (HU TAR1) -->
+                                        <a asp-page="/Solicitudes/Tarea" asp-route-id="@item.IdSolicitud" class="btn btn-sm btn-warning text-dark">
                                             Tarea
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
                             }
