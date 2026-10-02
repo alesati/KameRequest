@@ -1,0 +1,129 @@
+﻿@page
+@model KameRequest.Pages.Solicitudes.IndexModel
+@{
+    ViewData["Title"] = "Solicitudes";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Listado de Solicitudes</h2>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Consecutivo</th>
+                            <th>Título</th>
+                            <th>Representante</th>
+                            <th>Estado</th>
+                            <th>Fecha Ingreso</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListaSolicitudes != null && Model.ListaSolicitudes.Any())
+                        {
+                            @foreach (var item in Model.ListaSolicitudes)
+                            {
+                                <tr>
+                                    <td>@item.Consecutivo</td>
+                                    <td>@item.Titulo</td>
+                                    <td>@item.Representante</td>
+                                    <td>
+                                        <span class="badge bg-secondary">@item.Estado</span>
+                                    </td>
+                                    <td>@item.FechaIngreso.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-center">
+                                        <!-- Botón Desglose -->
+                                        <button type="button" class="btn btn-sm btn-info text-white me-1"
+                                                onclick="abrirModalGeneral(@item.IdSolicitud, '@item.Consecutivo', '@item.Titulo', '@item.Descripcion', '@item.FechaIngreso.ToString("dd/MM/yyyy")', '@(item.FechaRespuesta.HasValue ? item.FechaRespuesta.Value.ToString("dd/MM/yyyy") : "N/A")', '@(item.FechaInicio.HasValue ? item.FechaInicio.Value.ToString("dd/MM/yyyy") : "N/A")', 'Desglose')">
+                                            Desglose
+                                        </button>
+
+                                        <!-- Botón Tarea -->
+                                        <button type="button" class="btn btn-sm btn-warning"
+                                                onclick="abrirModalGeneral(@item.IdSolicitud, '@item.Consecutivo', '@item.Titulo', '@item.Descripcion', '@item.FechaIngreso.ToString("dd/MM/yyyy")', '@(item.FechaRespuesta.HasValue ? item.FechaRespuesta.Value.ToString("dd/MM/yyyy") : "N/A")', '@(item.FechaInicio.HasValue ? item.FechaInicio.Value.ToString("dd/MM/yyyy") : "N/A")', 'Tarea')">
+                                            Tarea
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-3">No hay solicitudes registradas en la base de datos.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Reutilizable para Desglose y Tarea -->
+<div class="modal fade" id="modalSolicitud" tabindex="-1" aria-labelledby="modalSolicitudLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="modalSolicitudLabel">Detalle de Solicitud</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <!-- ENCABEZADO CON INFORMACIÓN DE LA SOLICITUD -->
+                <div class="card bg-light mb-3">
+                    <div class="card-body">
+                        <small class="text-muted fw-bold" id="modalOficio">Oficio: -</small>
+                        <h4 class="card-title text-primary mt-1" id="modalTitulo">Título</h4>
+                        <p class="card-text" id="modalDescripcion">Descripción...</p>
+                        <hr />
+                        <div class="row text-center text-md-start">
+                            <div class="col-md-4"><strong>Fecha Ingreso:</strong> <span id="modalFIngreso">-</span></div>
+                            <div class="col-md-4"><strong>Fecha Respuesta:</strong> <span id="modalFRespuesta">-</span></div>
+                            <div class="col-md-4"><strong>Fecha Inicio:</strong> <span id="modalFInicio">-</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTENIDO DINÁMICO DE DESGLOSES O TAREAS -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 id="modalSeccionTitulo">Gestión</h5>
+                </div>
+
+                <div id="modalContenido" class="border rounded p-3 bg-white">
+                    <p class="text-muted text-center my-3">Seleccione una opción para cargar la información.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function abrirModalGeneral(idSolicitud, oficio, titulo, descripcion, fIngreso, fRespuesta, fInicio, tipo) {
+            // Llenar datos del encabezado
+            document.getElementById('modalOficio').innerText = 'Oficio: ' + oficio;
+            document.getElementById('modalTitulo').innerText = titulo;
+            document.getElementById('modalDescripcion').innerText = descripcion;
+            document.getElementById('modalFIngreso').innerText = fIngreso;
+            document.getElementById('modalFRespuesta').innerText = fRespuesta;
+            document.getElementById('modalFInicio').innerText = fInicio;
+
+            // Configurar títulos según la acción
+            document.getElementById('modalSolicitudLabel').innerText = 'Módulo de ' + tipo + 's - Solicitud #' + idSolicitud;
+            document.getElementById('modalSeccionTitulo').innerText = 'Lista de ' + tipo + 's';
+
+            // Mostrar el modal
+            var modalElement = document.getElementById('modalSolicitud');
+            var bootstrapModal = new bootstrap.Modal(modalElement);
+            bootstrapModal.show();
+        }
+    </script>
+}
