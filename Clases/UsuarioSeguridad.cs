@@ -4,7 +4,7 @@ using Dapper;
 using KameRequest.Models;
 using MySqlConnector;
 
-namespace KameRequest.Services;
+namespace KameRequest.Clases;
 
 public enum ResultadoAcceso
 {
@@ -15,7 +15,7 @@ public enum ResultadoAcceso
 }
 
 // Consulta el usuario y valida la contraseña antes de crear la sesion
-public class UsuarioSeguridadService(IConfiguration configuracion)
+public class UsuarioSeguridad(IConfiguration configuracion)
 {
     private MySqlConnection CrearConexion()
     {

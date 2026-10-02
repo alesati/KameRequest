@@ -1,10 +1,10 @@
-using KameRequest.Services;
+using KameRequest.Clases;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
-builder.Services.AddScoped<UsuarioSeguridadService>();
+builder.Services.AddScoped<UsuarioSeguridad>();
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(opciones =>
@@ -25,7 +25,7 @@ if (!string.IsNullOrWhiteSpace(app.Configuration.GetConnectionString("MySql")) &
     !string.IsNullOrWhiteSpace(app.Configuration["Seguridad:ClaveAes"]))
 {
     using var alcance = app.Services.CreateScope();
-    alcance.ServiceProvider.GetRequiredService<UsuarioSeguridadService>()
+    alcance.ServiceProvider.GetRequiredService<UsuarioSeguridad>()
         .CrearAdministradorInicialSiHaceFalta();
 }
 

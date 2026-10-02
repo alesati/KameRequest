@@ -1,4 +1,12 @@
 @using System.Security.Claims
+@{
+    string ClaseActual(string ruta)
+    {
+        return (Context.Request.Path.Value ?? string.Empty).StartsWith(ruta, StringComparison.OrdinalIgnoreCase)
+            ? "active"
+            : string.Empty;
+    }
+}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -18,15 +26,22 @@
                     <img src="~/img/logo-kamerequest.png" alt="KameRequest" />
                     <span>KameRequest</span>
                 </a>
-                <nav class="sidebar-nav">
-                    <a asp-page="/Index">Inicio</a>
-                    @if (User.IsInRole("Administrador"))
-                    {
-                        <a asp-page="/Usuarios/Index">Usuarios</a>
-                    }
-                    <a asp-page="/Solicitudes/Index">Solicitudes</a>
-                    <a asp-page="/Mantenimientos/Index">Mantenimientos</a>
-                    <a asp-page="/Reportes/Index">Reportes</a>
+                <nav class="sidebar-nav" aria-label="Menu principal">
+    <a asp-page="/Index" class="nav-link @ClaseActual("/Index")">
+        <span class="nav-icon" aria-hidden="true">⌂</span><span>Inicio</span>
+    </a>
+    <span class="menu-title">GESTIÓN</span>
+    <a asp-page="/Solicitudes/Index" class="nav-link @ClaseActual("/Solicitudes")">
+        <span class="nav-icon" aria-hidden="true">▤</span><span>Solicitudes</span><span class="nav-arrow" aria-hidden="true">›</span>
+    </a>
+    <span class="menu-title">MANTENIMIENTOS</span>
+    <a asp-page="/Mantenimientos/Index" class="nav-link @ClaseActual("/Mantenimientos")">
+        <span class="nav-icon" aria-hidden="true">⚙</span><span>Mantenimientos</span><span class="nav-arrow" aria-hidden="true">›</span>
+    </a>
+    <span class="menu-title">REPORTES</span>
+    <a asp-page="/Reportes/Index" class="nav-link @ClaseActual("/Reportes")">
+        <span class="nav-icon" aria-hidden="true">▥</span><span>Reportes</span><span class="nav-arrow" aria-hidden="true">›</span>
+    </a>
                 </nav>
             </aside>
             <div class="main-area">
