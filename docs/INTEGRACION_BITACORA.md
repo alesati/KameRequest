@@ -114,6 +114,26 @@ new
 }
 ```
 
+## Integracion concreta de SOL1 - Solicitudes
+
+SOL1 reutiliza el `BitacoraService` ya registrado; no agrega tablas ni servicios de
+bitacora.
+
+- `Pages/Solicitudes/Index.cshtml.cs`, en `OnGet`: `bitacora.RegistrarConsulta(User, "solicitudes")`.
+  El listado no envia filtros ni JSON.
+- `Pages/Solicitudes/Crear.cshtml.cs`, despues del `INSERT` exitoso y de releer la
+  fila creada: `bitacora.RegistrarCreacion(User, "solicitud", nueva)`.
+- `Pages/Solicitudes/Editar.cshtml.cs`: consulta la solicitud antes del `UPDATE`,
+  la vuelve a consultar despues y llama
+  `bitacora.RegistrarActualizacion(User, "solicitud", anterior, actual)`.
+- `Pages/Solicitudes/Index.cshtml.cs`, en `OnPostEliminar`: consulta la solicitud
+  antes del `DELETE` y, solo si este elimina una fila, llama
+  `bitacora.RegistrarEliminacion(User, "solicitud", eliminada)`.
+
+La restriccion de llave foranea al eliminar es una regla de negocio y muestra el
+mensaje requerido; no se registra como error tecnico. Las excepciones tecnicas no
+controladas siguen siendo atendidas por el middleware global de `Program.cs`.
+
 ## Matriz por historia
 
 | Responsable | Historia | Llamadas necesarias |

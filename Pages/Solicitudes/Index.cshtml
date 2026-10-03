@@ -1,0 +1,96 @@
+@page
+@model KameRequest.Pages.Solicitudes.IndexModel
+@{
+    ViewData["Title"] = "Solicitudes";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Solicitudes</h1>
+        <a asp-page="Crear" class="btn btn-primary">Nueva solicitud</a>
+    </div>
+
+    @if (TempData["Mensaje"] is string mensaje)
+    {
+        <div class="alert alert-success">@mensaje</div>
+    }
+    @if (TempData["Error"] is string error)
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Consecutivo</th>
+                    <th>Titulo</th>
+                    <th>Representante</th>
+                    <th>Estado</th>
+                    <th>Fecha de ingreso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var solicitud in Model.Solicitudes)
+                {
+                    var fechaVencimiento = IndexModel.AgregarDiasHabiles(solicitud.FechaIngreso, 5);
+                    var claseFila = solicitud.Estado == "Vencida"
+                        ? "table-danger"
+                        : fechaVencimiento == DateTime.Today
+                            ? "table-warning"
+                            : solicitud.Estado == "Nueva"
+                                ? "table-success"
+                                : string.Empty;
+
+                    <tr class="@claseFila">
+                        <td>@solicitud.ConsecutivoOficio</td>
+                        <td>@solicitud.Titulo</td>
+                        <td>@solicitud.Representante</td>
+                        <td>@solicitud.Estado</td>
+                        <td>@solicitud.FechaIngreso.ToString("dd/MM/yyyy")</td>
+                        <td class="text-nowrap">
+                            <a asp-page="/Solicitudes/Desglose" asp-route-id="@solicitud.IdSolicitud" class="btn btn-sm btn-info text-white">Desglose</a>
+                            <a asp-page="/Solicitudes/Tarea" asp-route-id="@solicitud.IdSolicitud" class="btn btn-sm btn-warning">Tareas</a>
+                            <a asp-page="Editar" asp-route-id="@solicitud.IdSolicitud" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarSolicitud-@solicitud.IdSolicitud">Eliminar</button>
+
+                            <div class="modal fade" id="eliminarSolicitud-@solicitud.IdSolicitud" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title fs-5">Eliminar solicitud</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                        </div>
+                                        <div class="modal-body">¿Realmente desea eliminar el elemento seleccionado?</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                                            <form method="post" asp-page-handler="Eliminar">
+                                                <input type="hidden" name="idSolicitud" value="@solicitud.IdSolicitud" />
+                                                <button type="submit" class="btn btn-danger">Sí</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.TotalPaginas > 1)
+    {
+        <nav aria-label="Paginacion de solicitudes">
+            <ul class="pagination">
+                @for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++)
+                {
+                    <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")">
+                        <a class="page-link" asp-route-pagina="@pagina">@pagina</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>

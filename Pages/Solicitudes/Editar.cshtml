@@ -1,0 +1,93 @@
+@page "{id:int}"
+@model KameRequest.Pages.Solicitudes.EditarModel
+@{
+    ViewData["Title"] = "Editar solicitud";
+}
+
+<div class="container py-4">
+    <h1>Editar solicitud</h1>
+
+    <form method="post" class="card card-body">
+        <input asp-for="Solicitud.IdSolicitud" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Solicitud.ConsecutivoOficio" class="form-label">Consecutivo de oficio de la solicitud</label>
+            <input asp-for="Solicitud.ConsecutivoOficio" class="form-control" />
+            <span asp-validation-for="Solicitud.ConsecutivoOficio" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Solicitud.Titulo" class="form-label">Titulo de la solicitud</label>
+            <input asp-for="Solicitud.Titulo" class="form-control" />
+            <span asp-validation-for="Solicitud.Titulo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Solicitud.Descripcion" class="form-label">Descripcion</label>
+            <textarea asp-for="Solicitud.Descripcion" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Solicitud.IdRepresentante" class="form-label">Representante</label>
+            <select asp-for="Solicitud.IdRepresentante" class="form-select">
+                <option value="">Seleccione...</option>
+                @foreach (var representante in Model.Representantes)
+                {
+                    <option value="@representante.IdRepresentante">@representante.Nombre</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Solicitud.IdEstado" class="form-label">Estado de la solicitud</label>
+            <select asp-for="Solicitud.IdEstado" class="form-select">
+                @foreach (var estado in Model.Estados)
+                {
+                    <option value="@estado.IdEstado">@estado.Nombre</option>
+                }
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label asp-for="Solicitud.FechaIngreso" class="form-label">Fecha de ingreso</label>
+                <input asp-for="Solicitud.FechaIngreso" type="date" class="form-control" />
+                <span asp-validation-for="Solicitud.FechaIngreso" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="Solicitud.FechaRespuesta" class="form-label">Fecha de respuesta</label>
+                <input asp-for="Solicitud.FechaRespuesta" type="date" class="form-control" />
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="Solicitud.FechaInicio" class="form-label">Fecha de inicio</label>
+                <input asp-for="Solicitud.FechaInicio" type="date" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Solicitud.DocumentoRespuesta" class="form-label">Documento de respuesta</label>
+                <input asp-for="Solicitud.DocumentoRespuesta" class="form-control" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Solicitud.DocumentoInicio" class="form-label">Documento de inicio</label>
+                <input asp-for="Solicitud.DocumentoInicio" class="form-control" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Solicitud.Observaciones" class="form-label">Observaciones</label>
+            <textarea asp-for="Solicitud.Observaciones" class="form-control" rows="2"></textarea>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Regresar al listado</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
