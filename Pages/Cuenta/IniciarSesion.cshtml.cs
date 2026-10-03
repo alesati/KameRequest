@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using KameRequest.Models;
 using KameRequest.Clases;
+using KameRequest.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KameRequest.Pages.Cuenta;
 
-public class IniciarSesionModel(UsuarioSeguridad seguridad) : PageModel
+public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraService bitacora) : PageModel
 {
     // Recibe los datos que el usuario escribe en el formulario
     [BindProperty]
@@ -33,6 +34,7 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad) : PageModel
             var resultado = seguridad.ValidarAcceso(Datos, out var usuario);
             if (resultado != ResultadoAcceso.Correcto || usuario is null)
             {
+                bitacora.RegistrarSistema($"Intento fallido de inicio de sesion para usuario {Datos.NombreUsuario}. Resultado: {resultado}");
                 ModelState.AddModelError(string.Empty, MensajeResultado(resultado));
                 return Page();
             }
@@ -51,10 +53,12 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad) : PageModel
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(identidad));
 
+            bitacora.Registrar(usuario.IdUsuario, "Inicio de sesion exitoso.");
             return RedirectToPage("/Index");
         }
-        catch
+        catch (Exception excepcion)
         {
+            bitacora.RegistrarErrorTecnicoSistema("Inicio de sesion", excepcion);
             // Muestra un mensaje controlado si falla la conexion u otro error tecnico
             ModelState.AddModelError(string.Empty, "No fue posible iniciar sesion, revise la conexion a la base de datos");
             return Page();

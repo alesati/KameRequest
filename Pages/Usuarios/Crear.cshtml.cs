@@ -1,5 +1,6 @@
 using KameRequest.Models;
 using KameRequest.Clases;
+using KameRequest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Usuarios;
 
 [Authorize(Roles = "Administrador")]
-public class CrearModel(UsuarioSeguridad seguridad) : PageModel
+public class CrearModel(UsuarioSeguridad seguridad, BitacoraService bitacora) : PageModel
 {
     // Se llena con los valores escritos en el formulario
     [BindProperty]
@@ -25,7 +26,18 @@ public class CrearModel(UsuarioSeguridad seguridad) : PageModel
             return Page();
         }
         TempData["Mensaje"] = "Usuario creado correctamente";
+        bitacora.RegistrarCreacion(User, "usuario", DatosBitacora(Datos));
         // TempData permite mostrar el mensaje despues de redirigir al listado
         return RedirectToPage("Index");
     }
+
+    private static object DatosBitacora(UsuarioFormulario usuario) => new
+    {
+        usuario.IdUsuario,
+        usuario.NombreCompleto,
+        usuario.NombreUsuario,
+        usuario.Correo,
+        usuario.TipoUsuario,
+        usuario.Estado
+    };
 }

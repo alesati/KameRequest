@@ -1,0 +1,59 @@
+@page
+@model KameRequest.Pages.Bitacora.IndexModel
+@{ ViewData["Title"] = "Bitacora general"; }
+
+<div class="container py-4">
+    <h1>Bitacora general</h1>
+    <p class="text-muted">Ultimas acciones realizadas por los usuarios.</p>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Registros.Count == 0)
+                {
+                    <tr><td colspan="3" class="text-muted">No hay acciones registradas.</td></tr>
+                }
+                @foreach (var registro in Model.Registros)
+                {
+                    <tr>
+                        <td class="text-nowrap">@registro.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@registro.Usuario</td>
+                        <td>@registro.Descripcion</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.TotalPaginas > 1)
+    {
+        var inicio = Math.Max(1, Model.Pagina - 2);
+        var final = Math.Min(Model.TotalPaginas, Model.Pagina + 2);
+
+        <nav aria-label="Paginacion de bitacora">
+            <ul class="pagination flex-wrap">
+                <li class="page-item @(Model.Pagina == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-route-pagina="@(Model.Pagina - 1)">Anterior</a>
+                </li>
+
+                @for (var pagina = inicio; pagina <= final; pagina++)
+                {
+                    <li class="page-item @(pagina == Model.Pagina ? "active" : "")">
+                        <a class="page-link" asp-route-pagina="@pagina">@pagina</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.Pagina == Model.TotalPaginas ? "disabled" : "")">
+                    <a class="page-link" asp-route-pagina="@(Model.Pagina + 1)">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

@@ -172,6 +172,8 @@ public class UsuarioSeguridad(IConfiguration configuracion)
                 @ContrasenaCifrada, @Nonce, @EtiquetaAutenticacion, 0)
             """, new { datos.NombreCompleto, datos.NombreUsuario, datos.Correo, datos.TipoUsuario, datos.Estado,
                 cifrado.ContrasenaCifrada, cifrado.Nonce, cifrado.EtiquetaAutenticacion });
+        // El identificador generado permite registrar en la bitacora el registro real creado.
+        datos.IdUsuario = conexion.ExecuteScalar<int>("SELECT LAST_INSERT_ID()");
         error = null;
         return true;
     }
@@ -255,7 +257,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
         }
     }
     // Cifra la contraseña antes de guardarla en la base de datos
-    private (string ContrasenaCifrada, string Nonce, string EtiquetaAutenticacion) Cifrar(string contrasena)
+    private (string ContrasenaCifrada, byte[] Nonce, byte[] EtiquetaAutenticacion) Cifrar(string contrasena)
     {
         var claveTexto = configuracion["Seguridad:ClaveAes"]
             ?? throw new InvalidOperationException("Falta configurar Seguridad:ClaveAes");
@@ -270,7 +272,7 @@ public class UsuarioSeguridad(IConfiguration configuracion)
         using var aes = new AesGcm(clave, etiqueta.Length);
         // AES GCM genera el texto cifrado y una etiqueta para validar los datos
         aes.Encrypt(nonce, texto, cifrado, etiqueta);
-        return (Convert.ToBase64String(cifrado), Convert.ToBase64String(nonce), Convert.ToBase64String(etiqueta));
+        return (Convert.ToBase64String(cifrado), nonce, etiqueta);
     }
     // La clave se guarda en configuracion y debe tener 32 bytes para AES GCM 256
     private string Descifrar(Usuario usuario)
@@ -280,13 +282,11 @@ public class UsuarioSeguridad(IConfiguration configuracion)
         var clave = Convert.FromBase64String(claveTexto);
         // Convierte los valores que vienen de la base otra vez a bytes
         var cifrado = Convert.FromBase64String(usuario.ContrasenaCifrada);
-        var nonce = Convert.FromBase64String(usuario.Nonce);
-        var etiqueta = Convert.FromBase64String(usuario.EtiquetaAutenticacion);
         var textoPlano = new byte[cifrado.Length];
 
-        using var aes = new AesGcm(clave, etiqueta.Length);
+        using var aes = new AesGcm(clave, usuario.EtiquetaAutenticacion.Length);
         // Recupera el texto para poder compararlo con la contraseña digitada
-        aes.Decrypt(nonce, cifrado, etiqueta, textoPlano);
+        aes.Decrypt(usuario.Nonce, cifrado, usuario.EtiquetaAutenticacion, textoPlano);
         return Encoding.UTF8.GetString(textoPlano);
     }
 }

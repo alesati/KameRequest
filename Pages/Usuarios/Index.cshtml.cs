@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using KameRequest.Models;
 using KameRequest.Clases;
+using KameRequest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Usuarios;
 
 [Authorize(Roles = "Administrador")]
-public class IndexModel(UsuarioSeguridad seguridad) : PageModel
+public class IndexModel(UsuarioSeguridad seguridad, BitacoraService bitacora) : PageModel
 {
     // Cantidad de registros que se muestran por pagina
     private const int TamanoPagina = 10;
@@ -19,12 +20,14 @@ public class IndexModel(UsuarioSeguridad seguridad) : PageModel
 
     public void OnGet(int pagina = 1)
     {
+        bitacora.RegistrarConsulta(User, "usuarios");
         // Carga la pagina solicitada al entrar al mantenimiento
         CargarUsuarios(pagina);
     }
 
     public IActionResult OnPostCambiarEstado(int idUsuario, string estado)
     {
+        var anterior = seguridad.ObtenerUsuario(idUsuario);
         // Recibe el estado elegido en la lista y lo actualiza en la base
         if (!seguridad.CambiarEstadoUsuario(idUsuario, estado, out var error))
         {
@@ -33,6 +36,8 @@ public class IndexModel(UsuarioSeguridad seguridad) : PageModel
         }
 
         TempData["Mensaje"] = "El estado del usuario se actualizo";
+        var actual = seguridad.ObtenerUsuario(idUsuario);
+        bitacora.RegistrarActualizacion(User, "estado de usuario", DatosBitacora(anterior), DatosBitacora(actual));
         return RedirectToPage();
     }
 
@@ -46,6 +51,7 @@ public class IndexModel(UsuarioSeguridad seguridad) : PageModel
             return RedirectToPage();
         }
 
+        var eliminado = seguridad.ObtenerUsuario(idUsuario);
         if (!seguridad.EliminarUsuario(idUsuario, out var error))
         {
             TempData["Error"] = error;
@@ -53,6 +59,7 @@ public class IndexModel(UsuarioSeguridad seguridad) : PageModel
         }
 
         TempData["Mensaje"] = "El usuario se elimino correctamente";
+        bitacora.RegistrarEliminacion(User, "usuario", DatosBitacora(eliminado));
         return RedirectToPage();
     }
 
@@ -64,5 +71,20 @@ public class IndexModel(UsuarioSeguridad seguridad) : PageModel
         PaginaActual = Math.Clamp(pagina, 1, TotalPaginas);
         // Pide solamente los usuarios que se necesitan para esta pagina
         Usuarios = seguridad.ListarUsuarios(PaginaActual, TamanoPagina);
+    }
+
+    private static object? DatosBitacora(UsuarioFormulario? usuario)
+    {
+        if (usuario is null) return null;
+
+        return new
+        {
+            usuario.IdUsuario,
+            usuario.NombreCompleto,
+            usuario.NombreUsuario,
+            usuario.Correo,
+            usuario.TipoUsuario,
+            usuario.Estado
+        };
     }
 }

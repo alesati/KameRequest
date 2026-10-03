@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     TipoUsuario VARCHAR(20) NOT NULL DEFAULT 'Usuario',
     Estado VARCHAR(20) NOT NULL DEFAULT 'Activo',
     ContrasenaCifrada TEXT NOT NULL,
-    Nonce VARCHAR(100) NOT NULL,
-    EtiquetaAutenticacion VARCHAR(100) NOT NULL,
+    Nonce VARBINARY(12) NOT NULL,
+    EtiquetaAutenticacion VARBINARY(16) NOT NULL,
     IntentosFallidos INT NOT NULL DEFAULT 0,
     PRIMARY KEY (IdUsuario),
     CONSTRAINT uq_usuarios_nombre UNIQUE (NombreUsuario),
@@ -109,3 +109,14 @@ CREATE TABLE IF NOT EXISTS Tareas (
     CONSTRAINT ck_tareas_horas CHECK (HorasInvertidas >= 0)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS Bitacoras (
+    IdBitacora INT NOT NULL AUTO_INCREMENT,
+    Fecha DATETIME NOT NULL,
+    IdUsuario INT NULL,
+    Descripcion TEXT NOT NULL,
+    PRIMARY KEY (IdBitacora),
+    INDEX ix_bitacoras_fecha (Fecha),
+    CONSTRAINT fk_bitacoras_usuario
+        FOREIGN KEY (IdUsuario) REFERENCES Usuarios (IdUsuario)
+        ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB;

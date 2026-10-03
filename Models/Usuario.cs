@@ -13,8 +13,8 @@ public class Usuario
     public string Estado { get; set; } = string.Empty;
     // Estos tres valores se ocupan para recuperar la contraseña de forma segura
     public string ContrasenaCifrada { get; set; } = string.Empty;
-    public string Nonce { get; set; } = string.Empty;
-    public string EtiquetaAutenticacion { get; set; } = string.Empty;
+    public byte[] Nonce { get; set; } = [];
+    public byte[] EtiquetaAutenticacion { get; set; } = [];
     // Cuenta los errores de contraseña para bloquear despues del limite
     public int IntentosFallidos { get; set; }
 }

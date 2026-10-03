@@ -1,4 +1,5 @@
 using KameRequest.Clases;
+using KameRequest.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();// Habilita las paginas Razor del proyecto
 builder.Services.AddScoped<UsuarioSeguridad>();// La clase se puede usar en las paginas para trabajar usuarios y seguridad
+builder.Services.AddScoped<BitacoraService>();// Servicio de auditoria y registro de errores tecnicos
 builder.Services
     // Se usa una cookie para recordar la sesion del usuario
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -38,5 +40,25 @@ app.UseStaticFiles();// Da acceso a css, imagenes, javascript y otros archivos d
 app.UseRouting();// Permite que el sistema encuentre la pagina segun la direccion
 app.UseAuthentication();// Primero revisa si existe una sesion y luego los permisos de la pagina
 app.UseAuthorization();// Publica las rutas que se crean con las paginas Razor
+app.Use(async (contexto, siguiente) =>
+{
+    try
+    {
+        await siguiente();
+    }
+    catch (Exception excepcion)
+    {
+        try
+        {
+            var bitacora = contexto.RequestServices.GetRequiredService<BitacoraService>();
+            bitacora.RegistrarErrorTecnico(contexto.User, contexto.Request.Path, excepcion);
+        }
+        catch
+        {
+            // Si la bitacora no esta disponible, se conserva el error original.
+        }
+        throw;
+    }
+});
 app.MapRazorPages();// Mantiene la aplicacion ejecutandose y atendiendo solicitudes
 app.Run();
