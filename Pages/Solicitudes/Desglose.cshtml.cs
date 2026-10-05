@@ -1,6 +1,6 @@
 using Dapper;
 using KameRequest.Models;
-using KameRequest.Services;
+using KameRequest.Clases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +9,7 @@ using MySqlConnector;
 namespace KameRequest.Pages.Solicitudes;
 
 [Authorize]
-public class DesgloseModel(IConfiguration configuracion, BitacoraService bitacora) : PageModel
+public class DesgloseModel(IConfiguration configuracion, BitacoraRegistro bitacora) : PageModel
 {
     public Solicitud? SolicitudActual { get; private set; }
     public List<DesgloseSolicitud> ListaDesgloses { get; private set; } = [];

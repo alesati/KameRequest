@@ -1,6 +1,5 @@
 using KameRequest.Models;
 using KameRequest.Clases;
-using KameRequest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Usuarios;
 
 [Authorize(Roles = "Administrador")]
-public class CrearModel(UsuarioSeguridad seguridad, BitacoraService bitacora) : PageModel
+public class CrearModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
 {
     // Se llena con los valores escritos en el formulario
     [BindProperty]

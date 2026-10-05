@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Dapper;
 using KameRequest.Models;
-using KameRequest.Services;
+using KameRequest.Clases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +10,7 @@ using MySqlConnector;
 namespace KameRequest.Pages.Solicitudes;
 
 [Authorize]
-public class TareasModel(IConfiguration configuracion, BitacoraService bitacora) : PageModel
+public class TareasModel(IConfiguration configuracion, BitacoraRegistro bitacora) : PageModel
 {
     public Solicitud? SolicitudActual { get; private set; }
     public List<TareaSolicitud> ListaTareas { get; private set; } = [];

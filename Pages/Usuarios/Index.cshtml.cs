@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using KameRequest.Models;
 using KameRequest.Clases;
-using KameRequest.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Usuarios;
 
 [Authorize(Roles = "Administrador")]
-public class IndexModel(UsuarioSeguridad seguridad, BitacoraService bitacora) : PageModel
+public class IndexModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
 {
     // Cantidad de registros que se muestran por pagina
     private const int TamanoPagina = 10;

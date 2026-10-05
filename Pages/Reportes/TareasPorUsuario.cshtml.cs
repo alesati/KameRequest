@@ -1,6 +1,6 @@
 using Dapper;
 using KameRequest.Models;
-using KameRequest.Services;
+using KameRequest.Clases;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,7 +8,7 @@ using MySqlConnector;
 
 namespace KameRequest.Pages.Reportes
 {
-    public class TareasPorUsuarioModel(IConfiguration configuration, BitacoraService bitacora) : PageModel
+    public class TareasPorUsuarioModel(IConfiguration configuration, BitacoraRegistro bitacora) : PageModel
     {
         [BindProperty(SupportsGet = true)]
         public string? UsuarioSeleccionado { get; set; }

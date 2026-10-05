@@ -1,5 +1,4 @@
 using KameRequest.Clases;
-using KameRequest.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();// Habilita las paginas Razor del proyecto
 builder.Services.AddScoped<UsuarioSeguridad>();// La clase se puede usar en las paginas para trabajar usuarios y seguridad
-builder.Services.AddScoped<BitacoraService>();// Servicio de auditoria y registro de errores tecnicos
+builder.Services.AddScoped<BitacoraRegistro>();// Servicio de auditoria y registro de errores tecnicos
 builder.Services
     // Se usa una cookie para recordar la sesion del usuario
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -50,7 +49,7 @@ app.Use(async (contexto, siguiente) =>
     {
         try
         {
-            var bitacora = contexto.RequestServices.GetRequiredService<BitacoraService>();
+            var bitacora = contexto.RequestServices.GetRequiredService<BitacoraRegistro>();
             bitacora.RegistrarErrorTecnico(contexto.User, contexto.Request.Path, excepcion);
         }
         catch

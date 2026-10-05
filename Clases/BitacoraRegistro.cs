@@ -4,10 +4,10 @@ using Dapper;
 using KameRequest.Models;
 using MySqlConnector;
 
-namespace KameRequest.Services;
+namespace KameRequest.Clases;
 
 // Guarda y consulta acciones importantes realizadas en el sistema.
-public class BitacoraService(IConfiguration configuracion)
+public class BitacoraRegistro(IConfiguration configuracion)
 {
     private static readonly JsonSerializerOptions OpcionesJson = new()
     {

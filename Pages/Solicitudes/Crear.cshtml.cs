@@ -1,6 +1,6 @@
 using Dapper;
 using KameRequest.Models;
-using KameRequest.Services;
+using KameRequest.Clases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,7 +11,7 @@ namespace KameRequest.Pages.Solicitudes;
 [Authorize]
 public class CrearModel(
     IConfiguration configuracion,
-    BitacoraService bitacora) : PageModel
+    BitacoraRegistro bitacora) : PageModel
 {
     [BindProperty]
     public Solicitud Solicitud { get; set; } = new();
