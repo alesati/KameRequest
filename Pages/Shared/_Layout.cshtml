@@ -21,35 +21,54 @@
     @if (User.Identity?.IsAuthenticated == true)
     {
         <div class="app-shell">
-            <aside class="sidebar">
+            <aside id="menuLateral" class="sidebar">
                 <a asp-page="/Index" class="brand">
                     <img src="~/img/logo-kamerequest.png" alt="KameRequest" />
                     <span>KameRequest</span>
                 </a>
                 <nav class="sidebar-nav" aria-label="Menu principal">
-    <a asp-page="/Index" class="nav-link @ClaseActual("/Index")">
-        <span class="nav-icon" aria-hidden="true">⌂</span><span>Inicio</span>
-    </a>
-    <span class="menu-title">GESTIÓN</span>
-    <a asp-page="/Solicitudes/Index" class="nav-link @ClaseActual("/Solicitudes")">
-        <span class="nav-icon" aria-hidden="true">▤</span><span>Solicitudes</span><span class="nav-arrow" aria-hidden="true">›</span>
-    </a>
-    <span class="menu-title">MANTENIMIENTOS</span>
-    <a asp-page="/Mantenimientos/Index" class="nav-link @ClaseActual("/Mantenimientos")">
-        <span class="nav-icon" aria-hidden="true">⚙</span><span>Mantenimientos</span><span class="nav-arrow" aria-hidden="true">›</span>
-    </a>
-    <span class="menu-title">REPORTE DE TAREAS</span>
-    <a asp-page="/Reportes/TareasPorUsuario" class="nav-link @ClaseActual("/Reportes/TareasPorUsuario")">
-        <span class="nav-icon" aria-hidden="true">▥</span><span>Tareas por Usuario</span><span class="nav-arrow" aria-hidden="true">›</span>
-    </a>
-    <a asp-page="/Reportes/TareasPorSolicitud" class="nav-link @ClaseActual("/Reportes/TareasPorSolicitud")">
-        <span class="nav-icon" aria-hidden="true">▥</span><span>Tareas por Solicitud</span><span class="nav-arrow" aria-hidden="true">›</span>
-    </a>
+                    <a asp-page="/Index" class="nav-link @ClaseActual("/Index")">
+                        <span class="nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M3 12 12 4l9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" /></svg>
+                        </span>
+                        <span>Inicio</span>
+                    </a>
+                    <span class="menu-title">GESTIÓN</span>
+                    <a asp-page="/Solicitudes/Index" class="nav-link @ClaseActual("/Solicitudes")">
+                        <span class="nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm8 1v4h4M8 11h8v2H8zm0 4h8v2H8zm0 4h5v-2H8z" /></svg>
+                        </span>
+                        <span>Solicitudes</span><span class="nav-arrow" aria-hidden="true">›</span>
+                    </a>
+                    <span class="menu-title">MANTENIMIENTOS</span>
+                    <a asp-page="/Mantenimientos/Index" class="nav-link @ClaseActual("/Mantenimientos")">
+                        <span class="nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="m21 7-4-4-3 3 4 4zM3 21l5-1 10-10-4-4L4 16zm2.5-3.6 9.2-9.2 1.3 1.3-9.2 9.2-1.8.4z" /></svg>
+                        </span>
+                        <span>Mantenimientos</span><span class="nav-arrow" aria-hidden="true">›</span>
+                    </a>
+                    <span class="menu-title">REPORTE DE TAREAS</span>
+                    <a asp-page="/Reportes/TareasPorUsuario" class="nav-link @ClaseActual("/Reportes/TareasPorUsuario")">
+                        <span class="nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 20h16v2H2V4h2zm3-3H5v-5h2zm5 0h-2V7h2zm5 0h-2V3h2z" /></svg>
+                        </span>
+                        <span>Tareas por Usuario</span><span class="nav-arrow" aria-hidden="true">›</span>
+                    </a>
+                    <a asp-page="/Reportes/TareasPorSolicitud" class="nav-link @ClaseActual("/Reportes/TareasPorSolicitud")">
+                        <span class="nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 3h16v18H4zm3 4v2h2V7zm4 0v2h6V7zM7 11v2h2v-2zm4 0v2h6v-2zM7 15v2h2v-2zm4 0v2h6v-2z" /></svg>
+                        </span>
+                        <span>Tareas por Solicitud</span><span class="nav-arrow" aria-hidden="true">›</span>
+                    </a>
                 </nav>
             </aside>
+            <button type="button" class="menu-backdrop" aria-label="Cerrar menu"></button>
             <div class="main-area">
                 <header class="topbar">
-                    <div></div>
+                    <button type="button" class="menu-toggle" aria-label="Abrir menu" aria-controls="menuLateral" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z" /></svg>
+                        <span>Menu</span>
+                    </button>
                     <div class="user-info">
                         <span class="avatar" aria-label="Avatar del usuario">
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z" /></svg>
@@ -67,6 +86,22 @@
         <main>@RenderBody()</main>
     }
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Abre y cierra el menu lateral en pantallas pequeñas
+        const menuLateral = document.querySelector('.sidebar');
+        const botonMenu = document.querySelector('.menu-toggle');
+        const fondoMenu = document.querySelector('.menu-backdrop');
+
+        function cambiarMenu(abrir) {
+            menuLateral?.classList.toggle('menu-open', abrir);
+            document.body.classList.toggle('menu-activo', abrir);
+            botonMenu?.setAttribute('aria-expanded', abrir.toString());
+        }
+
+        botonMenu?.addEventListener('click', () => cambiarMenu(!menuLateral?.classList.contains('menu-open')));
+        fondoMenu?.addEventListener('click', () => cambiarMenu(false));
+        document.querySelectorAll('.sidebar-nav a').forEach(enlace => enlace.addEventListener('click', () => cambiarMenu(false)));
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

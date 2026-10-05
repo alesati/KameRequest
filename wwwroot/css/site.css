@@ -180,6 +180,12 @@ h1, h2, h3 { color: var(--azul); }
     line-height: 1;
 }
 
+.nav-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
 .topbar {
     box-sizing: border-box;
     padding: .75rem 1.75rem;
@@ -280,4 +286,402 @@ h1, h2, h3 { color: var(--azul); }
     .sidebar-nav { display: grid; }
     .sidebar-nav .nav-link { padding: .7rem; border: 1px solid rgba(255, 255, 255, .13); border-radius: .4rem; }
     .sidebar-nav .nav-link:hover, .sidebar-nav .nav-link.active { padding-left: .7rem; }
+}
+
+/* Colores propios para solicitudes, tareas, desgloses y reportes */
+.solicitudes-page .card,
+.reportes-page .card {
+    border: 1px solid var(--borde);
+    box-shadow: 0 5px 16px rgba(16, 45, 84, .07);
+}
+
+.solicitudes-page .card-header,
+.reportes-page .card-header,
+.solicitudes-page .modal-header {
+    background: var(--azul) !important;
+    color: #fff;
+}
+
+.solicitudes-page .btn-success,
+.solicitudes-page .btn-info,
+.reportes-page .btn-info {
+    background: var(--turquesa);
+    border-color: var(--turquesa);
+    color: #fff;
+}
+
+.solicitudes-page .btn-warning {
+    background: var(--naranja);
+    border-color: var(--naranja);
+    color: #fff;
+}
+
+.solicitudes-page .btn-outline-primary {
+    border-color: var(--turquesa);
+    color: var(--turquesa);
+}
+
+.solicitudes-page .btn-outline-primary:hover {
+    background: var(--turquesa);
+    border-color: var(--turquesa);
+    color: #fff;
+}
+
+.solicitudes-page .btn-outline-danger {
+    border-color: var(--rosa);
+    color: #b83662;
+}
+
+.solicitudes-page .btn-outline-danger:hover {
+    background: var(--rosa);
+    border-color: var(--rosa);
+    color: var(--azul);
+}
+
+.solicitudes-page .table > thead > tr > th,
+.reportes-page .table > thead > tr > th {
+    background: var(--azul) !important;
+    color: #fff;
+    border-color: var(--azul);
+}
+
+.solicitudes-page .table-secondary,
+.solicitudes-page .table-light,
+.reportes-page .table-secondary {
+    --bs-table-bg: #eef6f8;
+    --bs-table-striped-bg: #e6f2f5;
+    --bs-table-color: var(--texto);
+}
+
+.solicitudes-page .badge.bg-info {
+    background: var(--turquesa) !important;
+    color: #fff !important;
+}
+
+.solicitudes-page .table-warning {
+    --bs-table-bg: #fff1df;
+}
+
+.solicitudes-page .table-success {
+    --bs-table-bg: #e4f7f1;
+}
+
+.solicitudes-page .table-danger {
+    --bs-table-bg: #fde8ef;
+}
+
+.reportes-page .table-info {
+    --bs-table-bg: #dff5f8;
+    --bs-table-color: var(--azul);
+}
+
+@media (max-width: 576px) {
+    .solicitudes-page,
+    .reportes-page {
+        padding-inline: .75rem !important;
+    }
+
+    .solicitudes-page .card-header,
+    .reportes-page .card-header {
+        gap: .5rem;
+        flex-wrap: wrap;
+    }
+}
+
+.solicitudes-page .btn-danger {
+    background: #c84f75;
+    border-color: #c84f75;
+    color: #fff;
+}
+
+.solicitudes-page .btn-danger:hover {
+    background: #ad3d61;
+    border-color: #ad3d61;
+}
+
+.solicitudes-page .text-primary,
+.reportes-page .text-primary {
+    color: var(--turquesa) !important;
+}
+
+/* Ajustes visuales especificos de Tareas y Desglose */
+.solicitudes-page .bg-light {
+    background: #eef7f8 !important;
+    border-color: var(--borde) !important;
+}
+
+.solicitudes-page .card-header.bg-dark {
+    background: var(--azul) !important;
+}
+
+.solicitudes-page .modal-header.bg-success {
+    background: var(--turquesa) !important;
+}
+
+.solicitudes-page .modal-header.bg-primary {
+    background: var(--azul) !important;
+}
+
+.solicitudes-page .btn-success:hover,
+.solicitudes-page .btn-info:hover {
+    background: #0b92a2;
+    border-color: #0b92a2;
+    color: #fff;
+}
+
+.solicitudes-page .btn-warning:hover {
+    background: #e97818;
+    border-color: #e97818;
+    color: #fff;
+}
+
+.solicitudes-page .btn-secondary,
+.solicitudes-page .btn-outline-secondary {
+    border-color: var(--borde);
+    color: var(--texto);
+}
+
+.solicitudes-page .btn-secondary:hover,
+.solicitudes-page .btn-outline-secondary:hover {
+    background: var(--borde);
+    border-color: var(--borde);
+    color: var(--azul);
+}
+
+.solicitudes-page .table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-accent-bg: #f6fbfc;
+}
+
+.solicitudes-page .form-control:focus,
+.solicitudes-page .form-select:focus {
+    border-color: var(--turquesa);
+    box-shadow: 0 0 0 .2rem rgba(16, 173, 192, .16);
+}
+
+/* Paleta aplicada solamente a los modales de tareas y desgloses */
+#modalNuevaTarea .modal-content,
+#modalEditarTarea .modal-content,
+#modalNuevoDesglose .modal-content,
+#modalEditarDesglose .modal-content {
+    border: 1px solid var(--borde);
+    border-radius: .8rem;
+    overflow: hidden;
+}
+
+#modalNuevaTarea .modal-header,
+#modalNuevoDesglose .modal-header {
+    background: var(--turquesa) !important;
+    color: #fff;
+}
+
+#modalEditarTarea .modal-header,
+#modalEditarDesglose .modal-header {
+    background: var(--azul) !important;
+    color: #fff;
+}
+
+#modalNuevaTarea .modal-body,
+#modalEditarTarea .modal-body,
+#modalNuevoDesglose .modal-body,
+#modalEditarDesglose .modal-body {
+    background: #fff;
+}
+
+#modalNuevaTarea .modal-footer,
+#modalEditarTarea .modal-footer,
+#modalNuevoDesglose .modal-footer,
+#modalEditarDesglose .modal-footer {
+    background: var(--fondo);
+    border-top-color: var(--borde);
+}
+
+#modalNuevaTarea .btn-success,
+#modalNuevoDesglose .btn-success {
+    background: var(--turquesa);
+    border-color: var(--turquesa);
+    color: #fff;
+}
+
+#modalEditarTarea .btn-primary,
+#modalEditarDesglose .btn-primary {
+    background: var(--naranja);
+    border-color: var(--naranja);
+    color: #fff;
+}
+
+#modalNuevaTarea .btn-secondary,
+#modalEditarTarea .btn-secondary,
+#modalNuevoDesglose .btn-secondary,
+#modalEditarDesglose .btn-secondary {
+    background: #fff;
+    border-color: var(--borde);
+    color: var(--texto);
+}
+
+/* Menu lateral responsive: estas reglas finales evitan choques entre los breakpoints anteriores */
+@media (max-width: 768px) {
+    .app-shell {
+        display: block;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        padding: .85rem 1rem 1rem;
+    }
+
+    .sidebar-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .5rem;
+        margin-top: .85rem;
+    }
+
+    .sidebar-nav .menu-title {
+        grid-column: 1 / -1;
+        margin: .65rem 0 0;
+        padding: .15rem 0 .4rem;
+    }
+
+    .sidebar-nav .nav-link {
+        min-height: 48px;
+        padding: .7rem .8rem;
+        border: 1px solid rgba(255, 255, 255, .16);
+        border-radius: .45rem;
+        white-space: normal;
+    }
+
+    .sidebar-nav .nav-link:hover,
+    .sidebar-nav .nav-link.active {
+        padding-left: .8rem;
+    }
+
+    .sidebar-nav .nav-arrow {
+        display: none;
+    }
+}
+
+@media (max-width: 560px) {
+    .sidebar {
+        padding: .75rem;
+    }
+
+    .brand {
+        justify-content: center;
+    }
+
+    .sidebar-nav {
+        grid-template-columns: 1fr;
+        gap: .35rem;
+    }
+
+    .sidebar-nav .nav-link {
+        justify-content: flex-start;
+        min-height: 44px;
+    }
+}
+
+/* En tablet y telefono el menu se abre desde el boton superior */
+.menu-toggle,
+.menu-backdrop {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .app-shell {
+        display: block;
+    }
+
+    .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 1050;
+        width: min(290px, 82vw);
+        height: 100dvh;
+        padding: 1rem;
+        overflow-y: auto;
+        transform: translateX(-105%);
+        transition: transform .25s ease;
+        box-shadow: 8px 0 24px rgba(16, 45, 84, .25);
+    }
+
+    .sidebar.menu-open {
+        transform: translateX(0);
+    }
+
+    .menu-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 1040;
+        width: 100%;
+        border: 0;
+        background: rgba(15, 23, 42, .42);
+    }
+
+    body.menu-activo .menu-backdrop {
+        display: block;
+    }
+
+    body.menu-activo {
+        overflow: hidden;
+    }
+
+    .sidebar-nav {
+        display: block;
+        margin-top: .75rem;
+    }
+
+    .sidebar-nav .menu-title {
+        display: block;
+        margin: 1rem 0 .35rem;
+    }
+
+    .sidebar-nav .nav-link {
+        justify-content: flex-start;
+        min-height: 44px;
+        margin-bottom: .25rem;
+        padding: .7rem .75rem;
+        border: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, .13);
+        border-radius: 0;
+    }
+
+    .sidebar-nav .nav-link:hover,
+    .sidebar-nav .nav-link.active {
+        padding-left: 1rem;
+    }
+
+    .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .45rem .7rem;
+        border: 1px solid var(--borde);
+        border-radius: .45rem;
+        background: #fff;
+        color: var(--azul);
+        font-size: .9rem;
+        font-weight: 600;
+    }
+
+    .menu-toggle svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
+
+    .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+        justify-content: space-between;
+        padding: .7rem 1rem;
+    }
+}
+
+/* En computadora el usuario se conserva alineado a la derecha */
+@media (min-width: 769px) {
+    .topbar {
+        justify-content: flex-end;
+    }
 }
