@@ -1,0 +1,79 @@
+@page
+@model KameRequest.Pages.Representantes.IndexModel
+@{
+    ViewData["Title"] = "Representantes";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Representantes</h1>
+        <a asp-page="Crear" class="btn btn-primary">Nuevo representante</a>
+    </div>
+
+    @if (TempData["Mensaje"] is string mensaje)
+    {
+        <div class="alert alert-success">@mensaje</div>
+    }
+    @if (TempData["Error"] is string error)
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var representante in Model.Representantes)
+                {
+                    <tr>
+                        <td>@representante.Nombre</td>
+                        <td>@representante.Email</td>
+                        <td class="text-nowrap">
+                            <a asp-page="Editar" asp-route-id="@representante.IdRepresentante" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarRepresentante-@representante.IdRepresentante">Eliminar</button>
+
+                            <div class="modal fade" id="eliminarRepresentante-@representante.IdRepresentante" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title fs-5">Eliminar representante</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                        </div>
+                                        <div class="modal-body">¿Realmente desea eliminar el elemento seleccionado?</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
+                                            <form method="post" asp-page-handler="Eliminar">
+                                                <input type="hidden" name="idRepresentante" value="@representante.IdRepresentante" />
+                                                <button type="submit" class="btn btn-danger">Sí</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.TotalPaginas > 1)
+    {
+        <nav aria-label="Paginacion de representantes">
+            <ul class="pagination">
+                @for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++)
+                {
+                    <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")">
+                        <a class="page-link" asp-route-pagina="@pagina">@pagina</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>

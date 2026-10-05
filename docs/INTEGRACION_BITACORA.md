@@ -149,6 +149,26 @@ controladas siguen siendo atendidas por el middleware global de `Program.cs`.
 | Luis | TAR1 | Read + Create/Update/Delete de tareas. |
 | Luis | TAR2/TAR3 | `RegistrarConsulta` al generar cada reporte. |
 
+## Integracion concreta de SOL3 - Representantes
+
+SOL3 reutiliza el `BitacoraService` ya registrado; no agrega tablas ni servicios de
+bitacora.
+
+- `Pages/Representantes/Index.cshtml.cs`, en `OnGet`: `bitacora.RegistrarConsulta(User, "representantes")`.
+  El listado no envia filtros ni JSON.
+- `Pages/Representantes/Crear.cshtml.cs`, despues del `INSERT` exitoso y de releer la
+  fila creada: `bitacora.RegistrarCreacion(User, "representante", nuevo)`.
+- `Pages/Representantes/Editar.cshtml.cs`: consulta el representante antes del
+  `UPDATE`, lo vuelve a consultar despues y llama
+  `bitacora.RegistrarActualizacion(User, "representante", anterior, actual)`.
+- `Pages/Representantes/Index.cshtml.cs`, en `OnPostEliminar`: consulta el
+  representante antes del `DELETE` y, solo si este elimina una fila, llama
+  `bitacora.RegistrarEliminacion(User, "representante", eliminado)`.
+
+La restriccion de llave foranea al eliminar es una regla de negocio y muestra el
+mensaje requerido; no se registra como error tecnico. Las excepciones tecnicas no
+controladas siguen siendo atendidas por el middleware global de `Program.cs`.
+
 ## Verificación antes de fusionar
 
 1. Confirmar que cada PageModel de CRUD recibe `BitacoraService`.
