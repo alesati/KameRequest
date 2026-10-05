@@ -10,6 +10,13 @@ public class Solicitud
     [Required(ErrorMessage = "El consecutivo de oficio es obligatorio.")]
     public string ConsecutivoOficio { get; set; } = string.Empty;
 
+    // Se conserva este nombre para las vistas del modulo de tareas de Luis
+    public string Consecutivo
+    {
+        get => ConsecutivoOficio;
+        set => ConsecutivoOficio = value;
+    }
+
     public string? DocumentoRespuesta { get; set; }
     public string? DocumentoInicio { get; set; }
 

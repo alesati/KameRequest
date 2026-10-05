@@ -38,9 +38,12 @@
     <a asp-page="/Mantenimientos/Index" class="nav-link @ClaseActual("/Mantenimientos")">
         <span class="nav-icon" aria-hidden="true">⚙</span><span>Mantenimientos</span><span class="nav-arrow" aria-hidden="true">›</span>
     </a>
-    <span class="menu-title">REPORTES</span>
-    <a asp-page="/Reportes/Index" class="nav-link @ClaseActual("/Reportes")">
-        <span class="nav-icon" aria-hidden="true">▥</span><span>Reportes</span><span class="nav-arrow" aria-hidden="true">›</span>
+    <span class="menu-title">REPORTE DE TAREAS</span>
+    <a asp-page="/Reportes/TareasPorUsuario" class="nav-link @ClaseActual("/Reportes/TareasPorUsuario")">
+        <span class="nav-icon" aria-hidden="true">▥</span><span>Tareas por Usuario</span><span class="nav-arrow" aria-hidden="true">›</span>
+    </a>
+    <a asp-page="/Reportes/TareasPorSolicitud" class="nav-link @ClaseActual("/Reportes/TareasPorSolicitud")">
+        <span class="nav-icon" aria-hidden="true">▥</span><span>Tareas por Solicitud</span><span class="nav-arrow" aria-hidden="true">›</span>
     </a>
                 </nav>
             </aside>

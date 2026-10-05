@@ -1,0 +1,111 @@
+﻿@page
+@model KameRequest.Pages.Reportes.TareasPorSolicitudModel
+@{
+    ViewData["Title"] = "Reporte de Tareas por Solicitud";
+}
+
+<div class="container-fluid mt-4 px-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Reporte de Tareas por Solicitud</h2>
+    </div>
+
+    <!-- FORMULARIO DE FILTROS -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Parámetros de Búsqueda</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label fw-bold">Solicitud</label>
+                    <select asp-for="IdSolicitudSeleccionada" asp-items="Model.ListaSolicitudes" class="form-select" required>
+                        <option value="">-- Seleccione una solicitud --</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Mes</label>
+                    <select asp-for="Mes" class="form-select" required>
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Año</label>
+                    <input type="number" min="2000" max="2100" asp-for="Anio" class="form-control" required />
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Generar Reporte</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TABLA DE RESULTADOS -->
+    @if (Model.BusquedaRealizada)
+    {
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Resultados para: <strong>@Model.InfoSolicitud</strong> (@Model.Mes/@Model.Anio)</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Fecha</th>
+                                <th>Consecutivo</th>
+                                <th>Título de la Solicitud</th>
+                                <th class="text-start">Descripción de la Tarea</th>
+                                <th>Horas Invertidas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ListaReporte.Any())
+                            {
+                                @foreach (var item in Model.ListaReporte)
+                                {
+                                    <tr>
+                                        <td>@item.Usuario</td>
+                                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                        <td><span class="badge bg-outline-dark text-dark border">@item.ConsecutivoOficio</span></td>
+                                        <td class="text-start fw-bold">@item.TituloSolicitud</td>
+                                        <td class="text-start">@item.Descripcion</td>
+                                        <td class="fw-bold">@item.HorasInvertidas.ToString("N2") hrs</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center py-4 text-muted">
+                                        No se encontraron tareas registradas para esta solicitud en el mes y año seleccionados.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        @if (Model.ListaReporte.Any())
+                        {
+                            <tfoot>
+                                <tr class="table-info fw-bold">
+                                    <td colspan="5" class="text-end fs-6">TOTAL HORAS INVERTIDAS POR TODOS LOS USUARIOS:</td>
+                                    <td class="fs-6 text-primary">@Model.TotalHoras.ToString("N2") hrs</td>
+                                </tr>
+                            </tfoot>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
