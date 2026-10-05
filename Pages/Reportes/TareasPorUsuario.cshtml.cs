@@ -1,5 +1,6 @@
 using Dapper;
 using KameRequest.Models;
+using KameRequest.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,15 +8,8 @@ using MySqlConnector;
 
 namespace KameRequest.Pages.Reportes
 {
-    public class TareasPorUsuarioModel : PageModel
+    public class TareasPorUsuarioModel(IConfiguration configuration, BitacoraService bitacora) : PageModel
     {
-        private readonly IConfiguration _configuration;
-
-        public TareasPorUsuarioModel(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
         [BindProperty(SupportsGet = true)]
         public string? UsuarioSeleccionado { get; set; }
 
@@ -39,12 +33,13 @@ namespace KameRequest.Pages.Reportes
             {
                 BusquedaRealizada = true;
                 CargarReporte();
+                bitacora.RegistrarConsulta(User, "reporte de tareas por usuario");
             }
         }
 
         private void CargarUsuariosConTareas()
         {
-            var conexionString = _configuration.GetConnectionString("MySql");
+            var conexionString = configuration.GetConnectionString("MySql");
 
             using (var conexion = new MySqlConnection(conexionString))
             {
@@ -68,7 +63,7 @@ namespace KameRequest.Pages.Reportes
 
         private void CargarReporte()
         {
-            var conexionString = _configuration.GetConnectionString("MySql");
+            var conexionString = configuration.GetConnectionString("MySql");
 
             using (var conexion = new MySqlConnection(conexionString))
             {
