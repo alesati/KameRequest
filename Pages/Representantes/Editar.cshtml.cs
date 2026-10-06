@@ -1,6 +1,6 @@
 using Dapper;
 using KameRequest.Models;
-using KameRequest.Services;
+using KameRequest.Clases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +9,7 @@ using MySqlConnector;
 namespace KameRequest.Pages.Representantes;
 
 [Authorize]
-public class EditarModel(IConfiguration configuracion, BitacoraService bitacora) : PageModel
+public class EditarModel(IConfiguration configuracion, BitacoraRegistro bitacora) : PageModel
 {
     [BindProperty]
     public Representante Representante { get; set; } = new();

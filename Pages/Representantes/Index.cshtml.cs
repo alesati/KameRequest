@@ -1,6 +1,6 @@
 using Dapper;
 using KameRequest.Models;
-using KameRequest.Services;
+using KameRequest.Clases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +9,7 @@ using MySqlConnector;
 namespace KameRequest.Pages.Representantes;
 
 [Authorize]
-public class IndexModel(IConfiguration configuracion, BitacoraService bitacora) : PageModel
+public class IndexModel(IConfiguration configuracion, BitacoraRegistro bitacora) : PageModel
 {
     private const int RegistrosPorPagina = 10;
 
