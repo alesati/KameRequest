@@ -1,4 +1,6 @@
-namespace KameRequest.Services;
+using KameRequest.Services;
+
+namespace KameRequest.Clases;
 
 // Ejecuta periodicamente la revision de vencimientos sin requerir un usuario autenticado.
 public class ProcesoVencimientoBackgroundService(IServiceScopeFactory fabricaAlcances) : BackgroundService
@@ -21,7 +23,7 @@ public class ProcesoVencimientoBackgroundService(IServiceScopeFactory fabricaAlc
         using var alcance = fabricaAlcances.CreateScope();
         try
         {
-            alcance.ServiceProvider.GetRequiredService<VencimientoService>()
+            alcance.ServiceProvider.GetRequiredService<VencimientoClase>()
                 .ActualizarSolicitudesVencidas();
         }
         catch (Exception excepcion)

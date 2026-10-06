@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();// Habilita las paginas Razor del proyecto
 builder.Services.AddScoped<UsuarioSeguridad>();// La clase se puede usar en las paginas para trabajar usuarios y seguridad
 builder.Services.AddScoped<BitacoraService>();// Servicio de auditoria y registro de errores tecnicos
-builder.Services.AddScoped<VencimientoService>();// Servicio que cambia a vencidas las solicitudes sin respuesta
+builder.Services.AddScoped<VencimientoClase>();// Clase que cambia a vencidas las solicitudes sin respuesta
 builder.Services.AddHostedService<ProcesoVencimientoBackgroundService>();// Proceso automatico de vencimientos
 builder.Services
     // Se usa una cookie para recordar la sesion del usuario
