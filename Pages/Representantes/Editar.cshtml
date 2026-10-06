@@ -1,0 +1,28 @@
+@page "{id:int}"
+@model KameRequest.Pages.Representantes.EditarModel
+@{
+    ViewData["Title"] = "Editar representante";
+}
+
+<div class="container py-4">
+    <h1>Editar representante</h1>
+
+    <form method="post" class="card card-body">
+        <input asp-for="Representante.IdRepresentante" type="hidden" />
+
+        <div class="mb-3">
+            <label asp-for="Representante.Nombre" class="form-label">Nombre</label>
+            <input asp-for="Representante.Nombre" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Representante.Email" class="form-label">Email</label>
+            <input asp-for="Representante.Email" class="form-control" />
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Regresar al listado</a>
+        </div>
+    </form>
+</div>

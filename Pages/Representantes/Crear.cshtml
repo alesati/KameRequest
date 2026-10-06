@@ -1,0 +1,26 @@
+@page
+@model KameRequest.Pages.Representantes.CrearModel
+@{
+    ViewData["Title"] = "Nuevo representante";
+}
+
+<div class="container py-4">
+    <h1>Nuevo representante</h1>
+
+    <form method="post" class="card card-body">
+        <div class="mb-3">
+            <label asp-for="Representante.Nombre" class="form-label">Nombre</label>
+            <input asp-for="Representante.Nombre" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Representante.Email" class="form-label">Email</label>
+            <input asp-for="Representante.Email" class="form-control" />
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Regresar al listado</a>
+        </div>
+    </form>
+</div>
