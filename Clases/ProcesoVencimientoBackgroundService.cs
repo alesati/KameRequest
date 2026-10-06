@@ -1,4 +1,3 @@
-using KameRequest.Services;
 
 namespace KameRequest.Clases;
 
@@ -30,7 +29,7 @@ public class ProcesoVencimientoBackgroundService(IServiceScopeFactory fabricaAlc
         {
             try
             {
-                alcance.ServiceProvider.GetRequiredService<BitacoraService>()
+                alcance.ServiceProvider.GetRequiredService<BitacoraRegistro>()
                     .RegistrarErrorTecnicoSistema("proceso de vencimiento", excepcion);
             }
             catch

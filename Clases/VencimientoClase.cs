@@ -1,13 +1,12 @@
 using System.Text.Json;
 using Dapper;
 using KameRequest.Models;
-using KameRequest.Services;
 using MySqlConnector;
 
 namespace KameRequest.Clases;
 
 // Actualiza las solicitudes sin respuesta que ya cumplieron cinco dias calendario.
-public class VencimientoClase(IConfiguration configuracion, BitacoraService bitacora)
+public class VencimientoClase(IConfiguration configuracion, BitacoraRegistro bitacora)
 {
     public void ActualizarSolicitudesVencidas()
     {
