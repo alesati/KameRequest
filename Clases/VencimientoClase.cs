@@ -5,7 +5,7 @@ using MySqlConnector;
 
 namespace KameRequest.Clases;
 
-// Actualiza las solicitudes sin respuesta que ya cumplieron cinco dias calendario.
+// Actualiza solicitudes sin respuesta cuando ya cumplieron cinco dias habiles.
 public class VencimientoClase(IConfiguration configuracion, BitacoraRegistro bitacora)
 {
     public void ActualizarSolicitudesVencidas()
@@ -32,9 +32,10 @@ public class VencimientoClase(IConfiguration configuracion, BitacoraRegistro bit
             INNER JOIN EstadosSolicitud e ON e.IdEstado = s.IdEstado
             LEFT JOIN Representantes r ON r.IdRepresentante = s.IdRepresentante
             WHERE s.FechaRespuesta IS NULL
-              AND s.FechaIngreso <= DATE_SUB(CURDATE(), INTERVAL 5 DAY)
               AND s.IdEstado <> @idEstadoVencida;
-            """, new { idEstadoVencida }).ToList();
+            """, new { idEstadoVencida })
+            .Where(solicitud => AgregarDiasHabiles(solicitud.FechaIngreso, 5) <= DateTime.Today)
+            .ToList();
 
         foreach (var solicitud in solicitudes)
         {
@@ -44,7 +45,6 @@ public class VencimientoClase(IConfiguration configuracion, BitacoraRegistro bit
                 SET IdEstado = @idEstadoVencida
                 WHERE IdSolicitud = @idSolicitud
                   AND FechaRespuesta IS NULL
-                  AND FechaIngreso <= DATE_SUB(CURDATE(), INTERVAL 5 DAY)
                   AND IdEstado <> @idEstadoVencida;
                 """, new { idEstadoVencida, idSolicitud = solicitud.IdSolicitud });
 
@@ -61,6 +61,23 @@ public class VencimientoClase(IConfiguration configuracion, BitacoraRegistro bit
         }
     }
 
+    // Suma dias de lunes a viernes para usar el mismo criterio del listado.
+    private static DateTime AgregarDiasHabiles(DateTime fechaIngreso, int cantidadDias)
+    {
+        var fecha = fechaIngreso.Date;
+        var diasAgregados = 0;
+
+        while (diasAgregados < cantidadDias)
+        {
+            fecha = fecha.AddDays(1);
+            if (fecha.DayOfWeek is not DayOfWeek.Saturday and not DayOfWeek.Sunday)
+            {
+                diasAgregados++;
+            }
+        }
+
+        return fecha;
+    }
     private static Solicitud CopiarSolicitud(Solicitud solicitud) => new()
     {
         IdSolicitud = solicitud.IdSolicitud,
