@@ -1,13 +1,14 @@
-USE kamerequest;
-
-CREATE TABLE IF NOT EXISTS Bitacoras (
-    IdBitacora INT NOT NULL AUTO_INCREMENT,
-    Fecha DATETIME NOT NULL,
+CREATE TABLE dbo.Bitacoras
+(
+    IdBitacora INT IDENTITY(1,1) NOT NULL,
+    Fecha DATETIME2 NOT NULL CONSTRAINT DF_Bitacoras_Fecha DEFAULT GETDATE(),
     IdUsuario INT NULL,
-    Descripcion TEXT NOT NULL,
-    PRIMARY KEY (IdBitacora),
-    INDEX ix_bitacoras_fecha (Fecha),
-    CONSTRAINT fk_bitacoras_usuario
-        FOREIGN KEY (IdUsuario) REFERENCES Usuarios (IdUsuario)
-        ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB;
+    Descripcion VARCHAR(MAX) NOT NULL,
+
+    CONSTRAINT PK_Bitacoras PRIMARY KEY (IdBitacora),
+    CONSTRAINT FK_Bitacoras_Usuario
+        FOREIGN KEY (IdUsuario) REFERENCES dbo.Usuarios (IdUsuario)
+);
+
+CREATE INDEX IX_Bitacoras_Fecha ON dbo.Bitacoras (Fecha DESC);
+

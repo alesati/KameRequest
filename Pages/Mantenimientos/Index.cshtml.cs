@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KameRequest.Pages.Mantenimientos;
 
-[Authorize(Roles = "Administrador")]
+[Authorize]
 // Pagina principal de los catalogos que solo puede abrir un administrador
 public class IndexModel : PageModel
 {
@@ -12,3 +12,4 @@ public class IndexModel : PageModel
     {
     }
 }
+

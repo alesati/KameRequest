@@ -5,3 +5,9 @@ obj/
 .nuget/
 appsettings.Development.json
 appsettings.json
+
+*.csproj.user
+*.bak
+output/
+tmp/
+publish/

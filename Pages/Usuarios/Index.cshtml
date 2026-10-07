@@ -26,7 +26,6 @@
                     <th>Nombre</th>
                     <th>Usuario</th>
                     <th>Correo</th>
-                    <th>Tipo</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
@@ -38,7 +37,6 @@
                         <td>@usuario.NombreCompleto</td>
                         <td>@usuario.NombreUsuario</td>
                         <td>@usuario.Correo</td>
-                        <td>@usuario.TipoUsuario</td>
                         <td>
                             <form method="post" asp-page-handler="CambiarEstado">
                                 <input type="hidden" name="idUsuario" value="@usuario.IdUsuario" />
@@ -94,4 +92,5 @@
 
     <a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary mt-2">Regresar a mantenimientos</a>
 </div>
+
 

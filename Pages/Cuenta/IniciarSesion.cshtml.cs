@@ -48,10 +48,7 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bit
             };
             var identidad = new ClaimsIdentity(datosUsuario, CookieAuthenticationDefaults.AuthenticationScheme);
             // Crea la cookie que permite navegar por las paginas protegidas
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identidad));
-
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identidad));
             bitacora.Registrar(usuario.IdUsuario, "Inicio de sesion exitoso.");
             return RedirectToPage("/Index");
         }
@@ -72,5 +69,3 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bit
         _ => "Usuario o contraseña incorrectos"
     };
 }
-
-

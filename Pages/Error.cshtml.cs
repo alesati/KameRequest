@@ -11,12 +11,10 @@ public class ErrorModel : PageModel
 {
     // Identificador util para revisar un error especifico en los registros
     public string? RequestId { get; set; }
-
     // Solo muestra el identificador si se logro obtener uno
     public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
     private readonly ILogger<ErrorModel> _logger;
-
     public ErrorModel(ILogger<ErrorModel> logger)
     {
         _logger = logger;
@@ -28,4 +26,3 @@ public class ErrorModel : PageModel
         RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
     }
 }
-

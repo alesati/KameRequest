@@ -5,7 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.79" />
-    <PackageReference Include="MySqlConnector" Version="2.6.2" />
+    <!-- Los modelos y repositorios se compilan en sus propios proyectos. -->
+    <Compile Remove="Models\**\*.cs" />
+    <Compile Remove="KameRequest.Entities\**\*.cs" />
+    <Compile Remove="KameRequest.Repository\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="KameRequest.Entities\KameRequest.Entities.csproj" />
+    <ProjectReference Include="KameRequest.Repository\KameRequest.Repository.csproj" />
   </ItemGroup>
 </Project>

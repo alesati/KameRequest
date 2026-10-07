@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KameRequest.Pages.Usuarios;
 
-[Authorize(Roles = "Administrador")]
+[Authorize]
 public class IndexModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
 {
     // Cantidad de registros que se muestran por pagina
@@ -74,16 +74,17 @@ public class IndexModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) :
 
     private static object? DatosBitacora(UsuarioFormulario? usuario)
     {
-        if (usuario is null) return null;
-
+        if (usuario is null)
+            return null;
         return new
         {
             usuario.IdUsuario,
             usuario.NombreCompleto,
             usuario.NombreUsuario,
             usuario.Correo,
-            usuario.TipoUsuario,
             usuario.Estado
         };
     }
 }
+
+
