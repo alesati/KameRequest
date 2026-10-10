@@ -6,7 +6,7 @@ using MySqlConnector;
 namespace KameRequest.Clases;
 
 // Actualiza solicitudes sin respuesta cuando ya cumplieron cinco dias habiles.
-public class VencimientoClase(IConfiguration configuracion, BitacoraRegistro bitacora)
+public class VencimientoClase(IConfiguration configuracion, BitacoraRegistro bitacora,    NotificacionesCorreos notificaciones)
 {
     public void ActualizarSolicitudesVencidas()
     {
@@ -36,7 +36,7 @@ public class VencimientoClase(IConfiguration configuracion, BitacoraRegistro bit
             """, new { idEstadoVencida })
             .Where(solicitud => AgregarDiasHabiles(solicitud.FechaIngreso, 5) <= DateTime.Today)
             .ToList();
-
+        
         foreach (var solicitud in solicitudes)
         {
             var anterior = CopiarSolicitud(solicitud);
@@ -58,6 +58,10 @@ public class VencimientoClase(IConfiguration configuracion, BitacoraRegistro bit
             bitacora.RegistrarSistema(
                 $"Actualizo solicitud por vencimiento. Anterior: {JsonSerializer.Serialize(anterior)}. " +
                 $"Actual: {JsonSerializer.Serialize(solicitud)}");
+
+            //notifica por correo el cambio automatico
+           notificaciones.EnviarCorreoCambioEstadoAuto(solicitud.IdSolicitud);
+            
         }
     }
 

@@ -1,17 +1,21 @@
 using Dapper;
-using KameRequest.Models;
 using KameRequest.Clases;
+using KameRequest.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySqlConnector;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Claims;
 
 namespace KameRequest.Pages.Solicitudes;
 
 [Authorize]
 public class EditarModel(
     IConfiguration configuracion,
-    BitacoraRegistro bitacora) : PageModel
+    BitacoraRegistro bitacora,
+    NotificacionesCorreos notificaciones) : PageModel
 {
     [BindProperty]
     public Solicitud Solicitud { get; set; } = new();
@@ -27,7 +31,7 @@ public class EditarModel(
         return Solicitud.IdSolicitud == 0 ? NotFound() : Page();
     }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPost()
     {
         using var conexion = CrearConexion();
         CargarCatalogos(conexion);
@@ -74,6 +78,21 @@ public class EditarModel(
 
         var actual = ObtenerSolicitud(conexion, Solicitud.IdSolicitud)!;
         bitacora.RegistrarActualizacion(User, "solicitud", anterior, actual);
+
+        if ((actual.Estado ?? "") != (anterior.Estado ?? ""))
+        {
+            
+            //se extrae el correo del representante del listado
+            var representante = Representantes.FirstOrDefault(r => r.IdRepresentante == actual.IdRepresentante);
+
+            //se extrae el nombre del estado actual y el anterior porque asi los recibe el metodo de notificacion.
+            var estadoanterior = Estados.FirstOrDefault(e => e.IdEstado == anterior.IdEstado)?.Nombre ?? anterior.Estado ?? "Desconocido";
+            var estadonuevo = Estados.FirstOrDefault(e => e.IdEstado == actual.IdEstado)?.Nombre ?? actual.Estado ?? "Desconocido";
+            if (!string.IsNullOrWhiteSpace(representante?.Email))
+            {
+                notificaciones.EnviarCorreoCambioEstadoManual(User, representante.Email , estadoanterior, estadonuevo, Solicitud.Consecutivo);
+            }
+        }
 
         TempData["Mensaje"] = "La solicitud se actualizo correctamente.";
         return RedirectToPage("Index");

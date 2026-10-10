@@ -9,6 +9,7 @@ builder.Services.AddScoped<UsuarioSeguridad>();// La clase se puede usar en las 
 builder.Services.AddScoped<BitacoraRegistro>();// Clase que guarda las acciones importantes y errores tecnicos
 builder.Services.AddScoped<VencimientoClase>();// Clase que revisa las solicitudes que deben pasar a vencida
 builder.Services.AddHostedService<ProcesoVencimientoBackgroundService>();// Proceso que ejecuta la revision de vencimientos
+builder.Services.AddScoped<NotificacionesCorreos>();
 builder.Services
     // Se usa una cookie para recordar la sesion del usuario
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
