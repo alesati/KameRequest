@@ -1,3 +1,4 @@
+// consultas de base de datos para este modulo
 using Dapper;
 using KameRequest.Models;
 
@@ -64,4 +65,5 @@ public class ReporteRepository(IDbConnectionFactory conexiones)
         return conexion.Query<Rpt_FacturacionMes>(sql, new { mes, anio }).ToList();
     }
 }
+
 

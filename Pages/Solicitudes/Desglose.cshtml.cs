@@ -1,3 +1,4 @@
+// logica de la pantalla Desglose.cshtml
 using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
@@ -86,4 +87,5 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
 
     private static bool DatosValidos(DesgloseSolicitud d) => d.Mes is >= 1 and <= 12 && d.Anio is >= 1000 and <= 9999 && d.Horas >= 0 && d.Monto >= 0 && d.PorcentajeCobro is >= 0 and <= 100;
 }
+
 

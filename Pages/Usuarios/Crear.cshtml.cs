@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Usuarios;
 
 [Authorize]
+// recibe los datos para crear una cuenta nueva
 public class CrearModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
 {
     // Se llena con los valores escritos en el formulario
@@ -43,5 +44,6 @@ public class CrearModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) :
         usuario.Estado
     };
 }
+
 
 

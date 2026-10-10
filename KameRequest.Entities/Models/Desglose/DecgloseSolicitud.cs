@@ -16,3 +16,4 @@ namespace KameRequest.Models
         public string? Observaciones { get; set; }
     }
 }
+

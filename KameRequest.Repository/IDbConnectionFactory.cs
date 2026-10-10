@@ -10,6 +10,7 @@ public interface IDbConnectionFactory
     IDbConnection CreateConnection();
 }
 
+// crea conexiones MySql para que los repositorios las usen
 public class MySqlConnectionFactory(IConfiguration configuracion) : IDbConnectionFactory
 {
     public IDbConnection CreateConnection()
@@ -20,3 +21,4 @@ public class MySqlConnectionFactory(IConfiguration configuracion) : IDbConnectio
         return new MySqlConnection(cadena);
     }
 }
+

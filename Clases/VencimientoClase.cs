@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+// reglas que se usan en esta parte del sistema
+using System.Text.Json;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
 
@@ -59,3 +60,4 @@ public class VencimientoClase(
         Representante = s.Representante
     };
 }
+

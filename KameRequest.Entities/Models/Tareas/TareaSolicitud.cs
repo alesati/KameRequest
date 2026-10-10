@@ -1,3 +1,4 @@
+// datos que usa esta parte del sistema
 using System.ComponentModel.DataAnnotations;
 
 namespace KameRequest.Models
@@ -16,3 +17,4 @@ namespace KameRequest.Models
         public decimal HorasInvertidas { get; set; }
     }
 }
+

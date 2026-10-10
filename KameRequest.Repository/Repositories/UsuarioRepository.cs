@@ -1,3 +1,4 @@
+// consultas de base de datos para este modulo
 using Dapper;
 using KameRequest.Models;
 
@@ -155,4 +156,5 @@ public class UsuarioRepository(IDbConnectionFactory conexiones)
         return conexion.Execute("DELETE FROM Usuarios WHERE IdUsuario = @idUsuario;", new { idUsuario });
     }
 }
+
 

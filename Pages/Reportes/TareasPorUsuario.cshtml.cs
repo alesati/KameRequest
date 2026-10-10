@@ -1,3 +1,4 @@
+// logica de la pantalla TareasPorUsuario.cshtml
 using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
@@ -35,4 +36,5 @@ public class TareasPorUsuarioModel(ReporteRepository reportes, BitacoraRegistro 
         }
     }
 }
+
 

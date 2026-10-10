@@ -1,4 +1,5 @@
-﻿using KameRequest.Clases;
+// logica de la pantalla Editar.cshtml
+using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -59,3 +60,4 @@ public class EditarModel(
         Estados = solicitudes.ListarEstados();
     }
 }
+

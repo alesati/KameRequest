@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KameRequest.Pages.Cuenta;
 
+// recibe y valida el acceso al sistema
 public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
 {
     // Recibe los datos que el usuario escribe en el formulario
@@ -71,5 +72,6 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bit
         _ => "Usuario y/o contraseña incorrectos."
     };
 }
+
 
 

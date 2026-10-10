@@ -1,3 +1,4 @@
+// logica de la pantalla Editar.cshtml
 using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
@@ -30,3 +31,4 @@ public class EditarModel(RepresentanteRepository representantes, BitacoraRegistr
         return RedirectToPage("Index");
     }
 }
+

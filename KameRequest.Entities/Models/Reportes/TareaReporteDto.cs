@@ -1,3 +1,4 @@
+// datos que usa esta parte del sistema
 namespace KameRequest.Models
 {
     public class TareaReporteDto
@@ -10,3 +11,4 @@ namespace KameRequest.Models
         public string TituloSolicitud { get; set; } = string.Empty;
     }
 }
+

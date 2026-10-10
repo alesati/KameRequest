@@ -1,3 +1,4 @@
+// logica de la pantalla Tarea.cshtml
 using System.Security.Claims;
 using KameRequest.Clases;
 using KameRequest.Models;
@@ -92,3 +93,4 @@ public class TareasModel(SolicitudRepository solicitudes, TareaRepository tareas
         return true;
     }
 }
+

@@ -1,3 +1,4 @@
+// consultas de base de datos para este modulo
 using Dapper;
 using KameRequest.Models;
 
@@ -63,4 +64,5 @@ public class DesgloseRepository(IDbConnectionFactory conexiones)
         return conexion.Execute("DELETE FROM DesglosesSolicitud WHERE IdDesglose = @id;", new { id });
     }
 }
+
 

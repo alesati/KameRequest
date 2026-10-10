@@ -1,3 +1,4 @@
+// logica de la pantalla Index.cshtml
 using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
@@ -44,4 +45,5 @@ public class IndexModel(RepresentanteRepository representantes, BitacoraRegistro
         return RedirectToPage();
     }
 }
+
 

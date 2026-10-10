@@ -15,6 +15,7 @@ public enum ResultadoAcceso
 }
 
 // Contiene reglas de seguridad; las consultas se realizan en UsuarioRepository.
+// contiene las reglas para login, bloqueo y contraseñas
 public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository usuarios)
 {
     public void CrearAdministradorInicialSiHaceFalta()
@@ -158,4 +159,5 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
         return Encoding.UTF8.GetString(texto);
     }
 }
+
 

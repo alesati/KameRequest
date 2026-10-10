@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Usuarios;
 
 [Authorize]
+// carga y actualiza los datos de una cuenta
 public class EditarModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
 {
     // Contiene los datos del usuario que se va a modificar
@@ -54,5 +55,6 @@ public class EditarModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) 
         };
     }
 }
+
 
 

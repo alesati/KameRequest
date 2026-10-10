@@ -1,3 +1,4 @@
+// consultas de base de datos para este modulo
 using Dapper;
 using KameRequest.Models;
 
@@ -133,5 +134,6 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.Query<Solicitud>(sql).ToList();
     }
 }
+
 
 

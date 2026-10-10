@@ -1,3 +1,4 @@
+// logica de la pantalla Index.cshtml
 using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
@@ -58,4 +59,5 @@ public class IndexModel(SolicitudRepository solicitudes, BitacoraRegistro bitaco
         return fecha;
     }
 }
+
 

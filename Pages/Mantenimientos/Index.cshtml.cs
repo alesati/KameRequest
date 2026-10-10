@@ -5,6 +5,7 @@ namespace KameRequest.Pages.Mantenimientos;
 
 [Authorize]
 // Pagina principal de los catalogos que solo puede abrir un administrador
+// muestra la pantalla principal de mantenimientos
 public class IndexModel : PageModel
 {
     // Por ahora la vista no necesita consultar datos antes de mostrarse
@@ -12,4 +13,5 @@ public class IndexModel : PageModel
     {
     }
 }
+
 

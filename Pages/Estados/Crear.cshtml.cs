@@ -1,3 +1,4 @@
+// logica de la pantalla Crear.cshtml
 using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
@@ -21,3 +22,4 @@ public class CrearModel(EstadoRepository estados, BitacoraRegistro bitacora) : P
         return RedirectToPage("Index");
     }
 }
+

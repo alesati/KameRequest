@@ -1,3 +1,4 @@
+// logica de la pantalla FacturacionMes.cshtml
 using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
@@ -28,3 +29,4 @@ public class FacturacionMesModel(ReporteRepository reportes, BitacoraRegistro bi
         bitacora.RegistrarConsulta(User, "reporte de facturacion mensual");
     }
 }
+

@@ -1,3 +1,4 @@
+// logica de la pantalla TareasPorSolicitud.cshtml
 using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
@@ -37,4 +38,5 @@ public class TareasPorSolicitudModel(SolicitudRepository solicitudes, ReporteRep
         }
     }
 }
+
 

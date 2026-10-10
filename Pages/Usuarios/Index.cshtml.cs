@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Usuarios;
 
 [Authorize]
+// lista usuarios y permite cambiar su estado
 public class IndexModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
 {
     // Cantidad de registros que se muestran por pagina
@@ -86,5 +87,6 @@ public class IndexModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) :
         };
     }
 }
+
 
 

@@ -6,6 +6,7 @@ using KameRequest.Repository.Repositories;
 namespace KameRequest.Clases;
 
 // Forma los mensajes de auditoria; BitacoraRepository es quien guarda en SQL Server.
+// prepara los datos que se guardan en la bitacora
 public class BitacoraRegistro(BitacoraRepository repositorio)
 {
     private static readonly JsonSerializerOptions OpcionesJson = new()
@@ -88,5 +89,6 @@ public class BitacoraRegistro(BitacoraRepository repositorio)
         return repositorio.ObtenerPagina(pagina, registrosPorPagina);
     }
 }
+
 
 

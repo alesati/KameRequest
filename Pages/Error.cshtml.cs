@@ -7,6 +7,7 @@ namespace KameRequest.Pages;
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 [IgnoreAntiforgeryToken]
 // Pagina que se usa cuando ocurre un error no controlado en la aplicacion
+// controla la pantalla que aparece ante un error no esperado
 public class ErrorModel : PageModel
 {
     // Identificador util para revisar un error especifico en los registros
@@ -26,3 +27,4 @@ public class ErrorModel : PageModel
         RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
     }
 }
+

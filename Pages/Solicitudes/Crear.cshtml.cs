@@ -1,3 +1,4 @@
+// logica de la pantalla Crear.cshtml
 using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
@@ -34,3 +35,4 @@ public class CrearModel(SolicitudRepository solicitudes, RepresentanteRepository
 
     private void CargarRepresentantes() => Representantes = representantes.Listar();
 }
+

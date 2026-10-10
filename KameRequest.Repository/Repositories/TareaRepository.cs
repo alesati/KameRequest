@@ -1,3 +1,4 @@
+// consultas de base de datos para este modulo
 using Dapper;
 using KameRequest.Models;
 
@@ -53,4 +54,5 @@ public class TareaRepository(IDbConnectionFactory conexiones)
         return conexion.Execute("DELETE FROM Tareas WHERE IdTarea = @id;", new { id });
     }
 }
+
 

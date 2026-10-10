@@ -1,3 +1,4 @@
+// consultas de base de datos para este modulo
 using Dapper;
 using KameRequest.Models;
 
@@ -28,4 +29,5 @@ public class BitacoraRepository(IDbConnectionFactory conexiones)
             """, new { registrosPorPagina, offset = (pagina - 1) * registrosPorPagina }).ToList();
     }
 }
+
 

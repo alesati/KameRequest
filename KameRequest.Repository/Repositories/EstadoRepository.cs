@@ -1,3 +1,4 @@
+// consultas de base de datos para este modulo
 using Dapper;
 using KameRequest.Models;
 
@@ -43,3 +44,4 @@ public class EstadoRepository(IDbConnectionFactory conexiones)
         return conexion.Execute("DELETE FROM EstadosSolicitud WHERE IdEstado = @idEstado;", new { idEstado });
     }
 }
+
