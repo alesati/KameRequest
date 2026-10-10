@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS Solicitudes (
     DocumentoRespuesta VARCHAR(255) NULL,
     DocumentoInicio VARCHAR(255) NULL,
     Titulo VARCHAR(200) NOT NULL,
-    MontoTotal DECIMAL(12,2) NOT NULL,
     Descripcion TEXT NOT NULL,
     IdRepresentante INT NULL,
     Observaciones TEXT NULL,
@@ -120,4 +119,6 @@ CREATE TABLE IF NOT EXISTS Bitacoras (
         FOREIGN KEY (IdUsuario) REFERENCES Usuarios (IdUsuario)
         ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB;
+
+
 

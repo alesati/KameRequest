@@ -1,4 +1,4 @@
-﻿using KameRequest.Clases;
+using KameRequest.Clases;
 using KameRequest.Repository;
 using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -13,6 +13,7 @@ builder.Services.AddScoped<SolicitudRepository>();
 builder.Services.AddScoped<DesgloseRepository>();
 builder.Services.AddScoped<TareaRepository>();
 builder.Services.AddScoped<ReporteRepository>();
+builder.Services.AddScoped<EstadoRepository>();
 builder.Services.AddScoped<UsuarioSeguridad>();
 builder.Services.AddScoped<BitacoraRegistro>();
 builder.Services.AddScoped<NotificacionesCorreos>();
@@ -22,6 +23,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 {
     opciones.LoginPath = "/Cuenta/IniciarSesion";
     opciones.AccessDeniedPath = "/Cuenta/IniciarSesion";
+    opciones.Events.OnRedirectToLogin = contexto =>
+    {
+        contexto.Response.Redirect(contexto.RedirectUri + "&mensaje=sesion");
+        return Task.CompletedTask;
+    };
 });
 
 var app = builder.Build();
@@ -50,3 +56,5 @@ app.Use(async (contexto, siguiente) =>
 });
 app.MapRazorPages();
 app.Run();
+
+

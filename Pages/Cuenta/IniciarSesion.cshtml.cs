@@ -14,9 +14,11 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bit
     [BindProperty]
     public InicioSesion Datos { get; set; } = new();
 
-    public IActionResult OnGet()
+    public IActionResult OnGet(string? mensaje)
     {
-        // Si ya inicio sesion no se le muestra otra vez el login
+        if (mensaje == "sesion")
+            ModelState.AddModelError(string.Empty, "Por favor inicie sesión para utilizar el sistema");
+
         return User.Identity?.IsAuthenticated == true ? RedirectToPage("/Index") : Page();
     }
 
@@ -66,6 +68,8 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bit
         // Cambia el resultado interno por un mensaje que entiende el usuario
         ResultadoAcceso.UsuarioBloqueado => "El usuario se encuentra bloqueado",
         ResultadoAcceso.UsuarioInactivo => "El usuario se encuentra inactivo",
-        _ => "Usuario o contraseña incorrectos"
+        _ => "Usuario y/o contraseña incorrectos."
     };
 }
+
+

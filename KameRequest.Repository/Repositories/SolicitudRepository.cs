@@ -9,7 +9,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         SELECT s.IdSolicitud, s.ConsecutivoOficio, s.DocumentoRespuesta, s.DocumentoInicio,
                s.Titulo, s.Descripcion, s.IdRepresentante, s.Observaciones, s.IdEstado,
                s.FechaIngreso, s.FechaRespuesta, s.FechaInicio, e.Nombre AS Estado,
-               r.Nombre AS Representante
+               r.Nombre AS Representante, r.Email AS CorreoRepresentante
         FROM Solicitudes s
         INNER JOIN EstadosSolicitud e ON e.IdEstado = s.IdEstado
         LEFT JOIN Representantes r ON r.IdRepresentante = s.IdRepresentante
@@ -26,7 +26,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         using var conexion = conexiones.CreateConnection();
         const string sql = """
             SELECT s.IdSolicitud, s.ConsecutivoOficio, s.Titulo, s.IdEstado,
-                   s.FechaIngreso, e.Nombre AS Estado, r.Nombre AS Representante
+                   s.FechaIngreso, e.Nombre AS Estado, r.Nombre AS Representante, r.Email AS CorreoRepresentante
             FROM Solicitudes s
             INNER JOIN EstadosSolicitud e ON e.IdEstado = s.IdEstado
             LEFT JOIN Representantes r ON r.IdRepresentante = s.IdRepresentante
@@ -133,4 +133,5 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.Query<Solicitud>(sql).ToList();
     }
 }
+
 

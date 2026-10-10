@@ -50,4 +50,18 @@ public class ReporteRepository(IDbConnectionFactory conexiones)
             """;
         return conexion.Query<TareaReporteDto>(sql, new { idSolicitud, mes, anio }).ToList();
     }
+    public IReadOnlyList<Rpt_FacturacionMes> FacturacionPorMes(int mes, int anio)
+    {
+        using var conexion = conexiones.CreateConnection();
+        const string sql = """
+            SELECT s.ConsecutivoOficio, s.Titulo, d.Mes, d.Anio, d.Monto,
+                   d.Monto * 0.13 AS Iva, d.Monto * 1.13 AS Total
+            FROM Solicitudes s
+            INNER JOIN DesglosesSolicitud d ON d.IdSolicitud = s.IdSolicitud
+            WHERE d.Mes = @mes AND d.Anio = @anio
+            ORDER BY s.ConsecutivoOficio;
+            """;
+        return conexion.Query<Rpt_FacturacionMes>(sql, new { mes, anio }).ToList();
+    }
 }
+

@@ -1,4 +1,4 @@
-﻿@page "{id:int?}"
+@page "{id:int?}"
 @model KameRequest.Pages.Solicitudes.TareasModel
 @{
     ViewData["Title"] = "Gestión de Tareas";
@@ -73,13 +73,7 @@
                                                     onclick="abrirModalEditar(@item.IdTarea, '@item.Descripcion.Replace("'", "\\'").Replace("\r\n", " ")', '@item.Fecha.ToString("yyyy-MM-dd")', @item.HorasInvertidas.ToString(System.Globalization.CultureInfo.InvariantCulture))">
                                                 Editar
                                             </button>
-
-                                            <!-- Botón Eliminar -->
-                                            <form method="post" asp-page-handler="Eliminar" onsubmit="return confirm('¿Desea eliminar esta tarea?');">
-                                                <input type="hidden" name="idTarea" value="@item.IdTarea" />
-                                                <input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" />
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">X</button>
-                                            </form>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmarEliminarTarea(@item.IdTarea)">X</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -178,8 +172,16 @@
     </div>
 </div>
 
+<!-- MODAL PARA CONFIRMAR ELIMINACION -->
+<div class="modal fade" id="modalEliminarTarea" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Eliminar tarea</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">¿Realmente desea eliminar el elemento seleccionado?</div>
+    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button><form method="post" asp-page-handler="Eliminar"><input type="hidden" id="eliminarIdTarea" name="idTarea" /><input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" /><button class="btn btn-danger">Sí</button></form></div></div></div>
+</div>
 @section Scripts {
     <script>
+        function confirmarEliminarTarea(idTarea) { document.getElementById("eliminarIdTarea").value = idTarea; new bootstrap.Modal(document.getElementById("modalEliminarTarea")).show(); }
+
         function abrirModalEditar(idTarea, descripcion, fecha, horas) {
             document.getElementById('editIdTarea').value = idTarea;
             document.getElementById('editDescripcion').value = descripcion;
@@ -192,3 +194,5 @@
         }
     </script>
 }
+
+

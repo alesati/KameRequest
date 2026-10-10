@@ -1,12 +1,14 @@
 using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace KameRequest.Pages.Reportes;
 
+[Authorize]
 public class TareasPorSolicitudModel(SolicitudRepository solicitudes, ReporteRepository reportes, BitacoraRegistro bitacora) : PageModel
 {
     [BindProperty(SupportsGet = true)]
@@ -35,3 +37,4 @@ public class TareasPorSolicitudModel(SolicitudRepository solicitudes, ReporteRep
         }
     }
 }
+

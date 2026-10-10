@@ -31,4 +31,6 @@ public class Solicitud
     public DateTime? FechaInicio { get; set; }
     public string Estado { get; set; } = string.Empty;
     public string? Representante { get; set; }
+    public string? CorreoRepresentante { get; set; }
 }
+

@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model KameRequest.Pages.Reportes.FacturacionMesModel
 @{
     ViewData["Title"] = "Reporte de Facturacion Mensual";
@@ -69,7 +69,7 @@
                                 {
                                     <tr>
                                         <td>@item.ConsecutivoOficio</td>
-                                        <td>@item.Descripcion</td>
+                                        <td>@item.Titulo</td>
                                         <td>@item.Mes</td>
                                         <td>@item.Anio</td>
                                         <td class="fw-bold">@item.Monto.ToString("C2")</td>
@@ -81,7 +81,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="6" class="text-center py-4 text-muted">
+                                    <td colspan="7" class="text-center py-4 text-muted">
                                         No se encontró facturacion para el mes y año seleccionado.
                                     </td>
                                 </tr>
@@ -104,3 +104,4 @@
         </div>
     }
 </div>
+

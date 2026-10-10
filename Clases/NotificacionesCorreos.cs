@@ -1,14 +1,11 @@
-using Dapper;
-using KameRequest.Models;
-using MySqlConnector;
-using System.ComponentModel.DataAnnotations;
+using KameRequest.Repository.Repositories;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Security.Claims;
 namespace KameRequest.Clases;
 
-    public class NotificacionesCorreos(IConfiguration configuracion,BitacoraRegistro bitacora, IWebHostEnvironment entorno)
+    public class NotificacionesCorreos(IConfiguration configuracion, BitacoraRegistro bitacora, IWebHostEnvironment entorno, SolicitudRepository solicitudes)
     {
         public void EnviarCorreoCambioEstadoManual(ClaimsPrincipal usuario, string? destinatario,string estadoAnterior,string estadoNuevo,string consecutivo) {
         if (string.IsNullOrWhiteSpace(destinatario))
@@ -66,31 +63,15 @@ namespace KameRequest.Clases;
     {
         try
         {
-            using var conexion = CrearConexion();
-            var solicitudenviar = conexion.QueryFirstOrDefault<dynamic>("""
-                
-                    SELECT
-                    s.ConsecutivoOficio AS Consecutivo,
-                    s.FechaIngreso,
-                    r.Email AS Email
-                    FROM Solicitudes s
-                    LEFT JOIN Representantes r ON r.IdRepresentante = s.IdRepresentante
-                    WHERE s.IdSolicitud = @id;
-                
-                """, new { id = idsolicitud });
-
-            if (solicitudenviar is null)
-            {
-                return; // No se encontró la solicitud
-            }
-
-            string consecutivo = solicitudenviar.Consecutivo;
-            string? destinatario = solicitudenviar.Email;
-            if (string.IsNullOrWhiteSpace(destinatario))
+            // El repositorio busca los datos necesarios y esta clase solo se encarga del correo.
+            var solicitudEnviada = solicitudes.Obtener(idsolicitud);
+            if (solicitudEnviada is null || string.IsNullOrWhiteSpace(solicitudEnviada.CorreoRepresentante))
             {
                 return;
             }
 
+            var consecutivo = solicitudEnviada.ConsecutivoOficio;
+            var destinatario = solicitudEnviada.CorreoRepresentante;
             var consechtml = WebUtility.HtmlEncode(consecutivo);
             var anteriorhtml = WebUtility.HtmlEncode("Abierta");
             var nuevohtml = WebUtility.HtmlEncode("Vencida");
@@ -143,14 +124,19 @@ namespace KameRequest.Clases;
                 : "<div style=\"font-size:24px;font-weight:700;color:#102D54;\">KameRequest</div>";
 
 
+            var correoOrigen = configuracion["Correo:Usuario"] ?? throw new InvalidOperationException("Falta configurar Correo:Usuario");
+            var dominioCorreo = correoOrigen.Split('@').LastOrDefault() ?? "kamerequest.local";
+
             using var mensaje = new MailMessage
             {
-                From = new MailAddress(configuracion["Correo:Usuario"] ?? throw new InvalidOperationException("Falta configurar Correo:Usuario")),
+                From = new MailAddress(correoOrigen, configuracion["Correo:NombreRemitente"] ?? "KameRequest"),
                 Subject = asunto,
                 Body = cuerpo,
                 IsBodyHtml = true
             };
 
+            // Gmail pide que cada correo tenga un identificador unico en el encabezado.
+            mensaje.Headers.Add("Message-ID", $"<{Guid.NewGuid():N}@{dominioCorreo}>");
             mensaje.To.Add(destinatario);
 
             using var cliente = new SmtpClient(
@@ -183,10 +169,6 @@ namespace KameRequest.Clases;
             throw ;
         }
     }
-    private MySqlConnection CrearConexion() =>
-        new(configuracion.GetConnectionString("MySql"));
-
-
 }
 
 
@@ -196,6 +178,9 @@ namespace KameRequest.Clases;
 
 
     
+
+
+
 
 
 

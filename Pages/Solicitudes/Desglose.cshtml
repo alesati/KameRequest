@@ -1,4 +1,4 @@
-﻿@page "{id:int?}"
+@page "{id:int?}"
 @model KameRequest.Pages.Solicitudes.DesgloseModel
 @{
     ViewData["Title"] = "Gestión de Desgloses";
@@ -71,13 +71,7 @@
                                                     onclick="abrirModalEditar(@item.IdDesglose, @item.Mes, @item.Anio, @item.Horas.ToString(System.Globalization.CultureInfo.InvariantCulture), @item.Monto.ToString(System.Globalization.CultureInfo.InvariantCulture), @item.PorcentajeCobro.ToString(System.Globalization.CultureInfo.InvariantCulture), '@Html.Raw(item.Observaciones ?? "")')">
                                                 Editar
                                             </button>
-
-                                            <!-- Botón Eliminar -->
-                                            <form method="post" asp-page-handler="Eliminar" onsubmit="return confirm('¿Desea eliminar este registro?');">
-                                                <input type="hidden" name="idDesglose" value="@item.IdDesglose" />
-                                                <input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" />
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">X</button>
-                                            </form>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmarEliminarDesglose(@item.IdDesglose)">X</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -220,8 +214,16 @@
     </div>
 </div>
 
+<!-- MODAL PARA CONFIRMAR ELIMINACION -->
+<div class="modal fade" id="modalEliminarDesglose" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Eliminar desglose</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">¿Realmente desea eliminar el elemento seleccionado?</div>
+    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button><form method="post" asp-page-handler="Eliminar"><input type="hidden" id="eliminarIdDesglose" name="idDesglose" /><input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" /><button class="btn btn-danger">Sí</button></form></div></div></div>
+</div>
 @section Scripts {
     <script>
+        function confirmarEliminarDesglose(idDesglose) { document.getElementById("eliminarIdDesglose").value = idDesglose; new bootstrap.Modal(document.getElementById("modalEliminarDesglose")).show(); }
+
         function calcularIvaTotal() {
             var monto = parseFloat(document.getElementById('inputMonto').value) || 0;
             var iva = monto * 0.13;
@@ -257,3 +259,5 @@
         }
     </script>
 }
+
+
