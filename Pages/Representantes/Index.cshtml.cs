@@ -4,7 +4,7 @@ using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Data.SqlClient;
+using MySqlConnector;
 
 namespace KameRequest.Pages.Representantes;
 
@@ -36,7 +36,7 @@ public class IndexModel(RepresentanteRepository representantes, BitacoraRegistro
                 TempData["Mensaje"] = "El representante se elimino correctamente.";
             }
         }
-        catch (SqlException e) when (e.Number == 547)
+        catch (MySqlException e) when (e.Number == 1451)
         {
             TempData["Error"] = "No se puede eliminar un registro con datos relacionados.";
         }

@@ -38,7 +38,7 @@ public class DesgloseRepository(IDbConnectionFactory conexiones)
                 (@IdSolicitud, @Mes, @Anio, @Horas, @Monto, @PorcentajeCobro, @Observaciones);
             """;
         conexion.Execute(sql, desglose);
-        return conexion.ExecuteScalar<int>("SELECT CAST(SCOPE_IDENTITY() AS int);");
+        return conexion.ExecuteScalar<int>("SELECT LAST_INSERT_ID();");
     }
 
     public void Actualizar(DesgloseSolicitud desglose)

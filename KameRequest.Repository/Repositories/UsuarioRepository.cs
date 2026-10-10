@@ -32,7 +32,7 @@ public class UsuarioRepository(IDbConnectionFactory conexiones)
                 SELECT IdUsuario, NombreCompleto, NombreUsuario, Correo, TipoUsuario, Estado, IntentosFallidos
                 FROM Usuarios
                 ORDER BY NombreCompleto
-                OFFSET @offset ROWS FETCH NEXT @tamano ROWS ONLY;
+                LIMIT @tamano OFFSET @offset;
                 """;
             return conexion.Query<Usuario>(sqlPaginado, new { tamano, offset = (pagina.Value - 1) * tamano.Value });
         }
@@ -75,7 +75,7 @@ public class UsuarioRepository(IDbConnectionFactory conexiones)
                  @cifrada, @nonce, @etiqueta, 0);
             """;
         conexion.Execute(sql, new { datos.NombreCompleto, datos.NombreUsuario, datos.Correo, datos.TipoUsuario, datos.Estado, cifrada, nonce, etiqueta });
-        return conexion.ExecuteScalar<int>("SELECT CAST(SCOPE_IDENTITY() AS int);");
+        return conexion.ExecuteScalar<int>("SELECT LAST_INSERT_ID();");
     }
 
     public void CrearAdministrador(string nombre, string usuario, string correo, string cifrada, byte[] nonce, byte[] etiqueta)

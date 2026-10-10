@@ -8,7 +8,7 @@ public class BitacoraRepository(IDbConnectionFactory conexiones)
     public void Registrar(int? idUsuario, string descripcion)
     {
         using var conexion = conexiones.CreateConnection();
-        conexion.Execute("INSERT INTO Bitacoras (Fecha, IdUsuario, Descripcion) VALUES (GETDATE(), @idUsuario, @descripcion);", new { idUsuario, descripcion });
+        conexion.Execute("INSERT INTO Bitacoras (Fecha, IdUsuario, Descripcion) VALUES (NOW(), @idUsuario, @descripcion);", new { idUsuario, descripcion });
     }
 
     public int Contar()
@@ -24,10 +24,8 @@ public class BitacoraRepository(IDbConnectionFactory conexiones)
             SELECT b.Fecha, COALESCE(u.NombreCompleto, 'Sistema') AS Usuario, b.Descripcion
             FROM Bitacoras b LEFT JOIN Usuarios u ON u.IdUsuario = b.IdUsuario
             ORDER BY b.Fecha DESC
-            OFFSET @offset ROWS FETCH NEXT @registrosPorPagina ROWS ONLY;
+            LIMIT @registrosPorPagina OFFSET @offset;
             """, new { registrosPorPagina, offset = (pagina - 1) * registrosPorPagina }).ToList();
     }
 }
-
-
 

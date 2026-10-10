@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages(); // Habilita las paginas Razor del proyecto
 // Registra los repositorios para que el acceso a SQL Server este separado de las paginas Razor.
-builder.Services.AddScoped<IDbConnectionFactory, SqlServerConnectionFactory>();
+builder.Services.AddScoped<IDbConnectionFactory, MySqlConnectionFactory>();
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<BitacoraRepository>();
 builder.Services.AddScoped<RepresentanteRepository>();
@@ -33,7 +33,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 // Solo crea la cuenta inicial cuando ya existe una configuracion de base de datos
-if (!string.IsNullOrWhiteSpace(app.Configuration.GetConnectionString("SqlServer")) && !string.IsNullOrWhiteSpace(app.Configuration["Seguridad:ClaveAes"]))
+if (!string.IsNullOrWhiteSpace(app.Configuration.GetConnectionString("MySql")) && !string.IsNullOrWhiteSpace(app.Configuration["Seguridad:ClaveAes"]))
 {
     // El alcance permite usar la clase registrada antes de atender solicitudes
     using var alcance = app.Services.CreateScope();

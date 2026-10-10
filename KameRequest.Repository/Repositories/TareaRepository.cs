@@ -37,7 +37,7 @@ public class TareaRepository(IDbConnectionFactory conexiones)
         using var conexion = conexiones.CreateConnection();
         const string sql = "INSERT INTO Tareas (IdSolicitud, IdUsuario, Descripcion, Fecha, HorasInvertidas) VALUES (@IdSolicitud, @IdUsuario, @Descripcion, @Fecha, @HorasInvertidas);";
         conexion.Execute(sql, tarea);
-        return conexion.ExecuteScalar<int>("SELECT CAST(SCOPE_IDENTITY() AS int);");
+        return conexion.ExecuteScalar<int>("SELECT LAST_INSERT_ID();");
     }
 
     public void Actualizar(TareaSolicitud tarea)

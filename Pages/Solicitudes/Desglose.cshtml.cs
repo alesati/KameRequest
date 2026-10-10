@@ -4,7 +4,7 @@ using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Data.SqlClient;
+using MySqlConnector;
 
 namespace KameRequest.Pages.Solicitudes;
 
@@ -67,7 +67,7 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
             desgloses.Eliminar(idDesglose);
             bitacora.RegistrarEliminacion(User, "desglose", eliminado);
         }
-        catch (SqlException e) when (e.Number == 547)
+        catch (MySqlException e) when (e.Number == 1451)
         {
             MensajeError = "No se puede eliminar un registro con datos relacionados.";
         }

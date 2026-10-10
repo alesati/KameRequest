@@ -15,7 +15,7 @@ public class RepresentanteRepository(IDbConnectionFactory conexiones)
     public IReadOnlyList<Representante> ObtenerPagina(int pagina, int tamano)
     {
         using var conexion = conexiones.CreateConnection();
-        const string sql = "SELECT IdRepresentante, Nombre, Email FROM Representantes ORDER BY Nombre, IdRepresentante OFFSET @offset ROWS FETCH NEXT @tamano ROWS ONLY;";
+        const string sql = "SELECT IdRepresentante, Nombre, Email FROM Representantes ORDER BY Nombre, IdRepresentante LIMIT @tamano OFFSET @offset;";
         return conexion.Query<Representante>(sql, new { tamano, offset = (pagina - 1) * tamano }).ToList();
     }
 
@@ -37,7 +37,7 @@ public class RepresentanteRepository(IDbConnectionFactory conexiones)
         using var conexion = conexiones.CreateConnection();
         const string sql = "INSERT INTO Representantes (Nombre, Email) VALUES (@Nombre, @Email);";
         conexion.Execute(sql, representante);
-        return conexion.ExecuteScalar<int>("SELECT CAST(SCOPE_IDENTITY() AS int);");
+        return conexion.ExecuteScalar<int>("SELECT LAST_INSERT_ID();");
     }
 
     public void Actualizar(Representante representante)

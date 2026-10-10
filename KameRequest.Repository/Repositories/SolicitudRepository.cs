@@ -31,7 +31,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
             INNER JOIN EstadosSolicitud e ON e.IdEstado = s.IdEstado
             LEFT JOIN Representantes r ON r.IdRepresentante = s.IdRepresentante
             ORDER BY s.FechaIngreso DESC, s.IdSolicitud DESC
-            OFFSET @offset ROWS FETCH NEXT @tamano ROWS ONLY;
+            LIMIT @tamano OFFSET @offset;
             """;
         return conexion.Query<Solicitud>(sql, new { tamano, offset = (pagina - 1) * tamano }).ToList();
     }
@@ -45,7 +45,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
     public int ObtenerIdEstadoNueva()
     {
         using var conexion = conexiones.CreateConnection();
-        const string sql = "SELECT TOP 1 IdEstado FROM EstadosSolicitud WHERE Nombre = 'Nueva';";
+        const string sql = "SELECT IdEstado FROM EstadosSolicitud WHERE Nombre = 'Nueva' LIMIT 1;";
         return conexion.ExecuteScalar<int>(sql);
     }
 
@@ -62,7 +62,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
                  @IdRepresentante, @Observaciones, @estado, @FechaIngreso, @FechaRespuesta, @FechaInicio);
             """;
         conexion.Execute(sql, new { solicitud.ConsecutivoOficio, solicitud.DocumentoRespuesta, solicitud.DocumentoInicio, solicitud.Titulo, Descripcion = solicitud.Descripcion ?? string.Empty, solicitud.IdRepresentante, solicitud.Observaciones, estado, solicitud.FechaIngreso, solicitud.FechaRespuesta, solicitud.FechaInicio });
-        return conexion.ExecuteScalar<int>("SELECT CAST(SCOPE_IDENTITY() AS int);");
+        return conexion.ExecuteScalar<int>("SELECT LAST_INSERT_ID();");
     }
 
     public void Actualizar(Solicitud solicitud)
@@ -109,7 +109,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
     public int? ObtenerIdEstadoPorNombre(string nombre)
     {
         using var conexion = conexiones.CreateConnection();
-        const string sql = "SELECT TOP 1 IdEstado FROM EstadosSolicitud WHERE Nombre = @nombre;";
+        const string sql = "SELECT IdEstado FROM EstadosSolicitud WHERE Nombre = @nombre LIMIT 1;";
         return conexion.QuerySingleOrDefault<int?>(sql, new { nombre });
     }
 

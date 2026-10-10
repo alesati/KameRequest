@@ -1,22 +1,22 @@
 using System.Data;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using MySqlConnector;
 
 namespace KameRequest.Repository;
 
-// Centraliza la creacion de conexiones para que las pantallas no conozcan SqlConnection.
+// Centraliza la creacion de conexiones para que las pantallas no conozcan MySqlConnection.
 public interface IDbConnectionFactory
 {
     IDbConnection CreateConnection();
 }
 
-public class SqlServerConnectionFactory(IConfiguration configuracion) : IDbConnectionFactory
+public class MySqlConnectionFactory(IConfiguration configuracion) : IDbConnectionFactory
 {
     public IDbConnection CreateConnection()
     {
-        var cadena = configuracion.GetConnectionString("SqlServer")
-            ?? throw new InvalidOperationException("Falta la cadena de conexion SqlServer");
+        var cadena = configuracion.GetConnectionString("MySql")
+            ?? throw new InvalidOperationException("Falta la cadena de conexion MySql");
 
-        return new SqlConnection(cadena);
+        return new MySqlConnection(cadena);
     }
 }

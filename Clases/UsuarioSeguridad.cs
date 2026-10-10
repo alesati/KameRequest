@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
-using Microsoft.Data.SqlClient;
+using MySqlConnector;
 
 namespace KameRequest.Clases;
 
@@ -129,7 +129,7 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
             error = eliminados == 0 ? "No se encontro el usuario" : null;
             return eliminados > 0;
         }
-        catch (SqlException ex) when (ex.Number == 547)
+        catch (MySqlException ex) when (ex.Number == 1451)
         {
             error = "No se puede eliminar un registro con datos relacionados.";
             return false;
@@ -158,6 +158,4 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
         return Encoding.UTF8.GetString(texto);
     }
 }
-
-
 
