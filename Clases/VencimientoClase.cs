@@ -1,24 +1,30 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
 
 namespace KameRequest.Clases;
-// Aplica la regla de vencimiento; SolicitudRepository contiene las consultas.
-public class VencimientoClase(SolicitudRepository solicitudes, BitacoraRegistro bitacora)
+
+public class VencimientoClase(
+    SolicitudRepository solicitudes,
+    BitacoraRegistro bitacora,
+    NotificacionesCorreos notificaciones)
 {
     public void ActualizarSolicitudesVencidas()
     {
         var idEstado = solicitudes.ObtenerIdEstadoPorNombre("Vencida");
         if (!idEstado.HasValue)
             throw new InvalidOperationException("No existe el estado Vencida para las solicitudes.");
+
         foreach (var solicitud in solicitudes.SinRespuestaNoVencidas(idEstado.Value).Where(s => AgregarDiasHabiles(s.FechaIngreso, 5) <= DateTime.Today))
         {
             var anterior = CopiarSolicitud(solicitud);
             if (solicitudes.MarcarVencida(solicitud.IdSolicitud, idEstado.Value) != 1)
                 continue;
+
             solicitud.IdEstado = idEstado.Value;
             solicitud.Estado = "Vencida";
             bitacora.RegistrarSistema($"Actualizo solicitud por vencimiento. Anterior: {JsonSerializer.Serialize(anterior)}. Actual: {JsonSerializer.Serialize(solicitud)}");
+            notificaciones.EnviarCorreoCambioEstadoAuto(solicitud.IdSolicitud);
         }
     }
 
@@ -32,7 +38,6 @@ public class VencimientoClase(SolicitudRepository solicitudes, BitacoraRegistro 
             if (fecha.DayOfWeek is not DayOfWeek.Saturday and not DayOfWeek.Sunday)
                 agregados++;
         }
-
         return fecha;
     }
 

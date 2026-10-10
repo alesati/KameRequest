@@ -1,4 +1,4 @@
-using KameRequest.Clases;
+﻿using KameRequest.Clases;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +8,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Solicitudes;
 
 [Authorize]
-public class EditarModel(SolicitudRepository solicitudes, RepresentanteRepository representantes, BitacoraRegistro bitacora) : PageModel
+public class EditarModel(
+    SolicitudRepository solicitudes,
+    RepresentanteRepository representantes,
+    BitacoraRegistro bitacora,
+    NotificacionesCorreos notificaciones) : PageModel
 {
     [BindProperty]
     public Solicitud Solicitud { get; set; } = new();
@@ -27,11 +31,24 @@ public class EditarModel(SolicitudRepository solicitudes, RepresentanteRepositor
         CargarCatalogos();
         if (!ModelState.IsValid)
             return Page();
+
         var anterior = solicitudes.Obtener(Solicitud.IdSolicitud);
         if (anterior is null)
             return NotFound();
+
         solicitudes.Actualizar(Solicitud);
-        bitacora.RegistrarActualizacion(User, "solicitud", anterior, solicitudes.Obtener(Solicitud.IdSolicitud));
+        var actual = solicitudes.Obtener(Solicitud.IdSolicitud);
+        bitacora.RegistrarActualizacion(User, "solicitud", anterior, actual);
+
+        if (actual is not null && actual.IdEstado != anterior.IdEstado)
+        {
+            var representante = Representantes.FirstOrDefault(r => r.IdRepresentante == actual.IdRepresentante);
+            var estadoAnterior = Estados.FirstOrDefault(e => e.IdEstado == anterior.IdEstado)?.Nombre ?? anterior.Estado ?? "Desconocido";
+            var estadoNuevo = Estados.FirstOrDefault(e => e.IdEstado == actual.IdEstado)?.Nombre ?? actual.Estado ?? "Desconocido";
+            if (!string.IsNullOrWhiteSpace(representante?.Email))
+                notificaciones.EnviarCorreoCambioEstadoManual(User, representante.Email, estadoAnterior, estadoNuevo, actual.ConsecutivoOficio);
+        }
+
         TempData["Mensaje"] = "La solicitud se actualizo correctamente.";
         return RedirectToPage("Index");
     }

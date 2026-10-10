@@ -1,0 +1,106 @@
+﻿@page
+@model KameRequest.Pages.Reportes.FacturacionMesModel
+@{
+    ViewData["Title"] = "Reporte de Facturacion Mensual";
+}
+
+<div class="container-fluid mt-4 px-4 reportes-page">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Reporte de Facturacion Mensual</h2>
+    </div>
+
+    <!-- FORMULARIO DE FILTROS -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Parámetros de Búsqueda</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Mes</label>
+                    <select asp-for="Mes" class="form-select" required>
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Año</label>
+                    <input type="number" min="2000" max="2100" asp-for="Anio" class="form-control" required />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-200">Generar Reporte</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TABLA DE RESULTADOS -->
+    @if (Model.BusquedaRealizada)
+    {
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Conscutivo del oficio</th>
+                                <th>Titulo de la solicitud</th>
+                                <th>Mes</th>
+                                <th>Año</th>
+                                <th>Monto</th>
+                                <th>IVA</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ListaReporte.Any())
+                            {
+                                @foreach (var item in Model.ListaReporte)
+                                {
+                                    <tr>
+                                        <td>@item.ConsecutivoOficio</td>
+                                        <td>@item.Descripcion</td>
+                                        <td>@item.Mes</td>
+                                        <td>@item.Anio</td>
+                                        <td class="fw-bold">@item.Monto.ToString("C2")</td>
+                                        <td class="fw-bold">@item.Iva.ToString("C2")</td>
+                                        <td class="fw-bold">@item.Total.ToString("C2")</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center py-4 text-muted">
+                                        No se encontró facturacion para el mes y año seleccionado.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        @if (Model.ListaReporte.Any())
+                        {
+                            <tfoot>
+                                <tr class="table-info fw-bold">
+                                    <td colspan="4" class="text-start fs-7">Totales:</td>
+                                    <td class="fs-6 text-primary">@Model.Subtotal.ToString("C2")</td>
+                                    <td class="fs-6 text-primary">@Model.TotalIva.ToString("C2")</td>
+                                    <td class="fs-6 text-primary">@Model.Total.ToString("C2")</td>
+                                </tr>
+                            </tfoot>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
