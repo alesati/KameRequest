@@ -3,7 +3,7 @@ namespace KameRequest.Clases;
 // Ejecuta periodicamente la revision de vencimientos sin requerir un usuario autenticado.
 public class ProcesoVencimientoBackgroundService(IServiceScopeFactory fabricaAlcances) : BackgroundService
 {
-    private static readonly TimeSpan Intervalo = TimeSpan.FromMinutes(5);
+    private static readonly TimeSpan Intervalo = TimeSpan.FromMinutes(2);
 
     protected override async Task ExecuteAsync(CancellationToken detener)
     {

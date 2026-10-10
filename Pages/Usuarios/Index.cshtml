@@ -23,8 +23,8 @@
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Usuario</th>
+                    <th>Nombre de usuario</th>
+                    <th>Nombre completo</th>
                     <th>Correo</th>
                     <th>Estado</th>
                     <th>Acciones</th>
@@ -34,8 +34,8 @@
                 @foreach (var usuario in Model.Usuarios)
                 {
                     <tr>
-                        <td>@usuario.NombreCompleto</td>
                         <td>@usuario.NombreUsuario</td>
+                        <td>@usuario.NombreCompleto</td>
                         <td>@usuario.Correo</td>
                         <td>
                             <form method="post" asp-page-handler="CambiarEstado">
@@ -92,5 +92,3 @@
 
     <a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary mt-2">Regresar a mantenimientos</a>
 </div>
-
-

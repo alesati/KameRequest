@@ -11,27 +11,21 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="mb-3">
-            <label asp-for="Datos.NombreCompleto" class="form-label">Nombre completo</label>
-            <input asp-for="Datos.NombreCompleto" class="form-control" />
-            <span asp-validation-for="Datos.NombreCompleto" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
             <label asp-for="Datos.NombreUsuario" class="form-label">Nombre de usuario</label>
             <input asp-for="Datos.NombreUsuario" class="form-control" />
             <span asp-validation-for="Datos.NombreUsuario" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Datos.Correo" class="form-label">Correo electrónico</label>
-            <input asp-for="Datos.Correo" class="form-control" />
-            <span asp-validation-for="Datos.Correo" class="text-danger"></span>
+            <label asp-for="Datos.NombreCompleto" class="form-label">Nombre completo</label>
+            <input asp-for="Datos.NombreCompleto" class="form-control" />
+            <span asp-validation-for="Datos.NombreCompleto" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Datos.Contrasena" class="form-label">Contraseña</label>
-            <input asp-for="Datos.Contrasena" class="form-control" />
-            <span asp-validation-for="Datos.Contrasena" class="text-danger"></span>
+            <label asp-for="Datos.Correo" class="form-label">Correo electrónico</label>
+            <input asp-for="Datos.Correo" class="form-control" />
+            <span asp-validation-for="Datos.Correo" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -42,6 +36,12 @@
                 <option value="Bloqueado">Bloqueado</option>
             </select>
             <span asp-validation-for="Datos.Estado" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Datos.Contrasena" class="form-label">Contraseña</label>
+            <input asp-for="Datos.Contrasena" class="form-control" />
+            <span asp-validation-for="Datos.Contrasena" class="text-danger"></span>
         </div>
 
         <div>
