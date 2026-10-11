@@ -1,4 +1,3 @@
-// consultas de base de datos para este modulo
 using Dapper;
 using KameRequest.Models;
 
@@ -6,7 +5,7 @@ namespace KameRequest.Repository.Repositories;
 
 public class TareaRepository(IDbConnectionFactory conexiones)
 {
-    public IReadOnlyList<TareaSolicitud> ListarPorSolicitud(int idSolicitud)
+    public IReadOnlyList<TareaSolicitud> ObtenerPaginaPorSolicitud(int idSolicitud, int pagina, int tamano)
     {
         using var conexion = conexiones.CreateConnection();
         const string sql = """
@@ -15,9 +14,16 @@ public class TareaRepository(IDbConnectionFactory conexiones)
             FROM Tareas t
             INNER JOIN Usuarios u ON u.IdUsuario = t.IdUsuario
             WHERE t.IdSolicitud = @idSolicitud
-            ORDER BY t.Fecha DESC, t.IdTarea DESC;
+            ORDER BY t.Fecha DESC, t.IdTarea DESC
+            LIMIT @tamano OFFSET @offset;
             """;
-        return conexion.Query<TareaSolicitud>(sql, new { idSolicitud }).ToList();
+        return conexion.Query<TareaSolicitud>(sql, new { idSolicitud, tamano, offset = (pagina - 1) * tamano }).ToList();
+    }
+
+    public int ContarPorSolicitud(int idSolicitud)
+    {
+        using var conexion = conexiones.CreateConnection();
+        return conexion.ExecuteScalar<int>("SELECT COUNT(*) FROM Tareas WHERE IdSolicitud = @idSolicitud;", new { idSolicitud });
     }
 
     public TareaSolicitud? Obtener(int id)
@@ -54,5 +60,3 @@ public class TareaRepository(IDbConnectionFactory conexiones)
         return conexion.Execute("DELETE FROM Tareas WHERE IdTarea = @id;", new { id });
     }
 }
-
-

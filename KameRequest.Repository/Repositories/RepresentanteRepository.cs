@@ -1,4 +1,3 @@
-// consultas de base de datos para este modulo
 using Dapper;
 using KameRequest.Models;
 

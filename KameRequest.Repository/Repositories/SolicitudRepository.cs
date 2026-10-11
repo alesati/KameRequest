@@ -1,4 +1,3 @@
-// consultas de base de datos para este modulo
 using Dapper;
 using KameRequest.Models;
 
@@ -43,17 +42,18 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.ExecuteScalar<int>("SELECT COUNT(*) FROM Solicitudes;");
     }
 
-    public int ObtenerIdEstadoNueva()
+    public int ObtenerIdEstadoInicial()
     {
+        // se usa el id del estado inicial para que funcione aunque se cambie su nombre
         using var conexion = conexiones.CreateConnection();
-        const string sql = "SELECT IdEstado FROM EstadosSolicitud WHERE Nombre = 'Nueva' LIMIT 1;";
-        return conexion.ExecuteScalar<int>(sql);
+        const string sql = "SELECT IdEstado FROM EstadosSolicitud WHERE IdEstado = 1 LIMIT 1;";
+        return conexion.QuerySingle<int>(sql);
     }
 
     public int Crear(Solicitud solicitud)
     {
         using var conexion = conexiones.CreateConnection();
-        var estado = ObtenerIdEstadoNueva();
+        var estado = ObtenerIdEstadoInicial();
         const string sql = """
             INSERT INTO Solicitudes
                 (ConsecutivoOficio, DocumentoRespuesta, DocumentoInicio, Titulo, Descripcion,
@@ -134,6 +134,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.Query<Solicitud>(sql).ToList();
     }
 }
+
 
 
 

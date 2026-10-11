@@ -94,7 +94,7 @@ namespace KameRequest.Clases;
                         <table role="presentation" style="width:100%;border-collapse:collapse;">
                             <tr><td style="padding:10px;border-bottom:1px solid #DCE3EC;font-weight:bold;">Estado anterior</td><td style="padding:10px;border-bottom:1px solid #DCE3EC;">{anteriorhtml}</td></tr>
                             <tr><td style="padding:10px;border-bottom:1px solid #DCE3EC;font-weight:bold;">Estado nuevo</td><td style="padding:10px;border-bottom:1px solid #DCE3EC;color:#10ADC0;font-weight:bold;">{nuevohtml}</td></tr>
-                            <tr><td style="padding:10px;font-weight:bold;">Modificado por</td><td style="padding:10px;">Proceso Automatico</td></tr>
+                            <tr><td style="padding:10px;font-weight:bold;">Modificado por</td><td style="padding:10px;">Sistema</td></tr>
                         </table>
                     </div>
                     <div style="padding:16px 28px;background:#102D54;color:#FFFFFF;font-size:12px;text-align:center;">Notificación automática de KameRequest</div>

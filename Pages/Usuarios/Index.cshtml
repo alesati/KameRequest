@@ -7,7 +7,10 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>Usuarios</h1>
-        <a asp-page="Crear" class="btn btn-primary">Nuevo usuario</a>
+        <div class="d-flex gap-2">
+            <a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary">Regresar a mantenimientos</a>
+            <a asp-page="Crear" class="btn btn-primary">Nuevo usuario</a>
+        </div>
     </div>
 
     @if (TempData["Mensaje"] is string mensaje)
@@ -90,5 +93,5 @@
         </nav>
     }
 
-    <a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary mt-2">Regresar a mantenimientos</a>
+
 </div>

@@ -12,7 +12,7 @@ namespace KameRequest.Pages.Estados;
 [Authorize]
 public class IndexModel(EstadoRepository estados, BitacoraRegistro bitacora) : PageModel
 {
-    private const int RegistrosPorPagina = 10;
+    private const int RegistrosPorPagina = 5;
     public IReadOnlyList<Estado> Estados { get; private set; } = [];
     public int PaginaActual { get; private set; }
     public int TotalPaginas { get; private set; }

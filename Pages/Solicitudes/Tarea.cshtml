@@ -88,6 +88,19 @@
                     </tbody>
                 </table>
             </div>
+            @if (Model.TotalPaginas > 1)
+            {
+                <nav aria-label="Paginacion de tareas">
+                    <ul class="pagination justify-content-center mb-0">
+                        @for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++)
+                        {
+                            <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")">
+                                <a class="page-link" asp-route-id="@Model.SolicitudActual?.IdSolicitud" asp-route-pagina="@pagina">@pagina</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
         </div>
     </div>
 </div>

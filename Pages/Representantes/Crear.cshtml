@@ -11,11 +11,13 @@
         <div class="mb-3">
             <label asp-for="Representante.Nombre" class="form-label">Nombre</label>
             <input asp-for="Representante.Nombre" class="form-control" />
+            <span asp-validation-for="Representante.Nombre" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="Representante.Email" class="form-label">Email</label>
             <input asp-for="Representante.Email" class="form-control" />
+            <span asp-validation-for="Representante.Email" class="text-danger"></span>
         </div>
 
         <div>
@@ -24,3 +26,6 @@
         </div>
     </form>
 </div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+

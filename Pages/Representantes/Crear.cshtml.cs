@@ -16,10 +16,13 @@ public class CrearModel(RepresentanteRepository representantes, BitacoraRegistro
 
     public IActionResult OnPost()
     {
+        if (!ModelState.IsValid)
+            return Page();
         Representante.IdRepresentante = representantes.Crear(Representante);
         bitacora.RegistrarCreacion(User, "representante", Representante);
         TempData["Mensaje"] = "El representante se creo correctamente.";
         return RedirectToPage("Index");
     }
 }
+
 

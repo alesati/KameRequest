@@ -12,8 +12,11 @@ namespace KameRequest.Pages.Solicitudes;
 [Authorize]
 public class TareasModel(SolicitudRepository solicitudes, TareaRepository tareas, BitacoraRegistro bitacora) : PageModel
 {
+    private const int RegistrosPorPagina = 5;
     public Solicitud? SolicitudActual { get; private set; }
     public List<TareaSolicitud> ListaTareas { get; private set; } = [];
+    public int PaginaActual { get; private set; }
+    public int TotalPaginas { get; private set; }
     public decimal TotalHoras => ListaTareas.Sum(t => t.HorasInvertidas);
 
     [BindProperty]
@@ -25,7 +28,7 @@ public class TareasModel(SolicitudRepository solicitudes, TareaRepository tareas
     [TempData]
     public string? MensajeError { get; set; }
 
-    public IActionResult OnGet(int id) => CargarDatos(id) ? Page() : RedirectToPage("/Solicitudes/Index");
+    public IActionResult OnGet(int id, int pagina = 1) => CargarDatos(id, pagina) ? Page() : RedirectToPage("/Solicitudes/Index");
     public IActionResult OnPostAgregar(int idSolicitud)
     {
         if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var idUsuario))
@@ -84,12 +87,16 @@ public class TareasModel(SolicitudRepository solicitudes, TareaRepository tareas
         return RedirectToPage(new { id = idSolicitud });
     }
 
-    private bool CargarDatos(int idSolicitud)
+    private bool CargarDatos(int idSolicitud, int pagina)
     {
         SolicitudActual = solicitudes.Obtener(idSolicitud);
         if (SolicitudActual is null)
             return false;
-        ListaTareas = tareas.ListarPorSolicitud(idSolicitud).ToList();
+
+        var total = tareas.ContarPorSolicitud(idSolicitud);
+        TotalPaginas = Math.Max(1, (int)Math.Ceiling(total / (double)RegistrosPorPagina));
+        PaginaActual = Math.Clamp(pagina, 1, TotalPaginas);
+        ListaTareas = tareas.ObtenerPaginaPorSolicitud(idSolicitud, PaginaActual, RegistrosPorPagina).ToList();
         return true;
     }
 }

@@ -12,7 +12,15 @@
 
         <div class="mb-3">
             <label asp-for="Estado.Nombre" class="form-label">Nombre</label>
-            <input asp-for="Estado.Nombre" class="form-control" />
+            @if (Model.Estado.idEstado == 1)
+            {
+                <input asp-for="Estado.Nombre" class="form-control" readonly />
+                <small class="text-muted">Este es el estado inicial de las solicitudes y no se puede cambiar.</small>
+            }
+            else
+            {
+                <input asp-for="Estado.Nombre" class="form-control" />
+            }
         </div>
 
 

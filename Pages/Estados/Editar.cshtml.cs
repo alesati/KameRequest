@@ -24,6 +24,14 @@ public class EditarModel(EstadoRepository estados, BitacoraRegistro bitacora) : 
     {
         var anterior = estados.Obtener(Estado.idEstado);
         if (anterior is null) return NotFound();
+
+        // el estado inicial siempre conserva su nombre para que las solicitudes nuevas lo puedan usar
+        if (Estado.idEstado == 1 && !string.Equals(Estado.Nombre, anterior.Nombre, StringComparison.Ordinal))
+        {
+            TempData["Error"] = "No se puede cambiar el nombre del estado inicial.";
+            return RedirectToPage(new { id = Estado.idEstado });
+        }
+
         estados.Actualizar(Estado);
         bitacora.RegistrarActualizacion(User, "estado", anterior, estados.Obtener(Estado.idEstado)!);
         TempData["Mensaje"] = "El estado se actualizo correctamente.";
