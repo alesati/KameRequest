@@ -14,6 +14,7 @@ public class CrearModel(EstadoRepository estados, BitacoraRegistro bitacora) : P
     [BindProperty]
     public Estado Estado { get; set; } = new();
 
+    // procesa los datos enviados desde el formulario
     public IActionResult OnPost()
     {
         Estado.idEstado = estados.Crear(Estado);

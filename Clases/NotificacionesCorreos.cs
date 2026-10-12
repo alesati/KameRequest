@@ -7,6 +7,7 @@ namespace KameRequest.Clases;
 
     public class NotificacionesCorreos(IConfiguration configuracion, BitacoraRegistro bitacora, IWebHostEnvironment entorno, SolicitudRepository solicitudes)
     {
+        // prepara el aviso cuando una persona cambia el estado
         public void EnviarCorreoCambioEstadoManual(ClaimsPrincipal usuario, string? destinatario,string estadoAnterior,string estadoNuevo,string consecutivo) {
         if (string.IsNullOrWhiteSpace(destinatario))
         {
@@ -59,6 +60,7 @@ namespace KameRequest.Clases;
 		}
 		}
 
+    // prepara el aviso cuando el sistema cambia una solicitud por vencimiento
     public void EnviarCorreoCambioEstadoAuto(int idsolicitud)
     {
         try

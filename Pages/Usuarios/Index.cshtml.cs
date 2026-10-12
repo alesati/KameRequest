@@ -18,6 +18,7 @@ public class IndexModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) :
     public int PaginaActual { get; private set; }
     public int TotalPaginas { get; private set; }
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet(int pagina = 1)
     {
         bitacora.RegistrarConsulta(User, "usuarios");
@@ -25,6 +26,7 @@ public class IndexModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) :
         CargarUsuarios(pagina);
     }
 
+    // cambia el estado seleccionado y muestra el resultado
     public IActionResult OnPostCambiarEstado(int idUsuario, string estado)
     {
         var anterior = seguridad.ObtenerUsuario(idUsuario);
@@ -41,6 +43,7 @@ public class IndexModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) :
         return RedirectToPage();
     }
 
+    // confirma y procesa la eliminacion del registro
     public IActionResult OnPostEliminar(int idUsuario)
     {
         // Evita que el administrador borre su propia cuenta mientras esta usandola

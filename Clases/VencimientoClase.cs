@@ -10,6 +10,7 @@ public class VencimientoClase(
     BitacoraRegistro bitacora,
     NotificacionesCorreos notificaciones)
 {
+    // revisa las solicitudes pendientes y marca las que ya vencieron
     public void ActualizarSolicitudesVencidas()
     {
         var idEstado = solicitudes.ObtenerIdEstadoPorNombre("Vencida");

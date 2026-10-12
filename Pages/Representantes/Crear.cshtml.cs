@@ -14,6 +14,7 @@ public class CrearModel(RepresentanteRepository representantes, BitacoraRegistro
     [BindProperty]
     public Representante Representante { get; set; } = new();
 
+    // procesa los datos enviados desde el formulario
     public IActionResult OnPost()
     {
         if (!ModelState.IsValid)

@@ -5,6 +5,7 @@ namespace KameRequest.Repository.Repositories;
 
 public class TareaRepository(IDbConnectionFactory conexiones)
 {
+    // obtiene los registros relacionados con una solicitud y su pagina
     public IReadOnlyList<TareaSolicitud> ObtenerPaginaPorSolicitud(int idSolicitud, int pagina, int tamano)
     {
         using var conexion = conexiones.CreateConnection();
@@ -20,12 +21,14 @@ public class TareaRepository(IDbConnectionFactory conexiones)
         return conexion.Query<TareaSolicitud>(sql, new { idSolicitud, tamano, offset = (pagina - 1) * tamano }).ToList();
     }
 
+    // cuenta los registros que pertenecen a la solicitud
     public int ContarPorSolicitud(int idSolicitud)
     {
         using var conexion = conexiones.CreateConnection();
         return conexion.ExecuteScalar<int>("SELECT COUNT(*) FROM Tareas WHERE IdSolicitud = @idSolicitud;", new { idSolicitud });
     }
 
+    // busca un registro por su identificador
     public TareaSolicitud? Obtener(int id)
     {
         using var conexion = conexiones.CreateConnection();
@@ -39,6 +42,7 @@ public class TareaRepository(IDbConnectionFactory conexiones)
         return conexion.QuerySingleOrDefault<TareaSolicitud>(sql, new { id });
     }
 
+    // guarda un nuevo registro en la base de datos
     public int Crear(TareaSolicitud tarea)
     {
         using var conexion = conexiones.CreateConnection();
@@ -47,6 +51,7 @@ public class TareaRepository(IDbConnectionFactory conexiones)
         return conexion.ExecuteScalar<int>("SELECT LAST_INSERT_ID();");
     }
 
+    // guarda los cambios realizados al registro
     public void Actualizar(TareaSolicitud tarea)
     {
         using var conexion = conexiones.CreateConnection();
@@ -54,6 +59,7 @@ public class TareaRepository(IDbConnectionFactory conexiones)
         conexion.Execute(sql, tarea);
     }
 
+    // elimina el registro indicado si no tiene relaciones
     public int Eliminar(int id)
     {
         using var conexion = conexiones.CreateConnection();

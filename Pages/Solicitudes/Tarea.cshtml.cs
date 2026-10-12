@@ -28,7 +28,9 @@ public class TareasModel(SolicitudRepository solicitudes, TareaRepository tareas
     [TempData]
     public string? MensajeError { get; set; }
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public IActionResult OnGet(int id, int pagina = 1) => CargarDatos(id, pagina) ? Page() : RedirectToPage("/Solicitudes/Index");
+    // valida y agrega el nuevo dato relacionado
     public IActionResult OnPostAgregar(int idSolicitud)
     {
         if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var idUsuario))
@@ -51,6 +53,7 @@ public class TareasModel(SolicitudRepository solicitudes, TareaRepository tareas
         return RedirectToPage(new { id = idSolicitud });
     }
 
+    // valida y guarda los cambios del formulario
     public IActionResult OnPostEditar(int idSolicitud)
     {
         var anterior = tareas.Obtener(TareaEditar.IdTarea);
@@ -71,6 +74,7 @@ public class TareasModel(SolicitudRepository solicitudes, TareaRepository tareas
         return RedirectToPage(new { id = idSolicitud });
     }
 
+    // confirma y procesa la eliminacion del registro
     public IActionResult OnPostEliminar(int idTarea, int idSolicitud)
     {
         var tarea = tareas.Obtener(idTarea);

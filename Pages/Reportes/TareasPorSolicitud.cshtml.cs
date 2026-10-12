@@ -26,6 +26,7 @@ public class TareasPorSolicitudModel(SolicitudRepository solicitudes, ReporteRep
     public bool BusquedaRealizada { get; set; }
     public string InfoSolicitud { get; set; } = string.Empty;
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet()
     {
         ListaSolicitudes = solicitudes.ListarParaReporte().Select(s => new SelectListItem { Value = s.IdSolicitud.ToString(), Text = $"{s.ConsecutivoOficio} - {s.Titulo}", Selected = s.IdSolicitud == IdSolicitudSeleccionada }).ToList();

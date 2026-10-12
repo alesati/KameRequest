@@ -18,6 +18,7 @@ public enum ResultadoAcceso
 // contiene las reglas para login, bloqueo y contraseñas
 public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository usuarios)
 {
+    // crea el administrador solo cuando la base aun no tiene usuarios
     public void CrearAdministradorInicialSiHaceFalta()
     {
         if (usuarios.Contar() > 0)
@@ -26,6 +27,7 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
         usuarios.CrearAdministrador(configuracion["UsuarioInicial:Nombre"] ?? "Administrador", configuracion["UsuarioInicial:Usuario"] ?? "admin", configuracion["UsuarioInicial:Correo"] ?? "admin@kamerequest.local", cifrado.ContrasenaCifrada, cifrado.Nonce, cifrado.EtiquetaAutenticacion);
     }
 
+    // revisa credenciales, estado e intentos antes de permitir el acceso
     public ResultadoAcceso ValidarAcceso(InicioSesion datos, out Usuario? usuario)
     {
         usuario = usuarios.ObtenerPorNombre(datos.NombreUsuario);
@@ -104,6 +106,7 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
         return true;
     }
 
+    // revisa el estado solicitado antes de actualizar al usuario
     public bool CambiarEstadoUsuario(int idUsuario, string estado, out string? error)
     {
         if (!new[]
@@ -122,6 +125,7 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
         return actualizados > 0;
     }
 
+    // valida relaciones antes de eliminar un usuario
     public bool EliminarUsuario(int idUsuario, out string? error)
     {
         try

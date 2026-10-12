@@ -25,6 +25,7 @@ public class TareasPorUsuarioModel(ReporteRepository reportes, BitacoraRegistro 
     public decimal TotalHoras => ListaReporte.Sum(t => t.HorasInvertidas);
     public bool BusquedaRealizada { get; set; }
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet()
     {
         ListaUsuarios = reportes.ListarUsuariosConTareas().Select(u => new SelectListItem { Value = u, Text = u, Selected = u == UsuarioSeleccionado }).ToList();

@@ -2,6 +2,7 @@ using KameRequest.Clases;
 using KameRequest.Repository;
 using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +45,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         return Task.CompletedTask;
     };
 });
-
+// usa la cultura de Costa Rica para montos, fechas y numeros en todo el sistema
+var culturaCostaRica = new CultureInfo("es-CR");
+CultureInfo.DefaultThreadCurrentCulture = culturaCostaRica;
+CultureInfo.DefaultThreadCurrentUICulture = culturaCostaRica;
 // termina la configuracion y crea la aplicacion para atender solicitudes
 var app = builder.Build();
 

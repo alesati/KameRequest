@@ -14,6 +14,7 @@ public class BitacoraRegistro(BitacoraRepository repositorio)
         WriteIndented = false
     };
 
+    // guarda en bitacora los datos del registro creado
     public void RegistrarCreacion(ClaimsPrincipal usuario, string elemento, object nuevo)
     {
         var descripcion = $"Creo {elemento}. Nuevo: {JsonSerializer.Serialize(nuevo, OpcionesJson)}";
@@ -21,6 +22,7 @@ public class BitacoraRegistro(BitacoraRepository repositorio)
         Registrar(usuario, descripcion);
     }
 
+    // guarda en bitacora los datos antes y despues del cambio
     public void RegistrarActualizacion(
         ClaimsPrincipal usuario,
         string elemento,
@@ -34,6 +36,7 @@ public class BitacoraRegistro(BitacoraRepository repositorio)
         Registrar(usuario, descripcion);
     }
 
+    // guarda en bitacora los datos del registro eliminado
     public void RegistrarEliminacion(ClaimsPrincipal usuario, string elemento, object? eliminado)
     {
         var descripcion = $"Elimino {elemento}. " +
@@ -42,11 +45,13 @@ public class BitacoraRegistro(BitacoraRepository repositorio)
         Registrar(usuario, descripcion);
     }
 
+    // deja evidencia de una consulta importante
     public void RegistrarConsulta(ClaimsPrincipal usuario, string elemento)
     {
         Registrar(usuario, $"El usuario consulta {elemento}");
     }
 
+    // guarda el error tecnico sin mostrar detalles internos al usuario
     public void RegistrarErrorTecnico(ClaimsPrincipal usuario, string ruta, Exception excepcion)
     {
         var descripcion = $"ERROR TECNICO. Ruta: {ruta}. Mensaje: {excepcion.Message}";
@@ -54,6 +59,7 @@ public class BitacoraRegistro(BitacoraRepository repositorio)
         Registrar(usuario, descripcion);
     }
 
+    // registra errores producidos por procesos automaticos
     public void RegistrarErrorTecnicoSistema(string origen, Exception excepcion)
     {
         var descripcion = $"ERROR TECNICO. Origen: {origen}. Mensaje: {excepcion.Message}";
@@ -84,6 +90,7 @@ public class BitacoraRegistro(BitacoraRepository repositorio)
         return repositorio.Contar();
     }
 
+    // obtiene solo los registros de la pagina solicitada
     public IReadOnlyList<Bitacora> ObtenerPagina(int pagina, int registrosPorPagina)
     {
         return repositorio.ObtenerPagina(pagina, registrosPorPagina);

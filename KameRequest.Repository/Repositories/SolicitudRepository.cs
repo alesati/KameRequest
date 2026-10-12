@@ -14,6 +14,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         INNER JOIN EstadosSolicitud e ON e.IdEstado = s.IdEstado
         LEFT JOIN Representantes r ON r.IdRepresentante = s.IdRepresentante
         """;
+    // busca un registro por su identificador
     public Solicitud? Obtener(int id)
     {
         using var conexion = conexiones.CreateConnection();
@@ -21,6 +22,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.QuerySingleOrDefault<Solicitud>(ConsultaCompleta + condicion, new { id });
     }
 
+    // obtiene solo los registros de la pagina solicitada
     public IReadOnlyList<Solicitud> ObtenerPagina(int pagina, int tamano)
     {
         using var conexion = conexiones.CreateConnection();
@@ -36,6 +38,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.Query<Solicitud>(sql, new { tamano, offset = (pagina - 1) * tamano }).ToList();
     }
 
+    // cuenta los registros para mostrar la paginacion
     public int Contar()
     {
         using var conexion = conexiones.CreateConnection();
@@ -50,6 +53,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.QuerySingle<int>(sql);
     }
 
+    // guarda un nuevo registro en la base de datos
     public int Crear(Solicitud solicitud)
     {
         using var conexion = conexiones.CreateConnection();
@@ -66,6 +70,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.ExecuteScalar<int>("SELECT LAST_INSERT_ID();");
     }
 
+    // guarda los cambios realizados al registro
     public void Actualizar(Solicitud solicitud)
     {
         using var conexion = conexiones.CreateConnection();
@@ -87,6 +92,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         conexion.Execute(sql, new { solicitud.IdSolicitud, solicitud.ConsecutivoOficio, solicitud.DocumentoRespuesta, solicitud.DocumentoInicio, solicitud.Titulo, Descripcion = solicitud.Descripcion ?? string.Empty, solicitud.IdRepresentante, solicitud.Observaciones, solicitud.IdEstado, solicitud.FechaIngreso, solicitud.FechaRespuesta, solicitud.FechaInicio });
     }
 
+    // elimina el registro indicado si no tiene relaciones
     public int Eliminar(int id)
     {
         using var conexion = conexiones.CreateConnection();

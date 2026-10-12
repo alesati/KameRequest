@@ -21,6 +21,7 @@ public class FacturacionMesModel(ReporteRepository reportes, BitacoraRegistro bi
     public decimal Total => ListaReporte.Sum(t => t.Total);
     public bool BusquedaRealizada { get; set; }
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet()
     {
         if (Mes is < 1 or > 12 || Anio < 1000) return;

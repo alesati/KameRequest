@@ -14,12 +14,14 @@ public class EditarModel(EstadoRepository estados, BitacoraRegistro bitacora) : 
     [BindProperty]
     public Estado Estado { get; set; } = new();
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public IActionResult OnGet(int id)
     {
         Estado = estados.Obtener(id) ?? new Estado();
         return Estado.idEstado == 0 ? NotFound() : Page();
     }
 
+    // procesa los datos enviados desde el formulario
     public IActionResult OnPost()
     {
         var anterior = estados.Obtener(Estado.idEstado);

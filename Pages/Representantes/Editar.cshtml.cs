@@ -14,12 +14,14 @@ public class EditarModel(RepresentanteRepository representantes, BitacoraRegistr
     [BindProperty]
     public Representante Representante { get; set; } = new();
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public IActionResult OnGet(int id)
     {
         Representante = representantes.Obtener(id) ?? new();
         return Representante.IdRepresentante == 0 ? NotFound() : Page();
     }
 
+    // procesa los datos enviados desde el formulario
     public IActionResult OnPost()
     {
         var anterior = representantes.Obtener(Representante.IdRepresentante);

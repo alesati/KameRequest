@@ -13,6 +13,7 @@ public interface IDbConnectionFactory
 // crea conexiones MySql para que los repositorios las usen
 public class MySqlConnectionFactory(IConfiguration configuracion) : IDbConnectionFactory
 {
+    // crea una conexion nueva usando la cadena configurada
     public IDbConnection CreateConnection()
     {
         var cadena = configuracion.GetConnectionString("MySql")

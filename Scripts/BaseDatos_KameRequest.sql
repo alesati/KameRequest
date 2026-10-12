@@ -1,9 +1,15 @@
-CREATE DATABASE IF NOT EXISTS kamerequest
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
-
-USE kamerequest;
-
+-- Antes de ejecutar en Plesk o cPanel, selecciona desde phpMyAdmin
+-- la base que ya creaste. Normalmente el nombre tiene un prefijo,
+-- por ejemplo: usuario_KameRequest.
+--
+-- Para una instalacion local nueva puedes descomentar estas lineas:
+-- CREATE DATABASE IF NOT EXISTS kamerequest
+--     CHARACTER SET utf8mb4
+--     COLLATE utf8mb4_unicode_ci;
+-- USE kamerequest;
+--
+-- El administrador inicial no se inserta con SQL porque su contrasena
+-- se cifra con AES-GCM. La aplicacion lo crea al iniciar por primera vez.
 CREATE TABLE IF NOT EXISTS Usuarios (
     IdUsuario INT NOT NULL AUTO_INCREMENT,
     NombreCompleto VARCHAR(150) NOT NULL,

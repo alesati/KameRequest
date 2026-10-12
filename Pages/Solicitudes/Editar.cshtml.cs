@@ -20,6 +20,7 @@ public class EditarModel(
     public IReadOnlyList<Representante> Representantes { get; private set; } = [];
     public IReadOnlyList<EstadoSolicitud> Estados { get; private set; } = [];
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public IActionResult OnGet(int id)
     {
         Solicitud = solicitudes.Obtener(id) ?? new();
@@ -27,6 +28,7 @@ public class EditarModel(
         return Solicitud.IdSolicitud == 0 ? NotFound() : Page();
     }
 
+    // procesa los datos enviados desde el formulario
     public IActionResult OnPost()
     {
         CargarCatalogos();

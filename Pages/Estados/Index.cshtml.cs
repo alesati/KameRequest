@@ -17,6 +17,7 @@ public class IndexModel(EstadoRepository estados, BitacoraRegistro bitacora) : P
     public int PaginaActual { get; private set; }
     public int TotalPaginas { get; private set; }
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet(int pagina = 1)
     {
         bitacora.RegistrarConsulta(User, "estados");
@@ -26,6 +27,7 @@ public class IndexModel(EstadoRepository estados, BitacoraRegistro bitacora) : P
         Estados = estados.ObtenerPagina(PaginaActual, RegistrosPorPagina);
     }
 
+    // confirma y procesa la eliminacion del registro
     public IActionResult OnPostEliminar(int idEstado)
     {
         try

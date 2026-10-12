@@ -30,7 +30,9 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
     [TempData]
     public string? MensajeError { get; set; }
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public IActionResult OnGet(int id, int pagina = 1) => CargarDatos(id, pagina) ? Page() : RedirectToPage("/Solicitudes/Index");
+    // valida y agrega el nuevo dato relacionado
     public IActionResult OnPostAgregar(int idSolicitud)
     {
         if (!DatosValidos(NuevoDesglose))
@@ -63,6 +65,7 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
         return RedirectToPage(new { id = idSolicitud });
     }
 
+    // valida y guarda los cambios del formulario
     public IActionResult OnPostEditar(int idSolicitud)
     {
         if (!DatosValidos(DesgloseEditar))
@@ -93,6 +96,7 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
         return RedirectToPage(new { id = idSolicitud });
     }
 
+    // confirma y procesa la eliminacion del registro
     public IActionResult OnPostEliminar(int idDesglose, int idSolicitud)
     {
         var eliminado = desgloses.Obtener(idDesglose);

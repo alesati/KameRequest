@@ -1,5 +1,6 @@
-﻿namespace KameRequest.Models;
+namespace KameRequest.Models;
 
+// modelo que muestra los montos calculados en facturacion mensual
 public class Rpt_FacturacionMes
 {
     public string ConsecutivoOficio { get; set; }

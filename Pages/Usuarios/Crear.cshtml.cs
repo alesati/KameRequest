@@ -14,10 +14,12 @@ public class CrearModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) :
     [BindProperty]
     public UsuarioFormulario Datos { get; set; } = new();
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet()
     {
     }
 
+    // procesa los datos enviados desde el formulario
     public IActionResult OnPost()
     {
         // Si falta algun dato requerido vuelve a mostrar la misma pagina

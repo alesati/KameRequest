@@ -17,6 +17,7 @@ public class IndexModel(RepresentanteRepository representantes, BitacoraRegistro
     public int PaginaActual { get; private set; }
     public int TotalPaginas { get; private set; }
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet(int pagina = 1)
     {
         bitacora.RegistrarConsulta(User, "representantes");
@@ -26,6 +27,7 @@ public class IndexModel(RepresentanteRepository representantes, BitacoraRegistro
         Representantes = representantes.ObtenerPagina(PaginaActual, RegistrosPorPagina);
     }
 
+    // confirma y procesa la eliminacion del registro
     public IActionResult OnPostEliminar(int idRepresentante)
     {
         try

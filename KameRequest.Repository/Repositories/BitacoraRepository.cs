@@ -11,12 +11,14 @@ public class BitacoraRepository(IDbConnectionFactory conexiones)
         conexion.Execute("INSERT INTO Bitacoras (Fecha, IdUsuario, Descripcion) VALUES (NOW(), @idUsuario, @descripcion);", new { idUsuario, descripcion });
     }
 
+    // cuenta los registros para mostrar la paginacion
     public int Contar()
     {
         using var conexion = conexiones.CreateConnection();
         return conexion.ExecuteScalar<int>("SELECT COUNT(*) FROM Bitacoras");
     }
 
+    // obtiene solo los registros de la pagina solicitada
     public IReadOnlyList<Bitacora> ObtenerPagina(int pagina, int registrosPorPagina)
     {
         using var conexion = conexiones.CreateConnection();

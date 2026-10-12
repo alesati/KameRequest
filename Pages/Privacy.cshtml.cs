@@ -12,6 +12,7 @@ public class PrivacyModel : PageModel
         _logger = logger;
     }
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet()
     {
         // La vista es estatica y no necesita cargar datos

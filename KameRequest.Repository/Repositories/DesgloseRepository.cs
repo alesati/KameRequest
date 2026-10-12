@@ -5,6 +5,7 @@ namespace KameRequest.Repository.Repositories;
 
 public class DesgloseRepository(IDbConnectionFactory conexiones)
 {
+    // obtiene los registros relacionados con una solicitud y su pagina
     public IReadOnlyList<DesgloseSolicitud> ObtenerPaginaPorSolicitud(int idSolicitud, int pagina, int tamano)
     {
         using var conexion = conexiones.CreateConnection();
@@ -18,6 +19,7 @@ public class DesgloseRepository(IDbConnectionFactory conexiones)
         return conexion.Query<DesgloseSolicitud>(sql, new { idSolicitud, tamano, offset = (pagina - 1) * tamano }).ToList();
     }
 
+    // cuenta los registros que pertenecen a la solicitud
     public int ContarPorSolicitud(int idSolicitud)
     {
         using var conexion = conexiones.CreateConnection();
@@ -35,6 +37,7 @@ public class DesgloseRepository(IDbConnectionFactory conexiones)
             """;
         return conexion.ExecuteScalar<decimal>(sql, new { idSolicitud, excluirIdDesglose });
     }
+    // busca un registro por su identificador
     public DesgloseSolicitud? Obtener(int id)
     {
         using var conexion = conexiones.CreateConnection();
@@ -46,6 +49,7 @@ public class DesgloseRepository(IDbConnectionFactory conexiones)
         return conexion.QuerySingleOrDefault<DesgloseSolicitud>(sql, new { id });
     }
 
+    // guarda un nuevo registro en la base de datos
     public int Crear(DesgloseSolicitud desglose)
     {
         using var conexion = conexiones.CreateConnection();
@@ -59,6 +63,7 @@ public class DesgloseRepository(IDbConnectionFactory conexiones)
         return conexion.ExecuteScalar<int>("SELECT LAST_INSERT_ID();");
     }
 
+    // guarda los cambios realizados al registro
     public void Actualizar(DesgloseSolicitud desglose)
     {
         using var conexion = conexiones.CreateConnection();
@@ -75,6 +80,7 @@ public class DesgloseRepository(IDbConnectionFactory conexiones)
         conexion.Execute(sql, desglose);
     }
 
+    // elimina el registro indicado si no tiene relaciones
     public int Eliminar(int id)
     {
         using var conexion = conexiones.CreateConnection();

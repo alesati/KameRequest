@@ -1,4 +1,4 @@
-﻿namespace KameRequest.Models
+namespace KameRequest.Models
 {
     public class TareaReporteDto
     {

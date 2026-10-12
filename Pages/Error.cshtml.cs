@@ -21,6 +21,7 @@ public class ErrorModel : PageModel
         _logger = logger;
     }
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet()
     {
         // Toma el id de la solicitud actual para mostrarlo en la vista de error

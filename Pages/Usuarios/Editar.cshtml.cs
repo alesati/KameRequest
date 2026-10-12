@@ -14,6 +14,7 @@ public class EditarModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) 
     [BindProperty]
     public UsuarioFormulario Datos { get; set; } = new();
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public IActionResult OnGet(int id)
     {
         // Busca el registro segun el id recibido en la ruta
@@ -24,6 +25,7 @@ public class EditarModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) 
         return Page();
     }
 
+    // procesa los datos enviados desde el formulario
     public IActionResult OnPost()
     {
         // Valida y luego guarda los cambios del formulario

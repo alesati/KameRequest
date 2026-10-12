@@ -5,6 +5,7 @@ namespace KameRequest.Repository.Repositories;
 
 public class UsuarioRepository(IDbConnectionFactory conexiones)
 {
+    // cuenta los registros para mostrar la paginacion
     public int Contar()
     {
         using var conexion = conexiones.CreateConnection();
@@ -23,6 +24,7 @@ public class UsuarioRepository(IDbConnectionFactory conexiones)
         return conexion.QuerySingleOrDefault<Usuario>(sql, new { nombreUsuario });
     }
 
+    // obtiene los registros ordenados para mostrarlos en pantalla
     public IEnumerable<Usuario> Listar(int? pagina = null, int? tamano = null)
     {
         using var conexion = conexiones.CreateConnection();
@@ -63,6 +65,7 @@ public class UsuarioRepository(IDbConnectionFactory conexiones)
         return conexion.ExecuteScalar<int>(sql, datos) > 0;
     }
 
+    // guarda un nuevo registro en la base de datos
     public int Crear(UsuarioFormulario datos, string cifrada, byte[] nonce, byte[] etiqueta)
     {
         using var conexion = conexiones.CreateConnection();
@@ -92,6 +95,7 @@ public class UsuarioRepository(IDbConnectionFactory conexiones)
         conexion.Execute(sql, new { nombre, usuario, correo, cifrada, nonce, etiqueta });
     }
 
+    // guarda los cambios realizados al registro
     public void Actualizar(UsuarioFormulario datos, string? cifrada = null, byte[]? nonce = null, byte[]? etiqueta = null)
     {
         using var conexion = conexiones.CreateConnection();
@@ -149,6 +153,7 @@ public class UsuarioRepository(IDbConnectionFactory conexiones)
         return conexion.Execute(sql, new { idUsuario, estado });
     }
 
+    // elimina el registro indicado si no tiene relaciones
     public int Eliminar(int idUsuario)
     {
         using var conexion = conexiones.CreateConnection();

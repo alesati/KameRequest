@@ -15,6 +15,7 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bit
     [BindProperty]
     public InicioSesion Datos { get; set; } = new();
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public IActionResult OnGet(string? mensaje)
     {
         if (mensaje == "sesion")
@@ -23,6 +24,7 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bit
         return User.Identity?.IsAuthenticated == true ? RedirectToPage("/Index") : Page();
     }
 
+    // valida el formulario y realiza la accion de forma asincrona
     public async Task<IActionResult> OnPostAsync()
     {
         // Revisa los Required del modelo antes de consultar la base

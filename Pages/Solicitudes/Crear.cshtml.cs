@@ -15,12 +15,14 @@ public class CrearModel(SolicitudRepository solicitudes, RepresentanteRepository
     public Solicitud Solicitud { get; set; } = new();
     public IReadOnlyList<Representante> Representantes { get; private set; } = [];
 
+    // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet()
     {
         Solicitud.FechaIngreso = DateTime.Today;
         CargarRepresentantes();
     }
 
+    // procesa los datos enviados desde el formulario
     public IActionResult OnPost()
     {
         CargarRepresentantes();
