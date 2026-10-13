@@ -65,10 +65,10 @@ if (!string.IsNullOrWhiteSpace(app.Configuration.GetConnectionString("MySql")) &
 
 app.UseStaticFiles();// permite cargar css, javascript, imagenes y logo desde wwwroot
 
-// prepara las rutas y revisa la cookie antes de abrir una pagina
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
+
+app.UseRouting();// prepara las rutas y revisa la cookie antes de abrir una pagina
+app.UseAuthentication();//lee la cookie que envía el navegador y reconstruye el usuario actual
+app.UseAuthorization();//revisa si la página exige una sesión válida
 
 
 app.Use(async (contexto, siguiente) =>// si una pantalla tiene un error tecnico se intenta guardar en la bitacora

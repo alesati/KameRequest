@@ -13,10 +13,9 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bit
 {
     // Recibe los datos que el usuario escribe en el formulario
     [BindProperty]
-    public InicioSesion Datos { get; set; } = new();
+    public InicioSesion Datos { get; set; } = new();// carga los datos necesarios antes de mostrar la pantalla
 
-    // carga los datos necesarios antes de mostrar la pantalla
-    public IActionResult OnGet(string? mensaje)
+    public IActionResult OnGet(string? mensaje)// valida el formulario y realiza la accion de forma asincrona
     {
         if (mensaje == "sesion")
             ModelState.AddModelError(string.Empty, "Por favor inicie sesión para utilizar el sistema");
@@ -24,7 +23,6 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bit
         return User.Identity?.IsAuthenticated == true ? RedirectToPage("/Index") : Page();
     }
 
-    // valida el formulario y realiza la accion de forma asincrona
     public async Task<IActionResult> OnPostAsync()
     {
         // Revisa los Required del modelo antes de consultar la base

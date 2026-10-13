@@ -23,7 +23,7 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
     {
         if (usuarios.Contar() > 0)
             return;
-        var cifrado = Cifrar(configuracion["UsuarioInicial:Contrasena"] ?? "Admin123*");
+        var cifrado = Cifrar(configuracion["UsuarioInicial:Contrasena"] ?? "Admin123*");//cifra la contraseña del administrador inicial
         usuarios.CrearAdministrador(configuracion["UsuarioInicial:Nombre"] ?? "Administrador", configuracion["UsuarioInicial:Usuario"] ?? "admin", configuracion["UsuarioInicial:Correo"] ?? "admin@kamerequest.local", cifrado.ContrasenaCifrada, cifrado.Nonce, cifrado.EtiquetaAutenticacion);
     }
 
@@ -37,7 +37,7 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
             return ResultadoAcceso.UsuarioBloqueado;
         if (usuario.Estado != "Activo")
             return ResultadoAcceso.UsuarioInactivo;
-        if (Descifrar(usuario) == datos.Contrasena)
+        if (Descifrar(usuario) == datos.Contrasena) //al validar el inicio de sesión.
         {
             usuarios.ActualizarIntentos(usuario.IdUsuario, 0, "Activo");
             return ResultadoAcceso.Correcto;
@@ -70,7 +70,7 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
             return false;
         }
 
-        var cifrado = Cifrar(datos.Contrasena);
+        var cifrado = Cifrar(datos.Contrasena);//al crear un usuario
         datos.IdUsuario = usuarios.Crear(datos, cifrado.ContrasenaCifrada, cifrado.Nonce, cifrado.EtiquetaAutenticacion);
         error = null;
         return true;
@@ -98,7 +98,7 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
             usuarios.Actualizar(datos);
         else
         {
-            var cifrado = Cifrar(datos.Contrasena);
+            var cifrado = Cifrar(datos.Contrasena);//al cambiar una contraseña
             usuarios.Actualizar(datos, cifrado.ContrasenaCifrada, cifrado.Nonce, cifrado.EtiquetaAutenticacion);
         }
 
@@ -144,13 +144,13 @@ public class UsuarioSeguridad(IConfiguration configuracion, UsuarioRepository us
     private (string ContrasenaCifrada, byte[] Nonce, byte[] EtiquetaAutenticacion) Cifrar(string contrasena)
     {
         var clave = Convert.FromBase64String(configuracion["Seguridad:ClaveAes"] ?? throw new InvalidOperationException("Falta configurar Seguridad:ClaveAes"));
-        var nonce = RandomNumberGenerator.GetBytes(12);
+        var nonce = RandomNumberGenerator.GetBytes(12); //genera el nonce aleatorio de 12 bytes
         var texto = Encoding.UTF8.GetBytes(contrasena);
         var cifrado = new byte[texto.Length];
         var etiqueta = new byte[16];
-        using var aes = new AesGcm(clave, etiqueta.Length);
-        aes.Encrypt(nonce, texto, cifrado, etiqueta);
-        return (Convert.ToBase64String(cifrado), nonce, etiqueta);
+        using var aes = new AesGcm(clave, etiqueta.Length);//crea el objeto AesGcm
+        aes.Encrypt(nonce, texto, cifrado, etiqueta);//cifra la contraseña con aes.Encrypt
+        return (Convert.ToBase64String(cifrado), nonce, etiqueta); //devuelve el texto cifrado, nonce y etiqueta
     }
 
     private string Descifrar(Usuario usuario)

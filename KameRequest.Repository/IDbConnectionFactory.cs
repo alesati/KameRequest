@@ -4,7 +4,7 @@ using MySqlConnector;
 
 namespace KameRequest.Repository;
 
-// Centraliza la creacion de conexiones para que las pantallas no conozcan MySqlConnection.
+// Centraliza la creacion de conexiones.
 public interface IDbConnectionFactory
 {
     IDbConnection CreateConnection();

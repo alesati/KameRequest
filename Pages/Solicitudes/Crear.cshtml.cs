@@ -5,6 +5,7 @@ using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MySqlConnector;
 
 namespace KameRequest.Pages.Solicitudes;
 
@@ -28,7 +29,17 @@ public class CrearModel(SolicitudRepository solicitudes, RepresentanteRepository
         CargarRepresentantes();
         if (!ModelState.IsValid)
             return Page();
-        Solicitud.IdSolicitud = solicitudes.Crear(Solicitud);
+        try
+        {
+            Solicitud.IdSolicitud = solicitudes.Crear(Solicitud);
+        }
+        catch (MySqlException error) when (error.Number == 1062)
+        {
+            // evita mostrar el error de MariaDB cuando el consecutivo ya existe
+            ModelState.AddModelError("Solicitud.ConsecutivoOficio", "El consecutivo de oficio ya existe.");
+            return Page();
+        }
+
         var creada = solicitudes.Obtener(Solicitud.IdSolicitud) ?? Solicitud;
         bitacora.RegistrarCreacion(User, "solicitud", creada);
         TempData["Mensaje"] = "La solicitud se creo correctamente.";

@@ -22,8 +22,7 @@ public class IndexModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) :
     public void OnGet(int pagina = 1)
     {
         bitacora.RegistrarConsulta(User, "usuarios");
-        // Carga la pagina solicitada al entrar al mantenimiento
-        CargarUsuarios(pagina);
+        CargarUsuarios(pagina);// Carga la pagina solicitada al entrar al mantenimiento
     }
 
     // cambia el estado seleccionado y muestra el resultado
