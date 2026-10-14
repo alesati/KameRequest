@@ -33,12 +33,12 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
     // carga los datos necesarios antes de mostrar la pantalla
     public IActionResult OnGet(int id, int pagina = 1) => CargarDatos(id, pagina) ? Page() : RedirectToPage("/Solicitudes/Index");
     // valida y agrega el nuevo dato relacionado
-    public IActionResult OnPostAgregar(int idSolicitud)
+    public IActionResult OnPostAgregar(int idSolicitud, bool modal = false)
     {
         if (!DatosValidos(NuevoDesglose))
         {
             MensajeError = "Revise el mes, año, monto y porcentaje de cobro.";
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
         }
 
         if (desgloses.SumarPorcentajePorSolicitud(idSolicitud) + NuevoDesglose.PorcentajeCobro > 100)
@@ -50,7 +50,7 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
             MensajeError = "El porcentaje total de cobro no puede ser mayor a 100%.";
 
 
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
 
 
         }
@@ -62,22 +62,22 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
 
         NuevoDesglose.IdDesglose = desgloses.Crear(NuevoDesglose);
         bitacora.RegistrarCreacion(User, "desglose", NuevoDesglose);
-        return RedirectToPage(new { id = idSolicitud });
+        return VolverAListado(idSolicitud, modal);
     }
 
     // valida y guarda los cambios del formulario
-    public IActionResult OnPostEditar(int idSolicitud)
+    public IActionResult OnPostEditar(int idSolicitud, bool modal = false)
     {
         if (!DatosValidos(DesgloseEditar))
         {
             MensajeError = "Revise el mes, año, monto y porcentaje de cobro.";
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
         }
 
         var anterior = desgloses.Obtener(DesgloseEditar.IdDesglose);
         if (anterior is null || anterior.IdSolicitud != idSolicitud)
 
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
 
 
         if (desgloses.SumarPorcentajePorSolicitud(idSolicitud, DesgloseEditar.IdDesglose) + DesgloseEditar.PorcentajeCobro > 100)
@@ -86,22 +86,22 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
 
             MensajeError = "El porcentaje total de cobro no puede ser mayor a 100%.";
 
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
 
         }
 
 
         desgloses.Actualizar(DesgloseEditar);
         bitacora.RegistrarActualizacion(User, "desglose", anterior, desgloses.Obtener(DesgloseEditar.IdDesglose));
-        return RedirectToPage(new { id = idSolicitud });
+        return VolverAListado(idSolicitud, modal);
     }
 
     // confirma y procesa la eliminacion del registro
-    public IActionResult OnPostEliminar(int idDesglose, int idSolicitud)
+    public IActionResult OnPostEliminar(int idDesglose, int idSolicitud, bool modal = false)
     {
         var eliminado = desgloses.Obtener(idDesglose);
         if (eliminado is null || eliminado.IdSolicitud != idSolicitud)
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
         try
         {
             desgloses.Eliminar(idDesglose);
@@ -112,8 +112,12 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
             MensajeError = "No se puede eliminar un registro con datos relacionados.";
         }
 
-        return RedirectToPage(new { id = idSolicitud });
+        return VolverAListado(idSolicitud, modal);
     }
+
+    // conserva la vista reducida cuando la accion viene desde el modal de solicitudes
+    private RedirectToPageResult VolverAListado(int idSolicitud, bool modal) =>
+        RedirectToPage(new { id = idSolicitud, modal = modal ? 1 : (int?)null });
 
     private bool CargarDatos(int idSolicitud, int pagina)
     {

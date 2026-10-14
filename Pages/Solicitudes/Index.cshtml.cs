@@ -10,12 +10,14 @@ using MySqlConnector;
 namespace KameRequest.Pages.Solicitudes;
 
 [Authorize]
-public class IndexModel(SolicitudRepository solicitudes, BitacoraRegistro bitacora) : PageModel
+public class IndexModel(SolicitudRepository solicitudes, RepresentanteRepository representantes, BitacoraRegistro bitacora) : PageModel
 {
     private const int RegistrosPorPagina = 5;
     public IReadOnlyList<Solicitud> Solicitudes { get; private set; } = [];
     public int PaginaActual { get; private set; }
     public int TotalPaginas { get; private set; }
+    public IReadOnlyList<Representante> Representantes { get; private set; } = [];
+    public IReadOnlyList<EstadoSolicitud> Estados { get; private set; } = [];
 
     // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet(int pagina = 1)
@@ -25,6 +27,8 @@ public class IndexModel(SolicitudRepository solicitudes, BitacoraRegistro bitaco
         TotalPaginas = Math.Max(1, (int)Math.Ceiling(total / (double)RegistrosPorPagina));
         PaginaActual = Math.Clamp(pagina, 1, TotalPaginas);
         Solicitudes = solicitudes.ObtenerPagina(PaginaActual, RegistrosPorPagina);
+        Representantes = representantes.Listar();
+        Estados = solicitudes.ListarEstados();
     }
 
     // confirma y procesa la eliminacion del registro
@@ -61,5 +65,7 @@ public class IndexModel(SolicitudRepository solicitudes, BitacoraRegistro bitaco
         return fecha;
     }
 }
+
+
 
 

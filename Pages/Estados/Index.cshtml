@@ -1,85 +1,28 @@
 @page
 @model KameRequest.Pages.Estados.IndexModel
 @{
-    ViewData["Title"] = "Estados";
+    ViewData["Title"] = "Estados de solicitudes";
 }
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>Estados</h1>
-        <div class="d-flex gap-2">
+<div class="container py-4 app-page maintenance-page">
+    <div class="page-header"><h1>Estados de solicitudes</h1><div class="page-header-actions"><a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary">Regresar</a><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearEstado">Nuevo estado</button></div></div>
+    @if (TempData["Mensaje"] is string mensaje) { <div class="alert alert-success">@mensaje</div> }
+    @if (TempData["Error"] is string error) { <div class="alert alert-danger">@error</div> }
 
-            <a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary">Regresar a mantenimientos</a>
-
-            <a asp-page="Crear" class="btn btn-primary">Nuevo estado</a>
-
-        </div>
-    </div>
-
-    @if (TempData["Mensaje"] is string mensaje)
+    <div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Identificador</th><th>Nombre</th><th>Acciones</th></tr></thead><tbody>
+    @foreach (var estado in Model.Estados)
     {
-        <div class="alert alert-success">@mensaje</div>
+        <tr><td>@estado.idEstado</td><td>@estado.Nombre</td><td class="text-nowrap">
+            <button type="button" class="btn btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editarEstado-@estado.idEstado" @(estado.idEstado == 1 ? "disabled" : null)>Editar</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarEstado-@estado.idEstado">Eliminar</button>
+            <div class="modal fade" id="editarEstado-@estado.idEstado" tabindex="-1" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><form method="post" asp-page="Editar"><div class="modal-header"><h2 class="modal-title fs-5">Editar estado</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body"><input type="hidden" name="Estado.idEstado" value="@estado.idEstado" /><label class="form-label">Nombre</label><input class="form-control" name="Estado.Nombre" value="@estado.Nombre" required /></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Guardar cambios</button></div></form></div></div></div>
+            <div class="modal fade" id="eliminarEstado-@estado.idEstado" tabindex="-1" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5">Eliminar estado</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body">¿Desea eliminar el estado <strong>@estado.Nombre</strong>?</div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><form method="post" asp-page-handler="Eliminar"><input type="hidden" name="idEstado" value="@estado.idEstado" /><button type="submit" class="btn btn-danger">Eliminar</button></form></div></div></div></div>
+        </td></tr>
     }
-    @if (TempData["Error"] is string error)
-    {
-        <div class="alert alert-danger">@error</div>
-    }
-
-    <div class="table-responsive">
-        <table class="table align-middle">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var estado in Model.Estados)
-                {
-                    <tr>
-                        <td>@estado.idEstado</td>
-                        <td>@estado.Nombre</td>
-                        <td class="text-nowrap">
-                            <a asp-page="Editar" asp-route-id="@estado.idEstado" class="btn btn-sm btn-outline-primary">Editar</a>
-                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarestado-@estado.idEstado">Eliminar</button>
-
-                            <div class="modal fade" id="eliminarestado-@estado.idEstado" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h2 class="modal-title fs-5">Eliminar estado</h2>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                        </div>
-                                        <div class="modal-body">¿Realmente desea eliminar el elemento seleccionado?</div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
-                                            <form method="post" asp-page-handler="Eliminar">
-                                                <input type="hidden" name="idestado" value="@estado.idEstado" />
-                                                <button type="submit" class="btn btn-danger">Sí</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    @if (Model.TotalPaginas > 1)
-    {
-        <nav aria-label="Paginacion de estados">
-            <ul class="pagination">
-                @for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++)
-                {
-                    <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")">
-                        <a class="page-link" asp-route-pagina="@pagina">@pagina</a>
-                    </li>
-                }
-            </ul>
-        </nav>
-    }
+    </tbody></table></div>
+    @if (Model.TotalPaginas > 1) { <nav aria-label="Paginacion de estados"><ul class="pagination">@for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++) { <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")"><a class="page-link" asp-route-pagina="@pagina">@pagina</a></li> }</ul></nav> }
 </div>
+
+<div class="modal fade" id="modalCrearEstado" tabindex="-1" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><form method="post" asp-page="Crear"><div class="modal-header"><h2 class="modal-title fs-5">Nuevo estado</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body"><label class="form-label">Nombre</label><input class="form-control" name="Estado.Nombre" required /></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Guardar estado</button></div></form></div></div></div>
+
+

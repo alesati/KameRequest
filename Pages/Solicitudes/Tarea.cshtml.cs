@@ -31,18 +31,18 @@ public class TareasModel(SolicitudRepository solicitudes, TareaRepository tareas
     // carga los datos necesarios antes de mostrar la pantalla
     public IActionResult OnGet(int id, int pagina = 1) => CargarDatos(id, pagina) ? Page() : RedirectToPage("/Solicitudes/Index");
     // valida y agrega el nuevo dato relacionado
-    public IActionResult OnPostAgregar(int idSolicitud)
+    public IActionResult OnPostAgregar(int idSolicitud, bool modal = false)
     {
         if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var idUsuario))
         {
             MensajeError = "No se pudo identificar el usuario de la sesion.";
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
         }
 
         if (string.IsNullOrWhiteSpace(NuevaTarea.Descripcion) || NuevaTarea.HorasInvertidas < 0)
         {
             MensajeError = "Digite la descripcion y las horas invertidas.";
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
         }
 
         NuevaTarea.IdSolicitud = idSolicitud;
@@ -50,46 +50,50 @@ public class TareasModel(SolicitudRepository solicitudes, TareaRepository tareas
         NuevaTarea.Usuario = User.Identity?.Name ?? "Usuario";
         NuevaTarea.IdTarea = tareas.Crear(NuevaTarea);
         bitacora.RegistrarCreacion(User, "tarea", NuevaTarea);
-        return RedirectToPage(new { id = idSolicitud });
+        return VolverAListado(idSolicitud, modal);
     }
 
     // valida y guarda los cambios del formulario
-    public IActionResult OnPostEditar(int idSolicitud)
+    public IActionResult OnPostEditar(int idSolicitud, bool modal = false)
     {
         var anterior = tareas.Obtener(TareaEditar.IdTarea);
         if (anterior is null || anterior.IdSolicitud != idSolicitud)
         {
             MensajeError = "No se encontro la tarea solicitada.";
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
         }
 
         if (string.IsNullOrWhiteSpace(TareaEditar.Descripcion) || TareaEditar.HorasInvertidas < 0)
         {
             MensajeError = "Digite la descripcion y las horas invertidas.";
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
         }
 
         tareas.Actualizar(TareaEditar);
         bitacora.RegistrarActualizacion(User, "tarea", anterior, tareas.Obtener(TareaEditar.IdTarea));
-        return RedirectToPage(new { id = idSolicitud });
+        return VolverAListado(idSolicitud, modal);
     }
 
     // confirma y procesa la eliminacion del registro
-    public IActionResult OnPostEliminar(int idTarea, int idSolicitud)
+    public IActionResult OnPostEliminar(int idTarea, int idSolicitud, bool modal = false)
     {
         var tarea = tareas.Obtener(idTarea);
         if (tarea is null || tarea.IdSolicitud != idSolicitud)
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
         if (tarea.IdDesglose is not null)
         {
             MensajeError = "No se puede eliminar un registro con datos relacionados.";
-            return RedirectToPage(new { id = idSolicitud });
+            return VolverAListado(idSolicitud, modal);
         }
 
         tareas.Eliminar(idTarea);
         bitacora.RegistrarEliminacion(User, "tarea", tarea);
-        return RedirectToPage(new { id = idSolicitud });
+        return VolverAListado(idSolicitud, modal);
     }
+
+    // conserva la vista reducida cuando la accion viene desde el modal de solicitudes
+    private RedirectToPageResult VolverAListado(int idSolicitud, bool modal) =>
+        RedirectToPage(new { id = idSolicitud, modal = modal ? 1 : (int?)null });
 
     private bool CargarDatos(int idSolicitud, int pagina)
     {

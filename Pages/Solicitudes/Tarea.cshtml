@@ -2,10 +2,11 @@
 @model KameRequest.Pages.Solicitudes.TareasModel
 @{
     ViewData["Title"] = "Gestión de Tareas";
+    Layout = HttpContext.Request.Query.ContainsKey("modal") ? "_ModalLayout" : "_Layout";
 }
 
-<div class="container-fluid mt-4 px-4 solicitudes-page">
-    <a asp-page="/Solicitudes/Index" class="btn btn-outline-secondary mb-3">
+<div class="container-fluid mt-4 px-4 solicitudes-page gestion-listado">
+    <a asp-page="/Solicitudes/Index" class="btn btn-outline-secondary mb-3 volver-solicitudes">
         ← Volver a Solicitudes
     </a>
 
@@ -37,11 +38,11 @@
     }
 
     <!-- TABLA DE TAREAS -->
-    <div class="card shadow-sm">
+    <div class="card shadow-sm gestion-tabla">
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Tareas Asociadas</h5>
-            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevaTarea">
-                + Agregar Tarea
+            <button type="button" class="btn btn-success btn-sm" onclick="mostrarFormulario('modalNuevaTarea')">
+                Nueva tarea
             </button>
         </div>
         <div class="card-body">
@@ -69,11 +70,11 @@
                                     <td>
                                         <div class="d-flex justify-content-center gap-1">
                                             @* El usuario de una tarea se conserva, solo se editan los datos de ejecucion *@
-                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                            <button type="button" class="btn btn-sm btn-edit"
                                                     onclick="abrirModalEditar(@item.IdTarea, '@item.Descripcion.Replace("'", "\\'").Replace("\r\n", " ")', '@item.Fecha.ToString("yyyy-MM-dd")', @item.HorasInvertidas.ToString(System.Globalization.CultureInfo.InvariantCulture))">
                                                 Editar
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmarEliminarTarea(@item.IdTarea)">X</button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmarEliminarTarea(@item.IdTarea)">Eliminar</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -95,7 +96,7 @@
                         @for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++)
                         {
                             <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")">
-                                <a class="page-link" asp-route-id="@Model.SolicitudActual?.IdSolicitud" asp-route-pagina="@pagina">@pagina</a>
+                                <a class="page-link" asp-route-id="@Model.SolicitudActual?.IdSolicitud" asp-route-pagina="@pagina" asp-route-modal="@(HttpContext.Request.Query.ContainsKey("modal") ? "1" : null)">@pagina</a>
                             </li>
                         }
                     </ul>
@@ -103,19 +104,18 @@
             }
         </div>
     </div>
-</div>
-
-<!-- MODAL PARA AGREGAR TAREA -->
-<div class="modal fade" id="modalNuevaTarea" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+<!-- FORMULARIO PARA AGREGAR TAREA -->
+<div class="gestion-formulario d-none" id="modalNuevaTarea" tabindex="-1" aria-hidden="true">
+    <div class="gestion-formulario-dialog">
+        <div class="gestion-formulario-content">
             <form method="post" asp-page-handler="Agregar">
+                <input type="hidden" name="modal" value="@(HttpContext.Request.Query.ContainsKey("modal") ? "true" : "false")" />
                 <input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" />
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Agregar Tarea</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <div class="gestion-formulario-header bg-success text-white">
+                    <h5 class="modal-title">Nueva tarea</h5>
+                    <button type="button" class="btn-close btn-close-white" onclick="cerrarFormulario()"></button>
                 </div>
-                <div class="modal-body">
+                <div class="gestion-formulario-body">
                     <div class="mb-3">
                         <label class="form-label">Descripción de la Tarea</label>
                         <textarea asp-for="NuevaTarea.Descripcion" class="form-control" rows="3" required placeholder="Escriba el detalle del trabajo realizado..."></textarea>
@@ -135,8 +135,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <div class="gestion-formulario-footer">
+                    <button type="button" class="btn btn-secondary" onclick="cerrarFormulario()">Cancelar</button>
                     <button type="submit" class="btn btn-success">Guardar Tarea</button>
                 </div>
             </form>
@@ -144,19 +144,20 @@
     </div>
 </div>
 
-<!-- MODAL PARA EDITAR TAREA -->
-<div class="modal fade" id="modalEditarTarea" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+<!-- FORMULARIO PARA EDITAR TAREA -->
+<div class="gestion-formulario d-none" id="modalEditarTarea" tabindex="-1" aria-hidden="true">
+    <div class="gestion-formulario-dialog">
+        <div class="gestion-formulario-content">
             <form method="post" asp-page-handler="Editar">
+                <input type="hidden" name="modal" value="@(HttpContext.Request.Query.ContainsKey("modal") ? "true" : "false")" />
                 <input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" />
                 <input type="hidden" id="editIdTarea" asp-for="TareaEditar.IdTarea" />
 
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Editar Tarea</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <div class="gestion-formulario-header bg-primary text-white">
+                    <h5 class="modal-title">Editar tarea</h5>
+                    <button type="button" class="btn-close btn-close-white" onclick="cerrarFormulario()"></button>
                 </div>
-                <div class="modal-body">
+                <div class="gestion-formulario-body">
                     <div class="mb-3">
                         <label class="form-label">Descripción de la Tarea</label>
                         <textarea id="editDescripcion" asp-for="TareaEditar.Descripcion" class="form-control" rows="3" required></textarea>
@@ -176,8 +177,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <div class="gestion-formulario-footer">
+                    <button type="button" class="btn btn-secondary" onclick="cerrarFormulario()">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Actualizar Cambios</button>
                 </div>
             </form>
@@ -185,27 +186,39 @@
     </div>
 </div>
 
-<!-- MODAL PARA CONFIRMAR ELIMINACION -->
-<div class="modal fade" id="modalEliminarTarea" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Eliminar tarea</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">¿Realmente desea eliminar el elemento seleccionado?</div>
-    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button><form method="post" asp-page-handler="Eliminar"><input type="hidden" id="eliminarIdTarea" name="idTarea" /><input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" /><button class="btn btn-danger">Sí</button></form></div></div></div>
+<!-- CONFIRMACION PARA ELIMINAR TAREA -->
+<div class="gestion-formulario d-none" id="modalEliminarTarea" tabindex="-1" aria-hidden="true">
+    <div class="gestion-formulario-dialog"><div class="gestion-formulario-content"><div class="gestion-formulario-header"><h5 class="modal-title">Eliminar tarea</h5><button type="button" class="btn-close" onclick="cerrarFormulario()"></button></div>
+    <div class="gestion-formulario-body">¿Realmente desea eliminar el elemento seleccionado?</div>
+    <div class="gestion-formulario-footer"><button type="button" class="btn btn-secondary" onclick="cerrarFormulario()">Cancelar</button><form method="post" asp-page-handler="Eliminar">
+        <input type="hidden" name="modal" value="@(HttpContext.Request.Query.ContainsKey("modal") ? "true" : "false")" /><input type="hidden" id="eliminarIdTarea" name="idTarea" /><input type="hidden" name="idSolicitud" value="@Model.SolicitudActual?.IdSolicitud" /><button class="btn btn-danger">Eliminar</button></form></div></div></div>
+</div>
 </div>
 @section Scripts {
     <script>
-        function confirmarEliminarTarea(idTarea) { document.getElementById("eliminarIdTarea").value = idTarea; new bootstrap.Modal(document.getElementById("modalEliminarTarea")).show(); }
+        // muestra el formulario dentro del mismo espacio donde estaba la tabla
+        function mostrarFormulario(id) {
+            document.querySelectorAll(".gestion-formulario").forEach(formulario => formulario.classList.add("d-none"));
+            document.getElementById(id)?.classList.remove("d-none");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // al cancelar se oculta el formulario y vuelve a mostrarse el listado
+        function cerrarFormulario() {
+            document.querySelectorAll(".gestion-formulario").forEach(formulario => formulario.classList.add("d-none"));
+        }
+
+        function confirmarEliminarTarea(idTarea) {
+            document.getElementById("eliminarIdTarea").value = idTarea;
+            mostrarFormulario("modalEliminarTarea");
+        }
 
         function abrirModalEditar(idTarea, descripcion, fecha, horas) {
             document.getElementById('editIdTarea').value = idTarea;
             document.getElementById('editDescripcion').value = descripcion;
             document.getElementById('editFecha').value = fecha;
             document.getElementById('editHorasInvertidas').value = horas;
-
-            var modalElement = document.getElementById('modalEditarTarea');
-            var bootstrapModal = new bootstrap.Modal(modalElement);
-            bootstrapModal.show();
+            mostrarFormulario("modalEditarTarea");
         }
     </script>
 }
-
-

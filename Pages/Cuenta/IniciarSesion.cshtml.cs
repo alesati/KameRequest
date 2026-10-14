@@ -49,8 +49,7 @@ public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bit
                 new(ClaimTypes.GivenName, usuario.NombreCompleto),
                 new(ClaimTypes.Role, usuario.TipoUsuario)
             };
-            var identidad = new ClaimsIdentity(datosUsuario, CookieAuthenticationDefaults.AuthenticationScheme);
-            // Crea la cookie que permite navegar por las paginas protegidas
+            var identidad = new ClaimsIdentity(datosUsuario, CookieAuthenticationDefaults.AuthenticationScheme); // Crea la cookie que permite navegar por las paginas protegidas
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identidad));
             bitacora.Registrar(usuario.IdUsuario, "Inicio de sesion exitoso.");
             return RedirectToPage("/Index");

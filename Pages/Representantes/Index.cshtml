@@ -4,82 +4,28 @@
     ViewData["Title"] = "Representantes";
 }
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="container py-4 app-page maintenance-page">
+    <div class="page-header">
         <h1>Representantes</h1>
-        <div class="d-flex gap-2">
-
-            <a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary">Regresar a mantenimientos</a>
-
-            <a asp-page="Crear" class="btn btn-primary">Nuevo representante</a>
-
-        </div>
+        <div class="page-header-actions"><a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary">Regresar</a><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearRepresentante">Nuevo representante</button></div>
     </div>
+    @if (TempData["Mensaje"] is string mensaje) { <div class="alert alert-success">@mensaje</div> }
+    @if (TempData["Error"] is string error) { <div class="alert alert-danger">@error</div> }
 
-    @if (TempData["Mensaje"] is string mensaje)
+    <div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Nombre</th><th>Correo</th><th>Acciones</th></tr></thead><tbody>
+    @foreach (var representante in Model.Representantes)
     {
-        <div class="alert alert-success">@mensaje</div>
+        <tr><td>@representante.Nombre</td><td>@representante.Email</td><td class="text-nowrap">
+            <button type="button" class="btn btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editarRepresentante-@representante.IdRepresentante">Editar</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarRepresentante-@representante.IdRepresentante">Eliminar</button>
+            <div class="modal fade" id="editarRepresentante-@representante.IdRepresentante" tabindex="-1" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><form method="post" asp-page="Editar"><div class="modal-header"><h2 class="modal-title fs-5">Editar representante</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body"><input type="hidden" name="Representante.IdRepresentante" value="@representante.IdRepresentante" /><div class="mb-3"><label class="form-label">Nombre</label><input class="form-control" name="Representante.Nombre" value="@representante.Nombre" required /></div><div><label class="form-label">Correo</label><input type="email" class="form-control" name="Representante.Email" value="@representante.Email" required /></div></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Guardar cambios</button></div></form></div></div></div>
+            <div class="modal fade" id="eliminarRepresentante-@representante.IdRepresentante" tabindex="-1" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5">Eliminar representante</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body">¿Desea eliminar a <strong>@representante.Nombre</strong>?</div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><form method="post" asp-page-handler="Eliminar"><input type="hidden" name="idRepresentante" value="@representante.IdRepresentante" /><button type="submit" class="btn btn-danger">Eliminar</button></form></div></div></div></div>
+        </td></tr>
     }
-    @if (TempData["Error"] is string error)
-    {
-        <div class="alert alert-danger">@error</div>
-    }
-
-    <div class="table-responsive">
-        <table class="table align-middle">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var representante in Model.Representantes)
-                {
-                    <tr>
-                        <td>@representante.Nombre</td>
-                        <td>@representante.Email</td>
-                        <td class="text-nowrap">
-                            <a asp-page="Editar" asp-route-id="@representante.IdRepresentante" class="btn btn-sm btn-outline-primary">Editar</a>
-                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarRepresentante-@representante.IdRepresentante">Eliminar</button>
-
-                            <div class="modal fade" id="eliminarRepresentante-@representante.IdRepresentante" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h2 class="modal-title fs-5">Eliminar representante</h2>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                        </div>
-                                        <div class="modal-body">¿Realmente desea eliminar el elemento seleccionado?</div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
-                                            <form method="post" asp-page-handler="Eliminar">
-                                                <input type="hidden" name="idRepresentante" value="@representante.IdRepresentante" />
-                                                <button type="submit" class="btn btn-danger">Sí</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    @if (Model.TotalPaginas > 1)
-    {
-        <nav aria-label="Paginacion de representantes">
-            <ul class="pagination">
-                @for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++)
-                {
-                    <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")">
-                        <a class="page-link" asp-route-pagina="@pagina">@pagina</a>
-                    </li>
-                }
-            </ul>
-        </nav>
-    }
+    </tbody></table></div>
+    @if (Model.TotalPaginas > 1) { <nav aria-label="Paginacion de representantes"><ul class="pagination">@for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++) { <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")"><a class="page-link" asp-route-pagina="@pagina">@pagina</a></li> }</ul></nav> }
 </div>
+
+<div class="modal fade" id="modalCrearRepresentante" tabindex="-1" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><form method="post" asp-page="Crear"><div class="modal-header"><h2 class="modal-title fs-5">Nuevo representante</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body"><div class="mb-3"><label class="form-label">Nombre</label><input class="form-control" name="Representante.Nombre" required /></div><div><label class="form-label">Correo</label><input type="email" class="form-control" name="Representante.Email" required /></div></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Guardar representante</button></div></form></div></div></div>
+
+

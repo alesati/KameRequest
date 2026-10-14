@@ -4,12 +4,12 @@
     ViewData["Title"] = "Usuarios";
 }
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="container py-4 app-page maintenance-page">
+    <div class="page-header">
         <h1>Usuarios</h1>
-        <div class="d-flex gap-2">
-            <a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary">Regresar a mantenimientos</a>
-            <a asp-page="Crear" class="btn btn-primary">Nuevo usuario</a>
+        <div class="page-header-actions">
+            <a asp-page="/Mantenimientos/Index" class="btn btn-outline-secondary">Regresar</a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearUsuario">Nuevo usuario</button>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
     }
 
     <div class="table-responsive">
-        <table class="table align-middle">
+        <table class="table table-hover align-middle">
             <thead>
                 <tr>
                     <th>Nombre de usuario</th>
@@ -51,26 +51,36 @@
                             </form>
                         </td>
                         <td class="text-nowrap">
-                            <a asp-page="Editar" asp-route-id="@usuario.IdUsuario" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <button type="button" class="btn btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editarUsuario-@usuario.IdUsuario">Editar</button>
                             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarUsuario-@usuario.IdUsuario">Eliminar</button>
 
-                            <div class="modal fade" id="eliminarUsuario-@usuario.IdUsuario" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog">
+                            <div class="modal fade" id="editarUsuario-@usuario.IdUsuario" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-scrollable">
                                     <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h2 class="modal-title fs-5">Eliminar usuario</h2>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                        </div>
-                                        <div class="modal-body">¿Realmente desea eliminar el elemento seleccionado?</div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No, cancelar</button>
-                                            <form method="post" asp-page-handler="Eliminar">
-                                                <input type="hidden" name="idUsuario" value="@usuario.IdUsuario" />
-                                                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
-                                            </form>
-                                        </div>
+                                        <form method="post" asp-page="Editar">
+                                            <div class="modal-header">
+                                                <h2 class="modal-title fs-5">Editar usuario</h2>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="hidden" name="Datos.IdUsuario" value="@usuario.IdUsuario" />
+                                                <input type="hidden" name="Datos.TipoUsuario" value="@usuario.TipoUsuario" />
+                                                <div class="row g-3">
+                                                    <div class="col-md-6"><label class="form-label">Nombre de usuario</label><input class="form-control" name="Datos.NombreUsuario" value="@usuario.NombreUsuario" required /></div>
+                                                    <div class="col-md-6"><label class="form-label">Nombre completo</label><input class="form-control" name="Datos.NombreCompleto" value="@usuario.NombreCompleto" required /></div>
+                                                    <div class="col-md-6"><label class="form-label">Correo</label><input type="email" class="form-control" name="Datos.Correo" value="@usuario.Correo" required /></div>
+                                                    <div class="col-md-6"><label class="form-label">Estado</label><select class="form-select" name="Datos.Estado"><option value="Activo" selected="@(usuario.Estado == "Activo")">Activo</option><option value="Inactivo" selected="@(usuario.Estado == "Inactivo")">Inactivo</option><option value="Bloqueado" selected="@(usuario.Estado == "Bloqueado")">Bloqueado</option></select></div>
+                                                    <div class="col-12"><label class="form-label">Nueva contraseña <span class="text-muted">(opcional)</span></label><input type="password" class="form-control" name="Datos.Contrasena" /></div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Guardar cambios</button></div>
+                                        </form>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="modal fade" id="eliminarUsuario-@usuario.IdUsuario" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5">Eliminar usuario</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body">¿Desea eliminar el usuario <strong>@usuario.NombreUsuario</strong>?</div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><form method="post" asp-page-handler="Eliminar"><input type="hidden" name="idUsuario" value="@usuario.IdUsuario" /><button type="submit" class="btn btn-danger">Eliminar</button></form></div></div></div>
                             </div>
                         </td>
                     </tr>
@@ -81,17 +91,12 @@
 
     @if (Model.TotalPaginas > 1)
     {
-        <nav aria-label="Paginacion de usuarios">
-            <ul class="pagination">
-                @for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++)
-                {
-                    <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")">
-                        <a class="page-link" asp-route-pagina="@pagina">@pagina</a>
-                    </li>
-                }
-            </ul>
-        </nav>
+        <nav aria-label="Paginacion de usuarios"><ul class="pagination">@for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++) { <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")"><a class="page-link" asp-route-pagina="@pagina">@pagina</a></li> }</ul></nav>
     }
-
-
 </div>
+
+<div class="modal fade" id="modalCrearUsuario" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content"><form method="post" asp-page="Crear"><div class="modal-header"><h2 class="modal-title fs-5">Nuevo usuario</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body"><input type="hidden" name="Datos.TipoUsuario" value="Usuario" /><input type="hidden" name="Datos.Estado" value="Activo" /><div class="row g-3"><div class="col-md-6"><label class="form-label">Nombre de usuario</label><input class="form-control" name="Datos.NombreUsuario" required /></div><div class="col-md-6"><label class="form-label">Nombre completo</label><input class="form-control" name="Datos.NombreCompleto" required /></div><div class="col-md-6"><label class="form-label">Correo</label><input type="email" class="form-control" name="Datos.Correo" required /></div><div class="col-md-6"><label class="form-label">Contraseña</label><input type="password" class="form-control" name="Datos.Contrasena" required /></div></div></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Guardar usuario</button></div></form></div></div>
+</div>
+
+

@@ -685,3 +685,467 @@ h1, h2, h3 { color: var(--azul); }
         justify-content: flex-end;
     }
 }
+
+/* Linea grafica comun para listados, formularios y modales */
+.content .container,
+.content .container-fluid {
+    max-width: 1440px;
+}
+
+.app-page h1 {
+    margin: 0;
+    font-size: clamp(1.55rem, 2.8vw, 2rem);
+    font-weight: 700;
+    color: var(--azul);
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.page-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.content .alert {
+    border: 0;
+    border-left: 4px solid currentColor;
+    border-radius: .65rem;
+    box-shadow: 0 3px 10px rgba(16, 45, 84, .06);
+}
+
+.content .table-responsive {
+    overflow: hidden;
+    border: 1px solid var(--borde);
+    border-radius: .8rem;
+    background: #fff;
+    box-shadow: 0 5px 16px rgba(16, 45, 84, .06);
+}
+
+.content .table {
+    margin-bottom: 0;
+    --bs-table-striped-bg: #f7fafc;
+    --bs-table-hover-bg: #eef7f8;
+}
+
+.content .table > thead > tr > th {
+    padding: .85rem .8rem;
+    border-color: var(--azul);
+    background: var(--azul);
+    color: #fff;
+    font-size: .79rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    vertical-align: middle;
+}
+
+.content .table > tbody > tr > td {
+    padding: .8rem;
+    border-color: var(--borde);
+    color: var(--texto);
+    vertical-align: middle;
+}
+
+.btn {
+    border-radius: .48rem;
+    font-weight: 600;
+}
+
+.btn-primary,
+.btn-success {
+    background: var(--naranja);
+    border-color: var(--naranja);
+    color: #fff;
+}
+
+.btn-primary:hover,
+.btn-success:hover,
+.btn-primary:focus,
+.btn-success:focus {
+    background: #e97818;
+    border-color: #e97818;
+    color: #fff;
+}
+
+.btn-info {
+    background: var(--turquesa);
+    border-color: var(--turquesa);
+    color: #fff;
+}
+
+.btn-info:hover,
+.btn-info:focus {
+    background: #0b92a2;
+    border-color: #0b92a2;
+    color: #fff;
+}
+
+.btn-outline-primary {
+    border-color: var(--turquesa);
+    color: #087d8c;
+}
+
+.btn-outline-primary:hover {
+    background: var(--turquesa);
+    border-color: var(--turquesa);
+    color: #fff;
+}
+
+.btn-danger {
+    background: #c84f75;
+    border-color: #c84f75;
+}
+
+.btn-danger:hover,
+.btn-danger:focus {
+    background: #ad3d61;
+    border-color: #ad3d61;
+}
+
+.btn-outline-danger {
+    border-color: #c84f75;
+    color: #b13f64;
+}
+
+.btn-outline-danger:hover {
+    background: #c84f75;
+    border-color: #c84f75;
+    color: #fff;
+}
+
+.btn-outline-secondary,
+.btn-secondary {
+    border-color: var(--borde);
+    color: var(--texto);
+    background: #fff;
+}
+
+.btn-outline-secondary:hover,
+.btn-secondary:hover {
+    border-color: var(--borde);
+    background: var(--borde);
+    color: var(--azul);
+}
+
+.form-control,
+.form-select {
+    border-color: var(--borde);
+    color: var(--texto);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--turquesa);
+    box-shadow: 0 0 0 .2rem rgba(16, 173, 192, .16);
+}
+
+.modal-content {
+    overflow: hidden;
+    border: 1px solid var(--borde);
+    border-radius: .85rem;
+    box-shadow: 0 18px 42px rgba(16, 45, 84, .22);
+}
+
+.modal-header {
+    border-bottom: 0;
+    background: var(--azul) !important;
+    color: #fff;
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+.modal-body {
+    padding: 1.35rem;
+}
+
+.modal-footer {
+    border-top-color: var(--borde);
+    background: var(--fondo);
+}
+
+.pagination {
+    margin-top: 1rem;
+    gap: .25rem;
+}
+
+.page-link {
+    border: 1px solid var(--borde);
+    border-radius: .4rem;
+    color: var(--azul);
+}
+
+.page-item.active .page-link {
+    border-color: var(--naranja);
+    background: var(--naranja);
+}
+
+@media (max-width: 576px) {
+    .page-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .page-header-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .page-header-actions .btn {
+        width: 100%;
+    }
+
+    .content .table > thead > tr > th,
+    .content .table > tbody > tr > td {
+        padding: .65rem;
+    }
+
+    .modal-dialog {
+        margin: .75rem;
+    }
+}
+
+/* Tareas y desgloses se muestran dentro de un modal desde solicitudes */
+.gestion-modal .modal-dialog {
+    width: min(1420px, calc(100% - 2rem));
+    max-width: 1420px;
+    height: min(880px, calc(100dvh - 2rem));
+}
+
+.gestion-modal .modal-content,
+.gestion-modal .modal-body {
+    min-height: 0;
+}
+
+.gestion-modal iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 700px;
+    border: 0;
+    background: var(--fondo);
+}
+
+.modal-page .volver-solicitudes {
+    display: none;
+}
+
+.modal-page .solicitudes-page {
+    margin-top: 0 !important;
+    padding-top: 1rem;
+}
+
+.modal-page .solicitudes-page .container-fluid {
+    padding-inline: 1rem !important;
+}
+
+@media (max-width: 1199px) {
+    .gestion-modal .modal-dialog { width: 100%; height: 100dvh; }
+    .gestion-modal iframe { min-height: calc(100dvh - 72px); }
+}
+
+/* Editar es una accion secundaria: borde azul marino, sin repetir el turquesa */
+.btn-edit {
+    border: 1px solid var(--azul);
+    background: #fff;
+    color: var(--azul);
+}
+
+.btn-edit:hover,
+.btn-edit:focus {
+    border-color: var(--azul);
+    background: var(--azul);
+    color: #fff;
+}
+
+/* El titulo del modal siempre se ve sobre la cabecera azul */
+.modal-header .modal-title {
+    color: #fff !important;
+}
+
+/* Editar mantiene un estilo de contorno, como eliminar */
+.btn-edit {
+    border: 1px solid var(--azul) !important;
+    background: #fff !important;
+    color: var(--azul) !important;
+}
+
+.btn-edit:hover,
+.btn-edit:focus {
+    border-color: var(--azul) !important;
+    background: var(--azul) !important;
+    color: #fff !important;
+}
+
+/* Editar usa contorno naranja para diferenciarse de eliminar y de tareas */
+.btn-edit {
+    border: 1px solid var(--naranja) !important;
+    background: transparent !important;
+    color: #c65f0b !important;
+}
+
+.btn-edit:hover,
+.btn-edit:focus {
+    border-color: var(--naranja) !important;
+    background: var(--naranja) !important;
+    color: #fff !important;
+}
+
+/* Editar usa el azul del sistema con el mismo estilo de contorno que eliminar */
+.btn-edit {
+    border: 1px solid var(--azul) !important;
+    background: transparent !important;
+    color: var(--azul) !important;
+}
+
+.btn-edit:hover,
+.btn-edit:focus {
+    border-color: var(--azul) !important;
+    background: var(--azul) !important;
+    color: #fff !important;
+}
+
+/* Dentro del modal principal los formularios se muestran en linea, sin modales anidados */
+.modal-page .modal.modal-inline-active {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    background: transparent;
+    opacity: 1 !important;
+}
+
+.modal-page .modal-inline-active .modal-dialog {
+    width: auto;
+    max-width: none;
+    margin: 1rem 0;
+    transform: none;
+}
+
+.modal-page .modal-inline-active .modal-content {
+    box-shadow: 0 5px 16px rgba(16, 45, 84, .12);
+}
+
+/* En tareas y desgloses se mantiene una sola ventana: el formulario sustituye el listado */
+.modal-page.gestion-form-activa .gestion-listado {
+    display: none;
+}
+
+.modal-page .modal.modal-inline-active {
+    margin: 0;
+    padding: 1rem;
+}
+
+.modal-page .modal-inline-active .modal-dialog {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.modal-page .modal-inline-active .modal-header {
+    border-radius: .75rem .75rem 0 0;
+}
+
+/* Formularios de tareas y desgloses dentro del contenido del mismo modal */
+.gestion-formulario {
+    padding: 1rem;
+}
+
+.gestion-formulario-dialog {
+    width: min(900px, 100%);
+    margin: 0 auto;
+}
+
+.gestion-formulario-content {
+    overflow: hidden;
+    border: 1px solid var(--borde);
+    border-radius: .8rem;
+    background: #fff;
+    box-shadow: 0 5px 16px rgba(16, 45, 84, .12);
+}
+
+.gestion-formulario-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: var(--azul) !important;
+    color: #fff;
+}
+
+.gestion-formulario-header .modal-title {
+    color: #fff !important;
+}
+
+.gestion-formulario-body {
+    padding: 1.25rem;
+}
+
+.gestion-formulario-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--borde);
+    background: var(--fondo);
+}
+
+.gestion-formulario-header .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+/* El formulario se abre arriba y la tabla se mantiene visible debajo */
+.gestion-listado {
+    display: flex;
+    flex-direction: column;
+}
+
+.gestion-listado .gestion-tabla {
+    order: 2;
+}
+
+.gestion-listado .gestion-formulario {
+    order: 1;
+    padding: 0 0 1rem;
+}
+
+.gestion-formulario-dialog {
+    width: 100%;
+    max-width: none;
+}
+
+.gestion-formulario-content {
+    border: 1px solid #0d6efd;
+    border-radius: .5rem;
+    box-shadow: none;
+}
+
+.gestion-formulario-header {
+    background: #fff !important;
+    color: var(--texto);
+    border-bottom: 0;
+}
+
+.gestion-formulario-header .modal-title {
+    color: var(--texto) !important;
+    font-weight: 600;
+}
+
+.gestion-formulario-header .btn-close {
+    filter: none;
+}
+
+.gestion-formulario .btn-success,
+.gestion-formulario .btn-primary {
+    background: var(--naranja) !important;
+    border-color: var(--naranja) !important;
+    color: #fff !important;
+}
