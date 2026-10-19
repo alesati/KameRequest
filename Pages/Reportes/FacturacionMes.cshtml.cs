@@ -1,7 +1,7 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 // logica de la pantalla FacturacionMes.cshtml
-using KameRequest.Clases;
 using KameRequest.Models;
-using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Reportes;
 
 [Authorize]
-public class FacturacionMesModel(ReporteRepository reportes, BitacoraRegistro bitacora) : PageModel
+public class FacturacionMesModel(IReporteService reportes, IBitacoraService bitacora) : PageModel
 {
     [BindProperty(SupportsGet = true)]
     public int Mes { get; set; } = DateTime.Now.Month;

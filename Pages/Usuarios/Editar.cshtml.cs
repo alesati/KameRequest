@@ -1,5 +1,6 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 using KameRequest.Models;
-using KameRequest.Clases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,7 +9,7 @@ namespace KameRequest.Pages.Usuarios;
 
 [Authorize]
 // carga y actualiza los datos de una cuenta
-public class EditarModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
+public class EditarModel(IUsuarioService seguridad, IBitacoraService bitacora) : PageModel
 {
     // Contiene los datos del usuario que se va a modificar
     [BindProperty]
@@ -40,7 +41,7 @@ public class EditarModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) 
 
         TempData["Mensaje"] = "Usuario actualizado correctamente";
         bitacora.RegistrarActualizacion(User, "usuario", DatosBitacora(anterior), DatosBitacora(Datos));
-        return RedirectToPage("Index");
+        return RedirectToPage("/Usuarios/Index");
     }
 
     private static object? DatosBitacora(UsuarioFormulario? usuario)
@@ -57,6 +58,3 @@ public class EditarModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) 
         };
     }
 }
-
-
-

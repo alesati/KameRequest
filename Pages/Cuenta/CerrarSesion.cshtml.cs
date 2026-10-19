@@ -1,4 +1,5 @@
-using KameRequest.Clases;
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ namespace KameRequest.Pages.Cuenta;
 
 [Authorize]
 // cierra la sesion actual del usuario
-public class CerrarSesionModel(BitacoraRegistro bitacora) : PageModel
+public class CerrarSesionModel(IBitacoraService bitacora) : PageModel
 {
     // El cierre se recibe por POST para no cerrar la sesion al abrir una direccion
     public async Task<IActionResult> OnPostAsync()

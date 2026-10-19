@@ -1,7 +1,7 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 // logica de la pantalla TareasPorUsuario.cshtml
-using KameRequest.Clases;
 using KameRequest.Models;
-using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace KameRequest.Pages.Reportes;
 
 [Authorize]
-public class TareasPorUsuarioModel(ReporteRepository reportes, BitacoraRegistro bitacora) : PageModel
+public class TareasPorUsuarioModel(IReporteService reportes, IBitacoraService bitacora) : PageModel
 {
     [BindProperty(SupportsGet = true)]
     public string? UsuarioSeleccionado { get; set; }

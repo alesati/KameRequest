@@ -1,7 +1,7 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 // logica de la pantalla Desglose.cshtml
-using KameRequest.Clases;
 using KameRequest.Models;
-using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +10,7 @@ using MySqlConnector;
 namespace KameRequest.Pages.Solicitudes;
 
 [Authorize]
-public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository desgloses, BitacoraRegistro bitacora) : PageModel
+public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgloses, IBitacoraService bitacora) : PageModel
 {
     private const int RegistrosPorPagina = 5;
     public Solicitud? SolicitudActual { get; private set; }
@@ -132,7 +132,12 @@ public class DesgloseModel(SolicitudRepository solicitudes, DesgloseRepository d
         return true;
     }
 
-    private static bool DatosValidos(DesgloseSolicitud d) => d.Mes is >= 1 and <= 12 && d.Anio is >= 1000 and <= 9999 && d.Horas >= 0 && d.Monto >= 0 && d.PorcentajeCobro is >= 0 and <= 100;
+    private static bool DatosValidos(DesgloseSolicitud d)
+    {
+        return d.Mes is >= 1 and <= 12
+            && d.Anio is >= 1000 and <= 9999
+            && d.Horas >= 0
+            && d.Monto >= 0
+            && d.PorcentajeCobro is >= 0 and <= 100;
+    }
 }
-
-

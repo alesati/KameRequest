@@ -1,6 +1,7 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 using System.Security.Claims;
 using KameRequest.Models;
-using KameRequest.Clases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +10,7 @@ namespace KameRequest.Pages.Usuarios;
 
 [Authorize]
 // lista usuarios y permite cambiar su estado
-public class IndexModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
+public class IndexModel(IUsuarioService seguridad, IBitacoraService bitacora) : PageModel
 {
     // Cantidad de registros que se muestran por pagina
     private const int TamanoPagina = 10;

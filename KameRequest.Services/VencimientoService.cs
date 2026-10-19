@@ -1,37 +1,39 @@
 using System.Text.Json;
 using KameRequest.Models;
-using KameRequest.Repository.Repositories;
+using KameRequest.Services.Abstract;
 
-namespace KameRequest.Clases;
+namespace KameRequest.Services;
 
 // revisa las solicitudes que se vencen sin respuesta
-public class VencimientoClase(
-    SolicitudRepository solicitudes,
-    BitacoraRegistro bitacora,
-    NotificacionesCorreos notificaciones)
+public class VencimientoService(
+    ISolicitudService solicitudes,
+    IBitacoraService bitacora,
+    INotificacionesCorreoService notificaciones) : IVencimientoService
 {
     // busca las solicitudes atrasadas y cambia su estado a Vencida
     public void ActualizarSolicitudesVencidas()
     {
-        // se busca el id para no escribir un numero fijo en el codigo
-        var idEstado = solicitudes.ObtenerIdEstadoPorNombre("Vencida");
-        if (!idEstado.HasValue)
-            throw new InvalidOperationException("No existe el estado Vencida para las solicitudes.");
+        // se buscan los ids por nombre para no escribir numeros fijos en el codigo
+        var idEstadoNueva = solicitudes.ObtenerIdEstadoPorNombre("Nueva");
+        var idEstadoVencida = solicitudes.ObtenerIdEstadoPorNombre("Vencida");
 
-        // solo revisa solicitudes pendientes que ya cumplen los 5 dias habiles
+        if (!idEstadoNueva.HasValue || !idEstadoVencida.HasValue)
+            throw new InvalidOperationException("No existen los estados Nueva y Vencida para las solicitudes.");
+
+        // solo revisa solicitudes nuevas sin respuesta que cumplen 5 dias habiles
         foreach (var solicitud in solicitudes
-                     .SinRespuestaNoVencidas(idEstado.Value)
+                     .NuevasSinRespuesta(idEstadoNueva.Value)
                      .Where(s => AgregarDiasHabiles(s.FechaIngreso, 5) <= DateTime.Today))
         {
             // se guarda una copia para mostrar el antes y despues en bitacora
             var anterior = CopiarSolicitud(solicitud);
 
             // actualiza la base de datos y sigue solo si se modifico una solicitud
-            if (solicitudes.MarcarVencida(solicitud.IdSolicitud, idEstado.Value) != 1)
+            if (solicitudes.MarcarVencida(solicitud.IdSolicitud, idEstadoNueva.Value, idEstadoVencida.Value) != 1)
                 continue;
 
             // actualiza los datos del objeto que esta en memoria
-            solicitud.IdEstado = idEstado.Value;
+            solicitud.IdEstado = idEstadoVencida.Value;
             solicitud.Estado = "Vencida";
 
             // como lo hace el sistema se registra sin un usuario especifico
@@ -80,3 +82,5 @@ public class VencimientoClase(
     };
 
 }
+
+

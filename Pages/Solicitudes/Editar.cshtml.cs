@@ -1,7 +1,7 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 // logica de la pantalla Editar.cshtml
-using KameRequest.Clases;
 using KameRequest.Models;
-using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,10 +10,10 @@ namespace KameRequest.Pages.Solicitudes;
 
 [Authorize]
 public class EditarModel(
-    SolicitudRepository solicitudes,
-    RepresentanteRepository representantes,
-    BitacoraRegistro bitacora,
-    NotificacionesCorreos notificaciones) : PageModel
+    ISolicitudService solicitudes,
+    IRepresentanteService representantes,
+    IBitacoraService bitacora,
+    INotificacionesCorreoService notificaciones) : PageModel
 {
     [BindProperty]
     public Solicitud Solicitud { get; set; } = new();
@@ -53,7 +53,7 @@ public class EditarModel(
         }
 
         TempData["Mensaje"] = "La solicitud se actualizo correctamente.";
-        return RedirectToPage("Index");
+        return RedirectToPage("/Solicitudes/Index");
     }
 
     private void CargarCatalogos()
@@ -62,4 +62,3 @@ public class EditarModel(
         Estados = solicitudes.ListarEstados();
     }
 }
-

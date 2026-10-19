@@ -4,7 +4,7 @@ namespace KameRequest.Models;
 // Datos que se usan al crear o editar un usuario
 public class UsuarioFormulario
 {
-   
+
     public int IdUsuario { get; set; } // El id se usa al editar, al crear queda en cero
     [Required(ErrorMessage = "Digite el nombre completo")]
     [Display(Name = "Nombre completo")]

@@ -1,8 +1,8 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 // logica de la pantalla Tarea.cshtml
 using System.Security.Claims;
-using KameRequest.Clases;
 using KameRequest.Models;
-using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Solicitudes;
 
 [Authorize]
-public class TareasModel(SolicitudRepository solicitudes, TareaRepository tareas, BitacoraRegistro bitacora) : PageModel
+public class TareasModel(ISolicitudService solicitudes, ITareaService tareas, IBitacoraService bitacora) : PageModel
 {
     private const int RegistrosPorPagina = 5;
     public Solicitud? SolicitudActual { get; private set; }

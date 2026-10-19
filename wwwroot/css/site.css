@@ -1149,3 +1149,35 @@ h1, h2, h3 { color: var(--azul); }
     border-color: var(--naranja) !important;
     color: #fff !important;
 }
+
+/* Modal de crear y editar solicitudes: cuerpo con scroll y pie siempre visible */
+.modal-solicitud-form .modal-dialog {
+    width: min(1100px, calc(100% - 2rem));
+    max-width: 1100px;
+    height: min(860px, calc(100dvh - 2rem));
+    margin: 1rem auto;
+}
+
+.modal-solicitud-form .modal-content,
+.modal-solicitud-form form {
+    height: 100%;
+    min-height: 0;
+}
+
+.modal-solicitud-form .modal-body {
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.modal-solicitud-form .modal-header,
+.modal-solicitud-form .modal-footer {
+    flex-shrink: 0;
+}
+
+@media (max-width: 576px) {
+    .modal-solicitud-form .modal-dialog {
+        width: calc(100% - 1rem);
+        height: calc(100dvh - 1rem);
+        margin: .5rem auto;
+    }
+}

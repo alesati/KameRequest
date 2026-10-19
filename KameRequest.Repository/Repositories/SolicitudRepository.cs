@@ -66,7 +66,20 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
                 (@ConsecutivoOficio, @DocumentoRespuesta, @DocumentoInicio, @Titulo, @Descripcion,
                  @IdRepresentante, @Observaciones, @estado, @FechaIngreso, @FechaRespuesta, @FechaInicio);
             """;
-        conexion.Execute(sql, new { solicitud.ConsecutivoOficio, solicitud.DocumentoRespuesta, solicitud.DocumentoInicio, solicitud.Titulo, Descripcion = solicitud.Descripcion ?? string.Empty, solicitud.IdRepresentante, solicitud.Observaciones, estado, solicitud.FechaIngreso, solicitud.FechaRespuesta, solicitud.FechaInicio });
+        conexion.Execute(sql, new
+        {
+            solicitud.ConsecutivoOficio,
+            solicitud.DocumentoRespuesta,
+            solicitud.DocumentoInicio,
+            solicitud.Titulo,
+            Descripcion = solicitud.Descripcion ?? string.Empty,
+            solicitud.IdRepresentante,
+            solicitud.Observaciones,
+            estado,
+            solicitud.FechaIngreso,
+            solicitud.FechaRespuesta,
+            solicitud.FechaInicio
+        });
         return conexion.ExecuteScalar<int>("SELECT LAST_INSERT_ID();");
     }
 
@@ -89,7 +102,21 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
                 FechaInicio = @FechaInicio
             WHERE IdSolicitud = @IdSolicitud;
             """;
-        conexion.Execute(sql, new { solicitud.IdSolicitud, solicitud.ConsecutivoOficio, solicitud.DocumentoRespuesta, solicitud.DocumentoInicio, solicitud.Titulo, Descripcion = solicitud.Descripcion ?? string.Empty, solicitud.IdRepresentante, solicitud.Observaciones, solicitud.IdEstado, solicitud.FechaIngreso, solicitud.FechaRespuesta, solicitud.FechaInicio });
+        conexion.Execute(sql, new
+        {
+            solicitud.IdSolicitud,
+            solicitud.ConsecutivoOficio,
+            solicitud.DocumentoRespuesta,
+            solicitud.DocumentoInicio,
+            solicitud.Titulo,
+            Descripcion = solicitud.Descripcion ?? string.Empty,
+            solicitud.IdRepresentante,
+            solicitud.Observaciones,
+            solicitud.IdEstado,
+            solicitud.FechaIngreso,
+            solicitud.FechaRespuesta,
+            solicitud.FechaInicio
+        });
     }
 
     // elimina el registro indicado si no tiene relaciones
@@ -106,11 +133,12 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.Query<EstadoSolicitud>(sql).ToList();
     }
 
-    public IReadOnlyList<Solicitud> SinRespuestaNoVencidas(int idEstadoVencida)
+    // solo las solicitudes nuevas sin respuesta pueden vencerse automaticamente
+    public IReadOnlyList<Solicitud> NuevasSinRespuesta(int idEstadoNueva)
     {
         using var conexion = conexiones.CreateConnection();
-        const string condicion = " WHERE s.FechaRespuesta IS NULL AND s.IdEstado <> @idEstadoVencida;";
-        return conexion.Query<Solicitud>(ConsultaCompleta + condicion, new { idEstadoVencida }).ToList();
+        const string condicion = " WHERE s.FechaRespuesta IS NULL AND s.IdEstado = @idEstadoNueva;";
+        return conexion.Query<Solicitud>(ConsultaCompleta + condicion, new { idEstadoNueva }).ToList();
     }
 
     public int? ObtenerIdEstadoPorNombre(string nombre)
@@ -120,7 +148,8 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.QuerySingleOrDefault<int?>(sql, new { nombre });
     }
 
-    public int MarcarVencida(int idSolicitud, int idEstadoVencida)
+    // actualiza solo si continua nueva y sin respuesta al momento de guardar
+    public int MarcarVencida(int idSolicitud, int idEstadoNueva, int idEstadoVencida)
     {
         using var conexion = conexiones.CreateConnection();
         const string sql = """
@@ -128,9 +157,9 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
             SET IdEstado = @idEstadoVencida
             WHERE IdSolicitud = @idSolicitud
               AND FechaRespuesta IS NULL
-              AND IdEstado <> @idEstadoVencida;
+              AND IdEstado = @idEstadoNueva;
             """;
-        return conexion.Execute(sql, new { idSolicitud, idEstadoVencida });
+        return conexion.Execute(sql, new { idSolicitud, idEstadoNueva, idEstadoVencida });
     }
 
     public IReadOnlyList<Solicitud> ListarParaReporte()
@@ -140,7 +169,3 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         return conexion.Query<Solicitud>(sql).ToList();
     }
 }
-
-
-
-

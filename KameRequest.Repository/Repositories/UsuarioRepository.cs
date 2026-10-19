@@ -61,7 +61,9 @@ public class UsuarioRepository(IDbConnectionFactory conexiones)
     public bool ExisteDuplicado(UsuarioFormulario datos, bool excluirActual)
     {
         using var conexion = conexiones.CreateConnection();
-        var sql = excluirActual ? "SELECT COUNT(*) FROM Usuarios WHERE (NombreUsuario = @NombreUsuario OR Correo = @Correo) AND IdUsuario <> @IdUsuario;" : "SELECT COUNT(*) FROM Usuarios WHERE NombreUsuario = @NombreUsuario OR Correo = @Correo;";
+        var sql = excluirActual
+            ? "SELECT COUNT(*) FROM Usuarios WHERE (NombreUsuario = @NombreUsuario OR Correo = @Correo) AND IdUsuario <> @IdUsuario;"
+            : "SELECT COUNT(*) FROM Usuarios WHERE NombreUsuario = @NombreUsuario OR Correo = @Correo;";
         return conexion.ExecuteScalar<int>(sql, datos) > 0;
     }
 
@@ -126,7 +128,18 @@ public class UsuarioRepository(IDbConnectionFactory conexiones)
                 EtiquetaAutenticacion = @etiqueta
             WHERE IdUsuario = @IdUsuario;
             """;
-        conexion.Execute(sqlConContrasena, new { datos.NombreCompleto, datos.NombreUsuario, datos.Correo, datos.TipoUsuario, datos.Estado, datos.IdUsuario, cifrada, nonce, etiqueta });
+        conexion.Execute(sqlConContrasena, new
+        {
+            datos.NombreCompleto,
+            datos.NombreUsuario,
+            datos.Correo,
+            datos.TipoUsuario,
+            datos.Estado,
+            datos.IdUsuario,
+            cifrada,
+            nonce,
+            etiqueta
+        });
     }
 
     public void ActualizarIntentos(int idUsuario, int intentos, string estado)
@@ -160,5 +173,3 @@ public class UsuarioRepository(IDbConnectionFactory conexiones)
         return conexion.Execute("DELETE FROM Usuarios WHERE IdUsuario = @idUsuario;", new { idUsuario });
     }
 }
-
-

@@ -1,4 +1,5 @@
-using KameRequest.Clases;
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 using KameRequest.Repository;
 using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -12,7 +13,7 @@ builder.Services.AddRazorPages();
 // cada solicitud web recibe su propia conexion para trabajar con MySql
 builder.Services.AddScoped<IDbConnectionFactory, MySqlConnectionFactory>();
 
-// repositorios: aqui estan separadas las consultas SQL de cada modulo
+// repositorios: aqui estan solamente las consultas SQL de cada modulo
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<BitacoraRepository>();
 builder.Services.AddScoped<RepresentanteRepository>();
@@ -21,12 +22,16 @@ builder.Services.AddScoped<DesgloseRepository>();
 builder.Services.AddScoped<TareaRepository>();
 builder.Services.AddScoped<ReporteRepository>();
 builder.Services.AddScoped<EstadoRepository>();
-
-// clases con reglas del sistema que usan las pantallas
-builder.Services.AddScoped<UsuarioSeguridad>();
-builder.Services.AddScoped<BitacoraRegistro>();
-builder.Services.AddScoped<NotificacionesCorreos>();
-builder.Services.AddScoped<VencimientoClase>();
+builder.Services.AddScoped<IEstadoService, EstadoService>();
+builder.Services.AddScoped<IRepresentanteService, RepresentanteService>();
+builder.Services.AddScoped<ISolicitudService, SolicitudService>();
+builder.Services.AddScoped<IDesgloseService, DesgloseService>();
+builder.Services.AddScoped<ITareaService, TareaService>();
+builder.Services.AddScoped<IReporteService, ReporteService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IBitacoraService, BitacoraService>();
+builder.Services.AddScoped<INotificacionesCorreoService, NotificacionesCorreoService>();
+builder.Services.AddScoped<IVencimientoService, VencimientoService>();
 
 // proceso que revisa vencimientos mientras el sistema esta encendido
 builder.Services.AddHostedService<ProcesoVencimientoBackgroundService>();
@@ -60,7 +65,7 @@ if (!app.Environment.IsDevelopment())
 if (!string.IsNullOrWhiteSpace(app.Configuration.GetConnectionString("MySql")) && !string.IsNullOrWhiteSpace(app.Configuration["Seguridad:ClaveAes"]))
 {
     using var alcance = app.Services.CreateScope();
-    alcance.ServiceProvider.GetRequiredService<UsuarioSeguridad>().CrearAdministradorInicialSiHaceFalta();
+    alcance.ServiceProvider.GetRequiredService<IUsuarioService>().CrearAdministradorInicialSiHaceFalta();
 }
 
 app.UseStaticFiles();// permite cargar css, javascript, imagenes y logo desde wwwroot
@@ -81,7 +86,7 @@ app.Use(async (contexto, siguiente) =>// si una pantalla tiene un error tecnico 
     {
         try
         {
-            contexto.RequestServices.GetRequiredService<BitacoraRegistro>()
+            contexto.RequestServices.GetRequiredService<IBitacoraService>()
                 .RegistrarErrorTecnico(contexto.User, contexto.Request.Path, excepcion);
         }
         catch

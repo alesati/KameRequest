@@ -57,7 +57,7 @@
                             <div class="modal fade" id="editarUsuario-@usuario.IdUsuario" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
                                     <div class="modal-content">
-                                        <form method="post" asp-page="Editar">
+                                        <form method="post" asp-page="/Usuarios/Editar" asp-route-id="@usuario.IdUsuario">
                                             <div class="modal-header">
                                                 <h2 class="modal-title fs-5">Editar usuario</h2>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -66,21 +66,58 @@
                                                 <input type="hidden" name="Datos.IdUsuario" value="@usuario.IdUsuario" />
                                                 <input type="hidden" name="Datos.TipoUsuario" value="@usuario.TipoUsuario" />
                                                 <div class="row g-3">
-                                                    <div class="col-md-6"><label class="form-label">Nombre de usuario</label><input class="form-control" name="Datos.NombreUsuario" value="@usuario.NombreUsuario" required /></div>
-                                                    <div class="col-md-6"><label class="form-label">Nombre completo</label><input class="form-control" name="Datos.NombreCompleto" value="@usuario.NombreCompleto" required /></div>
-                                                    <div class="col-md-6"><label class="form-label">Correo</label><input type="email" class="form-control" name="Datos.Correo" value="@usuario.Correo" required /></div>
-                                                    <div class="col-md-6"><label class="form-label">Estado</label><select class="form-select" name="Datos.Estado"><option value="Activo" selected="@(usuario.Estado == "Activo")">Activo</option><option value="Inactivo" selected="@(usuario.Estado == "Inactivo")">Inactivo</option><option value="Bloqueado" selected="@(usuario.Estado == "Bloqueado")">Bloqueado</option></select></div>
-                                                    <div class="col-12"><label class="form-label">Nueva contraseña <span class="text-muted">(opcional)</span></label><input type="password" class="form-control" name="Datos.Contrasena" /></div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Nombre de usuario</label>
+                                                        <input class="form-control" name="Datos.NombreUsuario" value="@usuario.NombreUsuario" required />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Nombre completo</label>
+                                                        <input class="form-control" name="Datos.NombreCompleto" value="@usuario.NombreCompleto" required />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Correo</label>
+                                                        <input type="email" class="form-control" name="Datos.Correo" value="@usuario.Correo" required />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Estado</label>
+                                                        <select class="form-select" name="Datos.Estado">
+                                                            <option value="Activo" selected="@(usuario.Estado == "Activo")">Activo</option>
+                                                            <option value="Inactivo" selected="@(usuario.Estado == "Inactivo")">Inactivo</option>
+                                                            <option value="Bloqueado" selected="@(usuario.Estado == "Bloqueado")">Bloqueado</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="form-label">Nueva contraseña <span class="text-muted">(opcional)</span></label>
+                                                        <input type="password" class="form-control" name="Datos.Contrasena" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Guardar cambios</button></div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal fade" id="eliminarUsuario-@usuario.IdUsuario" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5">Eliminar usuario</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body">¿Desea eliminar el usuario <strong>@usuario.NombreUsuario</strong>?</div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><form method="post" asp-page-handler="Eliminar"><input type="hidden" name="idUsuario" value="@usuario.IdUsuario" /><button type="submit" class="btn btn-danger">Eliminar</button></form></div></div></div>
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title fs-5">Eliminar usuario</h2>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                        </div>
+                                        <div class="modal-body">¿Desea eliminar el usuario <strong>@usuario.NombreUsuario</strong>?</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form method="post" asp-page-handler="Eliminar">
+                                                <input type="hidden" name="idUsuario" value="@usuario.IdUsuario" />
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -91,12 +128,54 @@
 
     @if (Model.TotalPaginas > 1)
     {
-        <nav aria-label="Paginacion de usuarios"><ul class="pagination">@for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++) { <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")"><a class="page-link" asp-route-pagina="@pagina">@pagina</a></li> }</ul></nav>
+        <nav aria-label="Paginacion de usuarios">
+            <ul class="pagination">
+                @for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++)
+                {
+                    <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")">
+                        <a class="page-link" asp-route-pagina="@pagina">@pagina</a>
+                    </li>
+                }
+            </ul>
+        </nav>
     }
 </div>
 
 <div class="modal fade" id="modalCrearUsuario" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content"><form method="post" asp-page="Crear"><div class="modal-header"><h2 class="modal-title fs-5">Nuevo usuario</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body"><input type="hidden" name="Datos.TipoUsuario" value="Usuario" /><input type="hidden" name="Datos.Estado" value="Activo" /><div class="row g-3"><div class="col-md-6"><label class="form-label">Nombre de usuario</label><input class="form-control" name="Datos.NombreUsuario" required /></div><div class="col-md-6"><label class="form-label">Nombre completo</label><input class="form-control" name="Datos.NombreCompleto" required /></div><div class="col-md-6"><label class="form-label">Correo</label><input type="email" class="form-control" name="Datos.Correo" required /></div><div class="col-md-6"><label class="form-label">Contraseña</label><input type="password" class="form-control" name="Datos.Contrasena" required /></div></div></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Guardar usuario</button></div></form></div></div>
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <form method="post" asp-page="Crear">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5">Nuevo usuario</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="Datos.TipoUsuario" value="Usuario" />
+                    <input type="hidden" name="Datos.Estado" value="Activo" />
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre de usuario</label>
+                            <input class="form-control" name="Datos.NombreUsuario" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre completo</label>
+                            <input class="form-control" name="Datos.NombreCompleto" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Correo</label>
+                            <input type="email" class="form-control" name="Datos.Correo" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" name="Datos.Contrasena" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
-

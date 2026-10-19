@@ -1,5 +1,6 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 using KameRequest.Models;
-using KameRequest.Clases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,7 +9,7 @@ namespace KameRequest.Pages.Usuarios;
 
 [Authorize]
 // recibe los datos para crear una cuenta nueva
-public class CrearModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
+public class CrearModel(IUsuarioService seguridad, IBitacoraService bitacora) : PageModel
 {
     // Se llena con los valores escritos en el formulario
     [BindProperty]

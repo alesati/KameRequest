@@ -1,7 +1,7 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 // logica de la pantalla Index.cshtml
-using KameRequest.Clases;
 using KameRequest.Models;
-using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +10,7 @@ using MySqlConnector;
 namespace KameRequest.Pages.Estados;
 
 [Authorize]
-public class IndexModel(EstadoRepository estados, BitacoraRegistro bitacora) : PageModel
+public class IndexModel(IEstadoService estados, IBitacoraService bitacora) : PageModel
 {
     private const int RegistrosPorPagina = 5;
     public IReadOnlyList<Estado> Estados { get; private set; } = [];

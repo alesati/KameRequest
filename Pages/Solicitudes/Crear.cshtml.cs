@@ -1,7 +1,7 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 // logica de la pantalla Crear.cshtml
-using KameRequest.Clases;
 using KameRequest.Models;
-using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +10,7 @@ using MySqlConnector;
 namespace KameRequest.Pages.Solicitudes;
 
 [Authorize]
-public class CrearModel(SolicitudRepository solicitudes, RepresentanteRepository representantes, BitacoraRegistro bitacora) : PageModel
+public class CrearModel(ISolicitudService solicitudes, IRepresentanteService representantes, IBitacoraService bitacora) : PageModel
 {
     [BindProperty]
     public Solicitud Solicitud { get; set; } = new();

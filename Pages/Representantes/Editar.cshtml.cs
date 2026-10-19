@@ -1,7 +1,7 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 // logica de la pantalla Editar.cshtml
-using KameRequest.Clases;
 using KameRequest.Models;
-using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Representantes;
 
 [Authorize]
-public class EditarModel(RepresentanteRepository representantes, BitacoraRegistro bitacora) : PageModel
+public class EditarModel(IRepresentanteService representantes, IBitacoraService bitacora) : PageModel
 {
     [BindProperty]
     public Representante Representante { get; set; } = new();
@@ -30,7 +30,6 @@ public class EditarModel(RepresentanteRepository representantes, BitacoraRegistr
         representantes.Actualizar(Representante);
         bitacora.RegistrarActualizacion(User, "representante", anterior, representantes.Obtener(Representante.IdRepresentante));
         TempData["Mensaje"] = "El representante se actualizo correctamente.";
-        return RedirectToPage("Index");
+        return RedirectToPage("/Representantes/Index");
     }
 }
-

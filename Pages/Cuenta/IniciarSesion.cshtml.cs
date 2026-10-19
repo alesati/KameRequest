@@ -1,6 +1,7 @@
+using KameRequest.Services;
+using KameRequest.Services.Abstract;
 using System.Security.Claims;
 using KameRequest.Models;
-using KameRequest.Clases;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace KameRequest.Pages.Cuenta;
 
 // recibe y valida el acceso al sistema
-public class IniciarSesionModel(UsuarioSeguridad seguridad, BitacoraRegistro bitacora) : PageModel
+public class IniciarSesionModel(IUsuarioService seguridad, IBitacoraService bitacora) : PageModel
 {
     // Recibe los datos que el usuario escribe en el formulario
     [BindProperty]

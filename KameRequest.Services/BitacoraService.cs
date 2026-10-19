@@ -2,12 +2,13 @@ using System.Security.Claims;
 using System.Text.Json;
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
+using KameRequest.Services.Abstract;
 
-namespace KameRequest.Clases;
+namespace KameRequest.Services;
 
-// Forma los mensajes de auditoria; BitacoraRepository es quien guarda en SQL Server.
+// Forma los mensajes de auditoria; BitacoraRepository es quien guarda en MySQL.
 // prepara los datos que se guardan en la bitacora
-public class BitacoraRegistro(BitacoraRepository repositorio)
+public class BitacoraService(BitacoraRepository repositorio) : IBitacoraService
 {
     private static readonly JsonSerializerOptions OpcionesJson = new()
     {
@@ -96,6 +97,7 @@ public class BitacoraRegistro(BitacoraRepository repositorio)
         return repositorio.ObtenerPagina(pagina, registrosPorPagina);
     }
 }
+
 
 
 

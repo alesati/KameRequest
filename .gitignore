@@ -11,3 +11,6 @@ appsettings.json
 output/
 tmp/
 publish/
+
+# preferencias locales de publicacion de Visual Studio
+*.pubxml.user

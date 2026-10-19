@@ -5,7 +5,12 @@
 }
 
 <div class="container py-4 app-page solicitudes-page">
-    <div class="page-header"><h1>Solicitudes</h1><div class="page-header-actions"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearSolicitud">Nueva solicitud</button></div></div>
+    <div class="page-header">
+        <h1>Solicitudes</h1>
+        <div class="page-header-actions">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearSolicitud">Nueva solicitud</button>
+        </div>
+    </div>
     @if (TempData["Mensaje"] is string mensaje) { <div class="alert alert-success">@mensaje</div> }
     @if (TempData["Error"] is string error) { <div class="alert alert-danger">@error</div> }
 
@@ -20,15 +25,177 @@
             <button type="button" class="btn btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editarSolicitud-@solicitud.IdSolicitud">Editar</button>
             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarSolicitud-@solicitud.IdSolicitud">Eliminar</button>
 
-            <div class="modal fade" id="editarSolicitud-@solicitud.IdSolicitud" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-xl modal-dialog-scrollable"><div class="modal-content"><form method="post" asp-page="Editar"><div class="modal-header"><h2 class="modal-title fs-5">Editar solicitud</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body"><input type="hidden" name="Solicitud.IdSolicitud" value="@solicitud.IdSolicitud" /><div class="row g-3"><div class="col-md-4"><label class="form-label">Consecutivo de oficio</label><input class="form-control" name="Solicitud.ConsecutivoOficio" value="@solicitud.ConsecutivoOficio" required /></div><div class="col-md-8"><label class="form-label">Título</label><input class="form-control" name="Solicitud.Titulo" value="@solicitud.Titulo" required /></div><div class="col-12"><label class="form-label">Descripción</label><textarea class="form-control" name="Solicitud.Descripcion" rows="2">@solicitud.Descripcion</textarea></div><div class="col-md-6"><label class="form-label">Representante</label><select class="form-select" name="Solicitud.IdRepresentante">@foreach (var representante in Model.Representantes) { <option value="@representante.IdRepresentante" selected="@(representante.IdRepresentante == solicitud.IdRepresentante)">@representante.Nombre</option> }</select></div><div class="col-md-6"><label class="form-label">Estado</label><select class="form-select" name="Solicitud.IdEstado">@foreach (var estado in Model.Estados) { <option value="@estado.IdEstado" selected="@(estado.IdEstado == solicitud.IdEstado)">@estado.Nombre</option> }</select></div><div class="col-md-4"><label class="form-label">Fecha de ingreso</label><input type="date" class="form-control" name="Solicitud.FechaIngreso" value="@solicitud.FechaIngreso.ToString("yyyy-MM-dd")" required /></div><div class="col-md-4"><label class="form-label">Fecha de respuesta</label><input type="date" class="form-control" name="Solicitud.FechaRespuesta" value="@(solicitud.FechaRespuesta?.ToString("yyyy-MM-dd"))" /></div><div class="col-md-4"><label class="form-label">Fecha de inicio</label><input type="date" class="form-control" name="Solicitud.FechaInicio" value="@(solicitud.FechaInicio?.ToString("yyyy-MM-dd"))" /></div><div class="col-md-6"><label class="form-label">Documento de respuesta</label><input class="form-control" name="Solicitud.DocumentoRespuesta" value="@solicitud.DocumentoRespuesta" /></div><div class="col-md-6"><label class="form-label">Documento de inicio</label><input class="form-control" name="Solicitud.DocumentoInicio" value="@solicitud.DocumentoInicio" /></div><div class="col-12"><label class="form-label">Observaciones</label><textarea class="form-control" name="Solicitud.Observaciones" rows="2">@solicitud.Observaciones</textarea></div></div></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Guardar cambios</button></div></form></div></div></div>
-            <div class="modal fade" id="eliminarSolicitud-@solicitud.IdSolicitud" tabindex="-1" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5">Eliminar solicitud</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body">¿Desea eliminar la solicitud <strong>@solicitud.ConsecutivoOficio</strong>?</div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><form method="post" asp-page-handler="Eliminar"><input type="hidden" name="idSolicitud" value="@solicitud.IdSolicitud" /><button type="submit" class="btn btn-danger">Eliminar</button></form></div></div></div></div>
+            <div class="modal fade modal-solicitud-form" id="editarSolicitud-@solicitud.IdSolicitud" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <form method="post" asp-page="/Solicitudes/Editar" asp-route-id="@solicitud.IdSolicitud" class="d-flex flex-column h-100">
+                            <div class="modal-header">
+                                <h2 class="modal-title fs-5">Editar solicitud</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="Solicitud.IdSolicitud" value="@solicitud.IdSolicitud" />
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Consecutivo de oficio</label>
+                                        <input class="form-control" name="Solicitud.ConsecutivoOficio" value="@solicitud.ConsecutivoOficio" required />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label class="form-label">Título</label>
+                                        <input class="form-control" name="Solicitud.Titulo" value="@solicitud.Titulo" required />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Descripción</label>
+                                        <textarea class="form-control" name="Solicitud.Descripcion" rows="2">@solicitud.Descripcion</textarea>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Representante</label>
+                                        <select class="form-select" name="Solicitud.IdRepresentante">
+                                            @foreach (var representante in Model.Representantes)
+                                            {
+                                                <option value="@representante.IdRepresentante" selected="@(representante.IdRepresentante == solicitud.IdRepresentante)">@representante.Nombre</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Estado</label>
+                                        <select class="form-select" name="Solicitud.IdEstado">
+                                            @foreach (var estado in Model.Estados)
+                                            {
+                                                <option value="@estado.IdEstado" selected="@(estado.IdEstado == solicitud.IdEstado)">@estado.Nombre</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Fecha de ingreso</label>
+                                        <input type="date" class="form-control" name="Solicitud.FechaIngreso" value="@solicitud.FechaIngreso.ToString("yyyy-MM-dd")" required />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Fecha de respuesta</label>
+                                        <input type="date" class="form-control" name="Solicitud.FechaRespuesta" value="@(solicitud.FechaRespuesta?.ToString("yyyy-MM-dd"))" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Fecha de inicio</label>
+                                        <input type="date" class="form-control" name="Solicitud.FechaInicio" value="@(solicitud.FechaInicio?.ToString("yyyy-MM-dd"))" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Documento de respuesta</label>
+                                        <input class="form-control" name="Solicitud.DocumentoRespuesta" value="@solicitud.DocumentoRespuesta" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Documento de inicio</label>
+                                        <input class="form-control" name="Solicitud.DocumentoInicio" value="@solicitud.DocumentoInicio" />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Observaciones</label>
+                                        <textarea class="form-control" name="Solicitud.Observaciones" rows="2">@solicitud.Observaciones</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="eliminarSolicitud-@solicitud.IdSolicitud" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5">Eliminar solicitud</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Desea eliminar la solicitud <strong>@solicitud.ConsecutivoOficio</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="post" asp-page-handler="Eliminar">
+                    <input type="hidden" name="idSolicitud" value="@solicitud.IdSolicitud" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
         </td></tr>
     }
     </tbody></table></div>
     @if (Model.TotalPaginas > 1) { <nav aria-label="Paginacion de solicitudes"><ul class="pagination">@for (var pagina = 1; pagina <= Model.TotalPaginas; pagina++) { <li class="page-item @(pagina == Model.PaginaActual ? "active" : "")"><a class="page-link" asp-route-pagina="@pagina">@pagina</a></li> }</ul></nav> }
 </div>
 
-<div class="modal fade" id="modalCrearSolicitud" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-xl modal-dialog-scrollable"><div class="modal-content"><form method="post" asp-page="Crear"><div class="modal-header"><h2 class="modal-title fs-5">Nueva solicitud</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body"><div class="row g-3"><div class="col-md-4"><label class="form-label">Consecutivo de oficio</label><input class="form-control" name="Solicitud.ConsecutivoOficio" required /></div><div class="col-md-8"><label class="form-label">Título</label><input class="form-control" name="Solicitud.Titulo" required /></div><div class="col-12"><label class="form-label">Descripción</label><textarea class="form-control" name="Solicitud.Descripcion" rows="2"></textarea></div><div class="col-md-6"><label class="form-label">Representante</label><select class="form-select" name="Solicitud.IdRepresentante" required><option value="">Seleccione...</option>@foreach (var representante in Model.Representantes) { <option value="@representante.IdRepresentante">@representante.Nombre</option> }</select></div><div class="col-md-6"><label class="form-label">Fecha de ingreso</label><input type="date" class="form-control" name="Solicitud.FechaIngreso" value="@DateTime.Today.ToString("yyyy-MM-dd")" required /></div><div class="col-md-6"><label class="form-label">Documento de inicio</label><input class="form-control" name="Solicitud.DocumentoInicio" /></div><div class="col-md-6"><label class="form-label">Documento de respuesta</label><input class="form-control" name="Solicitud.DocumentoRespuesta" /></div><div class="col-md-6"><label class="form-label">Fecha de inicio</label><input type="date" class="form-control" name="Solicitud.FechaInicio" /></div><div class="col-md-6"><label class="form-label">Fecha de respuesta</label><input type="date" class="form-control" name="Solicitud.FechaRespuesta" /></div><div class="col-12"><label class="form-label">Observaciones</label><textarea class="form-control" name="Solicitud.Observaciones" rows="2"></textarea></div></div></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Guardar solicitud</button></div></form></div></div></div>
+<div class="modal fade modal-solicitud-form" id="modalCrearSolicitud" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <form method="post" asp-page="/Solicitudes/Crear" class="d-flex flex-column h-100">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5">Nueva solicitud</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Consecutivo de oficio</label>
+                            <input class="form-control" name="Solicitud.ConsecutivoOficio" required />
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Título</label>
+                            <input class="form-control" name="Solicitud.Titulo" required />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Descripción</label>
+                            <textarea class="form-control" name="Solicitud.Descripcion" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Representante</label>
+                            <select class="form-select" name="Solicitud.IdRepresentante" required>
+                                <option value="">Seleccione...</option>
+                                @foreach (var representante in Model.Representantes)
+                                {
+                                    <option value="@representante.IdRepresentante">@representante.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Fecha de ingreso</label>
+                            <input type="date" class="form-control" name="Solicitud.FechaIngreso" value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Fecha de respuesta</label>
+                            <input type="date" class="form-control" name="Solicitud.FechaRespuesta" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Fecha de inicio</label>
+                            <input type="date" class="form-control" name="Solicitud.FechaInicio" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Estado inicial</label>
+                            <input class="form-control" value="Nueva" readonly />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Documento de respuesta</label>
+                            <input class="form-control" name="Solicitud.DocumentoRespuesta" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Documento de inicio</label>
+                            <input class="form-control" name="Solicitud.DocumentoInicio" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Observaciones</label>
+                            <textarea class="form-control" name="Solicitud.Observaciones" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade gestion-modal" id="modalGestionSolicitud" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen-xl-down modal-dialog-scrollable">
@@ -63,4 +230,3 @@
         });
     </script>
 }
-
