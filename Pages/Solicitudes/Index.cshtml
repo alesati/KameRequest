@@ -48,8 +48,16 @@
                                 <input type="hidden" name="IdSolicitudPublicacion" value="@solicitud.IdSolicitud" />
                                 <label class="form-label" for="publicada-@solicitud.IdSolicitud">Disponibilidad en portal externo</label>
                                 <select class="form-select mb-3" name="PublicadaExterna" id="publicada-@solicitud.IdSolicitud">
-                                    <option value="true" selected="@(solicitud.PublicadaExterna)">Publicar solicitud</option>
-                                    <option value="false" selected="@(!solicitud.PublicadaExterna)">No publicar solicitud</option>
+                                    @if (solicitud.PublicadaExterna)
+                                    {
+                                        <option value="true" selected>Publicar solicitud</option>
+                                        <option value="false">No publicar solicitud</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="true">Publicar solicitud</option>
+                                        <option value="false" selected>No publicar solicitud</option>
+                                    }
                                 </select>
                                 <label class="form-label" for="vencimiento-@solicitud.IdSolicitud">Vencimiento de publicación</label>
                                 <input class="form-control" type="date" name="FechaVencimientoPublicacion"
