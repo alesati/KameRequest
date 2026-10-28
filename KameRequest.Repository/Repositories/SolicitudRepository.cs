@@ -8,7 +8,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
     private const string ConsultaCompleta = """
         SELECT s.IdSolicitud, s.ConsecutivoOficio, s.DocumentoRespuesta, s.DocumentoInicio,
                s.Titulo, s.Descripcion, s.IdRepresentante, s.Observaciones, s.IdEstado,
-               s.FechaIngreso, s.FechaRespuesta, s.FechaInicio, e.Nombre AS Estado,
+               s.FechaIngreso, s.FechaRespuesta, s.FechaInicio, s.PublicadaExterna, s.FechaVencimientoPublicacion, e.Nombre AS Estado,
                r.Nombre AS Representante, r.Email AS CorreoRepresentante
         FROM Solicitudes s
         INNER JOIN EstadosSolicitud e ON e.IdEstado = s.IdEstado
@@ -28,7 +28,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         using var conexion = conexiones.CreateConnection();
         const string sql = """
             SELECT s.IdSolicitud, s.ConsecutivoOficio, s.Titulo, s.IdEstado,
-                   s.FechaIngreso, e.Nombre AS Estado, r.Nombre AS Representante, r.Email AS CorreoRepresentante
+                   s.FechaIngreso, s.PublicadaExterna, s.FechaVencimientoPublicacion, e.Nombre AS Estado, r.Nombre AS Representante, r.Email AS CorreoRepresentante
             FROM Solicitudes s
             INNER JOIN EstadosSolicitud e ON e.IdEstado = s.IdEstado
             LEFT JOIN Representantes r ON r.IdRepresentante = s.IdRepresentante
@@ -117,6 +117,19 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
             solicitud.FechaRespuesta,
             solicitud.FechaInicio
         });
+    }
+
+    // Actualiza la disponibilidad de una solicitud para el portal WordPress.
+    public void ActualizarPublicacionExterna(int idSolicitud, bool publicada, DateTime? fechaVencimiento)
+    {
+        using var conexion = conexiones.CreateConnection();
+        const string sql = """
+            UPDATE Solicitudes
+            SET PublicadaExterna = @publicada,
+                FechaVencimientoPublicacion = @fechaVencimiento
+            WHERE IdSolicitud = @idSolicitud;
+            """;
+        conexion.Execute(sql, new { idSolicitud, publicada, fechaVencimiento });
     }
 
     // elimina el registro indicado si no tiene relaciones
