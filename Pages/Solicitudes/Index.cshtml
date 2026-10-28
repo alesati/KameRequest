@@ -14,14 +14,59 @@
     @if (TempData["Mensaje"] is string mensaje) { <div class="alert alert-success">@mensaje</div> }
     @if (TempData["Error"] is string error) { <div class="alert alert-danger">@error</div> }
 
-    <div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Consecutivo</th><th>Título</th><th>Representante</th><th>Estado</th><th>Fecha de ingreso</th><th>Acciones</th></tr></thead><tbody>
+    <div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Consecutivo</th><th>Título</th><th>Representante</th><th>Estado</th><th>Fecha de ingreso</th><th>Portal externo</th><th>Acciones</th></tr></thead><tbody>
     @foreach (var solicitud in Model.Solicitudes)
     {
         var fechaVencimiento = IndexModel.AgregarDiasHabiles(solicitud.FechaIngreso, 5);
         var claseFila = solicitud.Estado == "Vencida" ? "table-danger" : fechaVencimiento == DateTime.Today ? "table-warning" : solicitud.Estado == "Nueva" ? "table-success" : string.Empty;
-        <tr class="@claseFila"><td>@solicitud.ConsecutivoOficio</td><td>@solicitud.Titulo</td><td>@solicitud.Representante</td><td>@solicitud.Estado</td><td>@solicitud.FechaIngreso.ToString("dd/MM/yyyy")</td><td class="text-nowrap">
+        <tr class="@claseFila"><td>@solicitud.ConsecutivoOficio</td><td>@solicitud.Titulo</td><td>@solicitud.Representante</td><td>@solicitud.Estado</td><td>@solicitud.FechaIngreso.ToString("dd/MM/yyyy")</td>
+            <td>
+                @if (solicitud.PublicadaExterna)
+                {
+                    <span class="badge text-bg-success">Publicada</span>
+                    <small class="d-block text-muted">Hasta @solicitud.FechaVencimientoPublicacion?.ToString("dd/MM/yyyy")</small>
+                }
+                else
+                {
+                    <span class="badge text-bg-secondary">No publicada</span>
+                }
+            </td>
+            <td class="text-nowrap">
             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Desglose", new { id = solicitud.IdSolicitud, modal = 1 })">Desglose</button>
             <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Tarea", new { id = solicitud.IdSolicitud, modal = 1 })">Tareas</button>
+            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#publicarSolicitud-@solicitud.IdSolicitud">Portal</button>
+            <div class="modal fade" id="publicarSolicitud-@solicitud.IdSolicitud" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" asp-page-handler="GuardarPublicacion">
+                            <div class="modal-header">
+                                <h2 class="modal-title fs-5">Publicación externa</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="IdSolicitudPublicacion" value="@solicitud.IdSolicitud" />
+                                <input type="hidden" name="PublicadaExterna" value="false" />
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="PublicadaExterna" value="true"
+                                           id="publicada-@solicitud.IdSolicitud" @(solicitud.PublicadaExterna ? "checked" : "") />
+                                    <label class="form-check-label" for="publicada-@solicitud.IdSolicitud">
+                                        Mostrar esta solicitud en el portal externo
+                                    </label>
+                                </div>
+                                <label class="form-label" for="vencimiento-@solicitud.IdSolicitud">Vencimiento de publicación</label>
+                                <input class="form-control" type="date" name="FechaVencimientoPublicacion"
+                                       id="vencimiento-@solicitud.IdSolicitud"
+                                       value="@solicitud.FechaVencimientoPublicacion?.ToString("yyyy-MM-dd")" />
+                                <small class="text-muted">La solicitud deja de mostrarse después de esta fecha.</small>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Guardar publicación</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <button type="button" class="btn btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editarSolicitud-@solicitud.IdSolicitud">Editar</button>
             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarSolicitud-@solicitud.IdSolicitud">Eliminar</button>
 
