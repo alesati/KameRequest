@@ -33,6 +33,18 @@ public class SolicitudService(SolicitudRepository repositorio) : ISolicitudServi
         repositorio.Actualizar(solicitud);
     }
 
+    // Revisa la fecha antes de hacer visible una solicitud en el portal.
+    public void ActualizarPublicacionExterna(int idSolicitud, bool publicada, DateTime? fechaVencimiento)
+    {
+        if (publicada && (!fechaVencimiento.HasValue || fechaVencimiento.Value.Date < DateTime.Today))
+            throw new ArgumentException("Indique una fecha de vencimiento igual o posterior a hoy.");
+
+        repositorio.ActualizarPublicacionExterna(
+            idSolicitud,
+            publicada,
+            publicada ? fechaVencimiento : null);
+    }
+
     public int Eliminar(int id)
     {
         return repositorio.Eliminar(id);
