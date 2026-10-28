@@ -11,6 +11,7 @@ public interface ISolicitudService
     int Crear(Solicitud solicitud);
     void Actualizar(Solicitud solicitud);
     int Eliminar(int id);
+    void ActualizarPublicacionExterna(int idSolicitud, bool publicada, DateTime? fechaVencimiento);
     IReadOnlyList<EstadoSolicitud> ListarEstados();
     IReadOnlyList<Solicitud> NuevasSinRespuesta(int idEstadoNueva);
     int? ObtenerIdEstadoPorNombre(string nombre);
