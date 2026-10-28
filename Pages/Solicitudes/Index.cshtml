@@ -46,14 +46,11 @@
                             </div>
                             <div class="modal-body">
                                 <input type="hidden" name="IdSolicitudPublicacion" value="@solicitud.IdSolicitud" />
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" name="PublicadaExterna" value="true"
-                                           id="publicada-@solicitud.IdSolicitud" @(solicitud.PublicadaExterna ? "checked" : "") />
-                                    <input type="hidden" name="PublicadaExterna" value="false" />
-                                    <label class="form-check-label" for="publicada-@solicitud.IdSolicitud">
-                                        Mostrar esta solicitud en el portal externo
-                                    </label>
-                                </div>
+                                <label class="form-label" for="publicada-@solicitud.IdSolicitud">Disponibilidad en portal externo</label>
+                                <select class="form-select mb-3" name="PublicadaExterna" id="publicada-@solicitud.IdSolicitud">
+                                    <option value="true" selected="@(solicitud.PublicadaExterna)">Publicar solicitud</option>
+                                    <option value="false" selected="@(!solicitud.PublicadaExterna)">No publicar solicitud</option>
+                                </select>
                                 <label class="form-label" for="vencimiento-@solicitud.IdSolicitud">Vencimiento de publicación</label>
                                 <input class="form-control" type="date" name="FechaVencimientoPublicacion"
                                        id="vencimiento-@solicitud.IdSolicitud"
