@@ -62,6 +62,25 @@ public class ParticipacionRepository(IDbConnectionFactory conexiones)
                 return false;
             }
 
+            var tieneTareasRelacionadas = conexion.ExecuteScalar<int>("""
+                SELECT COUNT(*)
+                FROM Tareas t
+                INNER JOIN DesglosesSolicitud d ON d.IdDesglose = t.IdDesglose
+                WHERE d.IdSolicitud = @idSolicitud;
+                """, new { idSolicitud }, transaccion) > 0;
+            if (tieneTareasRelacionadas)
+                throw new InvalidOperationException("No se puede aprobar porque existen tareas relacionadas con el desglose actual.");
+
+            // La propuesta aprobada reemplaza el plan de cobro oficial de la solicitud.
+            conexion.Execute("DELETE FROM DesglosesSolicitud WHERE IdSolicitud = @idSolicitud;", new { idSolicitud }, transaccion);
+            conexion.Execute("""
+                INSERT INTO DesglosesSolicitud
+                    (IdSolicitud, Mes, Anio, Horas, Monto, PorcentajeCobro, Observaciones)
+                SELECT @idSolicitud, Mes, Anio, Horas, Monto, PorcentajeCobro, Observaciones
+                FROM DesglosesParticipacion
+                WHERE IdParticipacion = @idParticipacion;
+                """, new { idSolicitud, idParticipacion }, transaccion);
+
             conexion.Execute("UPDATE ParticipacionesSolicitud SET Estado = 'Aprobada' WHERE IdParticipacion = @idParticipacion;", new { idParticipacion }, transaccion);
             conexion.Execute("UPDATE Solicitudes SET IdParticipacionAprobada = @idParticipacion WHERE IdSolicitud = @idSolicitud;", new { idSolicitud, idParticipacion }, transaccion);
             transaccion.Commit();
