@@ -33,14 +33,22 @@ public class ParticipacionesModel(
         if (anterior is null)
             return NotFound();
 
-        if (!participaciones.Aprobar(idSolicitud, idParticipacion))
+        try
         {
-            TempData["Error"] = "Ya existe una propuesta aprobada o la participación no corresponde a la solicitud.";
-            return RedirectToPage(new { id = idSolicitud });
+            if (!participaciones.Aprobar(idSolicitud, idParticipacion))
+            {
+                TempData["Error"] = "Ya existe una propuesta aprobada o la participación no corresponde a la solicitud.";
+                return RedirectToPage(new { id = idSolicitud });
+            }
+
+            bitacora.RegistrarActualizacion(User, "participacion de solicitud", anterior, new { anterior.IdParticipacion, Estado = "Aprobada" });
+            TempData["Mensaje"] = "La propuesta se aprobó y ahora es el desglose oficial de la solicitud.";
+        }
+        catch (InvalidOperationException error)
+        {
+            TempData["Error"] = error.Message;
         }
 
-        bitacora.RegistrarActualizacion(User, "participacion de solicitud", anterior, new { anterior.IdParticipacion, Estado = "Aprobada" });
-        TempData["Mensaje"] = "La propuesta se aprobó correctamente.";
         return RedirectToPage(new { id = idSolicitud });
     }
 }
