@@ -19,6 +19,15 @@ public class IndexModel(ISolicitudService solicitudes, IRepresentanteService rep
     public IReadOnlyList<Representante> Representantes { get; private set; } = [];
     public IReadOnlyList<EstadoSolicitud> Estados { get; private set; } = [];
 
+    [BindProperty]
+    public int IdSolicitudPublicacion { get; set; }
+
+    [BindProperty]
+    public bool PublicadaExterna { get; set; }
+
+    [BindProperty]
+    public DateTime? FechaVencimientoPublicacion { get; set; }
+
     // carga los datos necesarios antes de mostrar la pantalla
     public void OnGet(int pagina = 1)
     {
@@ -46,6 +55,34 @@ public class IndexModel(ISolicitudService solicitudes, IRepresentanteService rep
         catch (MySqlException e) when (e.Number == 1451)
         {
             TempData["Error"] = "No se puede eliminar un registro con datos relacionados.";
+        }
+
+        return RedirectToPage();
+    }
+
+    // Guarda si la solicitud aparece en WordPress y hasta que fecha.
+    public IActionResult OnPostGuardarPublicacion()
+    {
+        var anterior = solicitudes.Obtener(IdSolicitudPublicacion);
+        if (anterior is null)
+            return NotFound();
+
+        try
+        {
+            solicitudes.ActualizarPublicacionExterna(
+                IdSolicitudPublicacion,
+                PublicadaExterna,
+                FechaVencimientoPublicacion);
+
+            var actual = solicitudes.Obtener(IdSolicitudPublicacion);
+            bitacora.RegistrarActualizacion(User, "publicacion externa de solicitud", anterior, actual);
+            TempData["Mensaje"] = PublicadaExterna
+                ? "La solicitud se publicó para el portal externo."
+                : "La solicitud se retiró del portal externo.";
+        }
+        catch (ArgumentException error)
+        {
+            TempData["Error"] = error.Message;
         }
 
         return RedirectToPage();
