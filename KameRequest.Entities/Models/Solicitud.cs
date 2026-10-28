@@ -32,5 +32,12 @@ public class Solicitud
     public string Estado { get; set; } = string.Empty;
     public string? Representante { get; set; }
     public string? CorreoRepresentante { get; set; }
+
+    // Indica si la solicitud se puede mostrar en el portal externo.
+    public bool PublicadaExterna { get; set; }
+
+    // Despues de esta fecha ya no se muestra en el portal externo.
+    [DataType(DataType.Date)]
+    public DateTime? FechaVencimientoPublicacion { get; set; }
 }
 
