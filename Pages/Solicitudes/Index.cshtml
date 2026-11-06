@@ -19,16 +19,24 @@
     {
         var fechaVencimiento = IndexModel.AgregarDiasHabiles(solicitud.FechaIngreso, 5);
         var claseFila = solicitud.Estado == "Vencida" ? "table-danger" : fechaVencimiento == DateTime.Today ? "table-warning" : solicitud.Estado == "Nueva" ? "table-success" : string.Empty;
-        <tr class="@claseFila"><td>@solicitud.ConsecutivoOficio</td><td>@solicitud.Titulo</td><td>@solicitud.Representante</td><td>@solicitud.Estado</td><td>@solicitud.FechaIngreso.ToString("dd/MM/yyyy")</td>
+        var claseEstado = solicitud.Estado switch
+        {
+            "Nueva" => "estado-nueva",
+            "Iniciada" => "estado-iniciada",
+            "Respondida" => "estado-respondida",
+            "Vencida" => "estado-vencida",
+            _ => "estado-general"
+        };
+        <tr class="@claseFila"><td>@solicitud.ConsecutivoOficio</td><td>@solicitud.Titulo</td><td>@solicitud.Representante</td><td><span class="estado-solicitud @claseEstado">@solicitud.Estado</span></td><td>@solicitud.FechaIngreso.ToString("dd/MM/yyyy")</td>
             <td>
                 @if (solicitud.PublicadaExterna)
                 {
-                    <span class="badge text-bg-success">Publicada</span>
+                    <span class="estado-solicitud publicacion-activa">Publicada</span>
                     <small class="d-block text-muted">Hasta @solicitud.FechaVencimientoPublicacion?.ToString("dd/MM/yyyy")</small>
                 }
                 else
                 {
-                    <span class="badge text-bg-secondary">No publicada</span>
+                    <span class="estado-solicitud publicacion-inactiva">No publicada</span>
                 }
             </td>
             <td class="text-nowrap">

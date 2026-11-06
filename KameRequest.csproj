@@ -1,27 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
-  </PropertyGroup>
-  <ItemGroup>
-    <!-- Los modelos y repositorios se compilan en sus propios proyectos. -->
-    <Compile Remove="Models\**\*.cs" />
-    <Compile Remove="KameRequest.Entities\**\*.cs" />
-    <Compile Remove="KameRequest.Repository\**\*.cs" />
-    <Compile Remove="KameRequest.Services\**\*.cs" />
-    <!-- Son proyectos independientes, no archivos de la aplicacion web. -->
-    <Content Remove="KameRequest.Entities\**" />
-    <Content Remove="KameRequest.Repository\**" />
-    <Content Remove="KameRequest.Services\**" />
-    <None Remove="KameRequest.Entities\**" />
-    <None Remove="KameRequest.Repository\**" />
-    <None Remove="KameRequest.Services\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="KameRequest.Entities\KameRequest.Entities.csproj" />
-    <ProjectReference Include="KameRequest.Repository\KameRequest.Repository.csproj" />
-    <ProjectReference Include="KameRequest.Services\KameRequest.Services.csproj" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- Los modelos y repositorios se compilan en sus propios proyectos. -->
+		<Compile Remove="Models\**\*.cs" />
+		<Compile Remove="KameRequest.Entities\**\*.cs" />
+		<Compile Remove="KameRequest.Repository\**\*.cs" />
+		<Compile Remove="KameRequest.Services\**\*.cs" />
+		<!-- El WS externo se guarda en esta solucion, pero se compila por separado. -->
+		<Compile Remove="ModuloExterno\**\*.cs" />
+		<!-- Son proyectos independientes, no archivos de la aplicacion web. -->
+		<Content Remove="KameRequest.Entities\**" />
+		<Content Remove="KameRequest.Repository\**" />
+		<Content Remove="KameRequest.Services\**" />
+		<Content Remove="ModuloExterno\**" />
+		<None Remove="KameRequest.Entities\**" />
+		<None Remove="KameRequest.Repository\**" />
+		<None Remove="KameRequest.Services\**" />
+		<None Remove="ModuloExterno\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="KameRequest.Entities\KameRequest.Entities.csproj" />
+		<ProjectReference Include="KameRequest.Repository\KameRequest.Repository.csproj" />
+		<ProjectReference Include="KameRequest.Services\KameRequest.Services.csproj" />
+	</ItemGroup>
 </Project>

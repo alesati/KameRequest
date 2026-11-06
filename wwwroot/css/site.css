@@ -370,6 +370,53 @@ h1, h2, h3 { color: var(--azul); }
     --bs-table-bg: #fde8ef;
 }
 
+/* estados con contraste fijo para que siempre se puedan leer dentro de la tabla */
+.estado-solicitud {
+    display: inline-flex;
+    align-items: center;
+    padding: .34rem .62rem;
+    border-radius: 999px;
+    font-size: .82rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.estado-nueva {
+    background: #d9f4eb;
+    color: #126b55;
+}
+
+.estado-iniciada {
+    background: #dff5f8;
+    color: #086d7b;
+}
+
+.estado-respondida {
+    background: #e8edfa;
+    color: #284980;
+}
+
+.estado-vencida {
+    background: #fde8ef;
+    color: #a32e4d;
+}
+
+.estado-general {
+    background: #e8edf3;
+    color: #334155;
+}
+
+.publicacion-activa {
+    background: #d9f4eb;
+    color: #126b55;
+}
+
+.publicacion-inactiva {
+    background: #e8edf3;
+    color: #475569;
+}
+
 .reportes-page .table-info {
     --bs-table-bg: #dff5f8;
     --bs-table-color: var(--azul);

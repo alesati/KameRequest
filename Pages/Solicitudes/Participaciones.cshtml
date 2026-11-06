@@ -23,17 +23,16 @@
         <div class="alert alert-danger">@error</div>
     }
 
-    @if (!Model.Lista.Any())
+    @if (Model.ParticipacionSeleccionada is not null)
     {
-        <div class="alert alert-info">Aún no existen participaciones para esta solicitud.</div>
-    }
-
-    @foreach (var participacion in Model.Lista)
-    {
-        <section class="card mb-3">
+        var participacion = Model.ParticipacionSeleccionada;
+        var estadoParticipacion = string.IsNullOrWhiteSpace(participacion.Estado) ? "Pendiente" : participacion.Estado;
+        var claseEstadoParticipacion = estadoParticipacion == "Aprobada" ? "publicacion-activa" : "estado-general";
+        <a class="btn btn-outline-secondary mb-3" asp-route-id="@Model.Solicitud?.IdSolicitud">← Regresar a participaciones</a>
+        <section class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong>@participacion.NombreProveedor</strong>
-                <span class="badge @(participacion.Estado == "Aprobada" ? "text-bg-success" : "text-bg-secondary")">@participacion.Estado</span>
+                <strong>Propuesta de @participacion.NombreProveedor</strong>
+                <span class="estado-solicitud @claseEstadoParticipacion">@estadoParticipacion</span>
             </div>
             <div class="card-body">
                 <div class="row mb-3">
@@ -45,30 +44,60 @@
                     <table class="table table-sm align-middle">
                         <thead><tr><th>Periodo</th><th>Horas</th><th>Monto</th><th>IVA</th><th>Total</th><th>% cobro</th><th>Observaciones</th></tr></thead>
                         <tbody>
-                        @foreach (var desglose in participacion.Desgloses)
-                        {
-                            <tr>
-                                <td>@desglose.Mes / @desglose.Anio</td>
-                                <td>@desglose.Horas</td>
-                                <td>@desglose.Monto.ToString("C")</td>
-                                <td>@desglose.Iva.ToString("C")</td>
-                                <td>@desglose.Total.ToString("C")</td>
-                                <td>@desglose.PorcentajeCobro%</td>
-                                <td>@desglose.Observaciones</td>
-                            </tr>
-                        }
+                            @foreach (var desglose in participacion.Desgloses)
+                            {
+                                <tr>
+                                    <td>@desglose.Mes / @desglose.Anio</td>
+                                    <td>@desglose.Horas</td>
+                                    <td>@desglose.Monto.ToString("C")</td>
+                                    <td>@desglose.Iva.ToString("C")</td>
+                                    <td>@desglose.Total.ToString("C")</td>
+                                    <td>@desglose.PorcentajeCobro%</td>
+                                    <td>@desglose.Observaciones</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
-                @if (!Model.Lista.Any(item => item.Estado == "Aprobada"))
-                {
-                    <form method="post" asp-page-handler="Aprobar">
-                        <input type="hidden" name="idSolicitud" value="@Model.Solicitud?.IdSolicitud" />
-                        <input type="hidden" name="idParticipacion" value="@participacion.IdParticipacion" />
+                <form method="post" asp-page-handler="Aprobar">
+                    <input type="hidden" name="idSolicitud" value="@Model.Solicitud?.IdSolicitud" />
+                    <input type="hidden" name="idParticipacion" value="@participacion.IdParticipacion" />
+                    @if (Model.TienePropuestaAprobada)
+                    {
+                        <button class="btn btn-primary" type="submit" disabled>Aprobar propuesta</button>
+                        <small class="d-block text-muted mt-2">Ya existe una propuesta aprobada para esta solicitud.</small>
+                    }
+                    else
+                    {
                         <button class="btn btn-primary" type="submit">Aprobar propuesta</button>
-                    </form>
-                }
+                    }
+                </form>
             </div>
         </section>
+    }
+    else if (!Model.Lista.Any())
+    {
+        <div class="alert alert-info">Aún no existen participaciones para esta solicitud.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead><tr><th>Cédula jurídica</th><th>Proveedor</th><th>Fecha</th><th>Estado</th></tr></thead>
+                <tbody>
+                    @foreach (var participacion in Model.Lista)
+                    {
+                        var estadoParticipacion = string.IsNullOrWhiteSpace(participacion.Estado) ? "Pendiente" : participacion.Estado;
+                        var claseEstadoParticipacion = estadoParticipacion == "Aprobada" ? "publicacion-activa" : "estado-general";
+                        <tr>
+                            <td><a asp-route-id="@Model.Solicitud?.IdSolicitud" asp-route-participacion="@participacion.IdParticipacion">@participacion.CedulaJuridica</a></td>
+                            <td>@participacion.NombreProveedor</td>
+                            <td>@participacion.FechaParticipacion.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td><span class="estado-solicitud @claseEstadoParticipacion">@estadoParticipacion</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
 </div>
