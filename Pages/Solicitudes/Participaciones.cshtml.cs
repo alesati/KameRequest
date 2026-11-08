@@ -38,7 +38,7 @@ public class ParticipacionesModel(
     }
 
     // aprueba una propuesta y la convierte en el desglose oficial
-    public IActionResult OnPostAprobar(int idSolicitud, int idParticipacion)
+    public IActionResult OnPostAprobar(int idSolicitud, int idParticipacion, bool modal = false)
     {
         var anterior = participaciones.ListarPorSolicitud(idSolicitud)
             .SingleOrDefault(item => item.IdParticipacion == idParticipacion);
@@ -51,7 +51,7 @@ public class ParticipacionesModel(
             if (!participaciones.Aprobar(idSolicitud, idParticipacion))
             {
                 TempData["Error"] = "Ya existe una propuesta aprobada o la participación no corresponde a la solicitud.";
-                return RedirectToPage(new { id = idSolicitud, participacion = idParticipacion });
+                return RedirigirDetalle(idSolicitud, idParticipacion, modal);
             }
 
             bitacora.RegistrarActualizacion(User, "participacion de solicitud", anterior, new { anterior.IdParticipacion, Estado = "Aprobada" });
@@ -62,6 +62,10 @@ public class ParticipacionesModel(
             TempData["Error"] = error.Message;
         }
 
-        return RedirectToPage(new { id = idSolicitud, participacion = idParticipacion });
+        return RedirigirDetalle(idSolicitud, idParticipacion, modal);
     }
+
+    // conserva el modal abierto cuando la aprobacion se hizo desde solicitudes
+    private RedirectToPageResult RedirigirDetalle(int idSolicitud, int idParticipacion, bool modal) =>
+        RedirectToPage(new { id = idSolicitud, participacion = idParticipacion, modal = modal ? 1 : (int?)null });
 }

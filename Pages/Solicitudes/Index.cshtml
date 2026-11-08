@@ -42,7 +42,7 @@
             <td class="text-nowrap">
             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Desglose", new { id = solicitud.IdSolicitud, modal = 1 })">Desglose</button>
             <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Tarea", new { id = solicitud.IdSolicitud, modal = 1 })">Tareas</button>
-            <a class="btn btn-sm btn-outline-primary" asp-page="/Solicitudes/Participaciones" asp-route-id="@solicitud.IdSolicitud">Participaciones</a>
+            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Participaciones", new { id = solicitud.IdSolicitud, modal = 1 })">Participaciones</button>
             <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#publicarSolicitud-@solicitud.IdSolicitud">Portal</button>
             <div class="modal fade" id="publicarSolicitud-@solicitud.IdSolicitud" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">

@@ -993,6 +993,74 @@ h1, h2, h3 { color: var(--azul); }
     padding-inline: 1rem !important;
 }
 
+/* participaciones usa la misma linea visual de tareas y desgloses */
+.participaciones-page .solicitud-resumen {
+    border: 1px solid var(--borde);
+    background: #eef9fb;
+}
+
+.participaciones-page .solicitud-resumen .card-title {
+    color: var(--turquesa) !important;
+}
+
+.participaciones-page .gestion-tabla {
+    border: 1px solid var(--borde);
+}
+
+.participaciones-page .gestion-tabla > .card-header {
+    background: var(--azul);
+    color: #fff;
+    border-bottom: 0;
+}
+
+.participaciones-page .table-responsive {
+    overflow: hidden;
+    border: 1px solid var(--borde);
+    border-radius: .8rem;
+    background: #fff;
+}
+
+.participaciones-page .table {
+    margin-bottom: 0;
+    --bs-table-striped-bg: #f7fafc;
+}
+
+.participaciones-page .table > thead > tr > th {
+    padding: .85rem .8rem;
+    border-color: var(--azul);
+    background: var(--azul);
+    color: #fff;
+    font-size: .79rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    vertical-align: middle;
+}
+
+.participaciones-page .table > tbody > tr > td {
+    padding: .8rem;
+    border-color: var(--borde);
+    color: var(--texto);
+    vertical-align: middle;
+}
+
+.participaciones-page .propuesta-datos {
+    padding: .75rem;
+    border: 1px solid var(--borde);
+    border-radius: .65rem;
+    background: #f7fafc;
+}
+
+.participaciones-page .link-participacion {
+    color: var(--azul);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.participaciones-page .link-participacion:hover {
+    color: var(--turquesa);
+    text-decoration: underline;
+}
+
 @media (max-width: 1199px) {
     .gestion-modal .modal-dialog { width: 100%; height: 100dvh; }
     .gestion-modal iframe { min-height: calc(100dvh - 72px); }
