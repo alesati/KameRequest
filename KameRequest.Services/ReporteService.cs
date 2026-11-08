@@ -22,8 +22,20 @@ public class ReporteService(ReporteRepository repositorio) : IReporteService
         return repositorio.TareasPorSolicitud(idSolicitud, mes, anio);
     }
 
-    public IReadOnlyList<Rpt_FacturacionMes> FacturacionPorMes(int mes, int anio)
+    public IReadOnlyList<Rpt_FacturacionMes> FacturacionPorMes(int mes, int anio, int pagina, int tamano)
     {
-        return repositorio.FacturacionPorMes(mes, anio);
+        return repositorio.FacturacionPorMes(mes, anio, pagina, tamano);
+    }
+
+    // cuenta las filas para calcular cuantas paginas mostrar
+    public int ContarFacturacionPorMes(int mes, int anio)
+    {
+        return repositorio.ContarFacturacionPorMes(mes, anio);
+    }
+
+    // conserva los totales de todo el periodo aunque la tabla este paginada
+    public Rpt_FacturacionMes TotalesFacturacionPorMes(int mes, int anio)
+    {
+        return repositorio.TotalesFacturacionPorMes(mes, anio);
     }
 }

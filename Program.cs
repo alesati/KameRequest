@@ -3,6 +3,7 @@ using KameRequest.Services.Abstract;
 using KameRequest.Repository;
 using KameRequest.Repository.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,7 +47,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     // agrega un mensaje cuando alguien intenta abrir una pagina protegida por URL
     opciones.Events.OnRedirectToLogin = contexto =>
     {
-        contexto.Response.Redirect(contexto.RedirectUri + "&mensaje=sesion");
+        // conserva ReturnUrl y agrega el mensaje sin dañar la direccion original
+        var direccion = QueryHelpers.AddQueryString(contexto.RedirectUri, "mensaje", "sesion");
+        contexto.Response.Redirect(direccion);
         return Task.CompletedTask;
     };
 });

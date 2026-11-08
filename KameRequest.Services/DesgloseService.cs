@@ -35,12 +35,21 @@ public class DesgloseService(DesgloseRepository repositorio) : IDesgloseService
 
     public int Crear(DesgloseSolicitud desglose)
     {
+        ValidarValores(desglose);
         return repositorio.Crear(desglose);
     }
 
     public void Actualizar(DesgloseSolicitud desglose)
     {
+        ValidarValores(desglose);
         repositorio.Actualizar(desglose);
+    }
+
+    // evita guardar valores en cero aunque la llamada no venga desde la pantalla
+    private static void ValidarValores(DesgloseSolicitud desglose)
+    {
+        if (desglose.Horas <= 0 || desglose.Monto <= 0 || desglose.PorcentajeCobro is <= 0 or > 100)
+            throw new ArgumentException("Las horas, el monto y el porcentaje de cobro deben ser mayores a 0.");
     }
 
     public int Eliminar(int id)

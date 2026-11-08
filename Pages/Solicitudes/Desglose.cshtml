@@ -134,15 +134,15 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Horas</label>
-                            <input type="number" step="0.01" asp-for="NuevoDesglose.Horas" class="form-control" required placeholder="0.00" />
+                            <input type="number" min="0.01" step="0.01" asp-for="NuevoDesglose.Horas" class="form-control" required placeholder="0.00" />
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Monto (Sin IVA)</label>
-                            <input type="number" step="0.01" id="inputMonto" asp-for="NuevoDesglose.Monto" class="form-control" required placeholder="0.00" oninput="calcularIvaTotal()" />
+                            <input type="number" min="0.01" step="0.01" id="inputMonto" asp-for="NuevoDesglose.Monto" class="form-control" required placeholder="0.00" oninput="calcularIvaTotal()" />
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">% Cobro</label>
-                            <input type="number" step="0.01" asp-for="NuevoDesglose.PorcentajeCobro" class="form-control" required value="100" />
+                            <input type="number" min="0.01" max="100" step="0.01" asp-for="NuevoDesglose.PorcentajeCobro" class="form-control" required value="100" />
                         </div>
                     </div>
 
@@ -198,15 +198,15 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Horas</label>
-                            <input type="number" step="0.01" id="editHoras" asp-for="DesgloseEditar.Horas" class="form-control" required />
+                            <input type="number" min="0.01" step="0.01" id="editHoras" asp-for="DesgloseEditar.Horas" class="form-control" required />
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Monto (Sin IVA)</label>
-                            <input type="number" step="0.01" id="editMonto" asp-for="DesgloseEditar.Monto" class="form-control" required oninput="calcularIvaTotalEdit()" />
+                            <input type="number" min="0.01" step="0.01" id="editMonto" asp-for="DesgloseEditar.Monto" class="form-control" required oninput="calcularIvaTotalEdit()" />
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">% Cobro</label>
-                            <input type="number" step="0.01" id="editPorcentajeCobro" asp-for="DesgloseEditar.PorcentajeCobro" class="form-control" required />
+                            <input type="number" min="0.01" max="100" step="0.01" id="editPorcentajeCobro" asp-for="DesgloseEditar.PorcentajeCobro" class="form-control" required />
                         </div>
                     </div>
 

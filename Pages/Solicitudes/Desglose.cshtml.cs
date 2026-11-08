@@ -37,7 +37,7 @@ public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgl
     {
         if (!DatosValidos(NuevoDesglose))
         {
-            MensajeError = "Revise el mes, año, monto y porcentaje de cobro.";
+            MensajeError = "Las horas, el monto y el porcentaje de cobro deben ser mayores a 0.";
             return VolverAListado(idSolicitud, modal);
         }
 
@@ -70,7 +70,7 @@ public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgl
     {
         if (!DatosValidos(DesgloseEditar))
         {
-            MensajeError = "Revise el mes, año, monto y porcentaje de cobro.";
+            MensajeError = "Las horas, el monto y el porcentaje de cobro deben ser mayores a 0.";
             return VolverAListado(idSolicitud, modal);
         }
 
@@ -136,8 +136,8 @@ public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgl
     {
         return d.Mes is >= 1 and <= 12
             && d.Anio is >= 1000 and <= 9999
-            && d.Horas >= 0
-            && d.Monto >= 0
-            && d.PorcentajeCobro is >= 0 and <= 100;
+            && d.Horas > 0
+            && d.Monto > 0
+            && d.PorcentajeCobro is > 0 and <= 100;
     }
 }

@@ -16,12 +16,27 @@ public class IniciarSesionModel(IUsuarioService seguridad, IBitacoraService bita
     [BindProperty]
     public InicioSesion Datos { get; set; } = new();// carga los datos necesarios antes de mostrar la pantalla
 
+    // guarda la pantalla protegida que la persona quiso abrir antes de iniciar sesion
+    [BindProperty(SupportsGet = true)]
+    public string? ReturnUrl { get; set; }
+
+    // indica que se debe mostrar el aviso cuando se entra sin una sesion valida
+    public bool MostrarAvisoSesion { get; private set; }
+
     public IActionResult OnGet(string? mensaje)// valida el formulario y realiza la accion de forma asincrona
     {
         if (mensaje == "sesion")
-            ModelState.AddModelError(string.Empty, "Por favor inicie sesión para utilizar el sistema");
+        {
+            MostrarAvisoSesion = true;
+        }
 
-        return User.Identity?.IsAuthenticated == true ? RedirectToPage("/Index") : Page();
+        if (User.Identity?.IsAuthenticated != true)
+            return Page();
+
+        // evita redireccionar a direcciones externas recibidas por URL
+        return Url.IsLocalUrl(ReturnUrl)
+            ? LocalRedirect(ReturnUrl)
+            : RedirectToPage("/Index");
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -53,7 +68,11 @@ public class IniciarSesionModel(IUsuarioService seguridad, IBitacoraService bita
             var identidad = new ClaimsIdentity(datosUsuario, CookieAuthenticationDefaults.AuthenticationScheme); // Crea la cookie que permite navegar por las paginas protegidas
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identidad));
             bitacora.Registrar(usuario.IdUsuario, "Inicio de sesion exitoso.");
-            return RedirectToPage("/Index");
+
+            // despues de iniciar sesion vuelve a la pagina que se intento visitar
+            return Url.IsLocalUrl(ReturnUrl)
+                ? LocalRedirect(ReturnUrl)
+                : RedirectToPage("/Index");
         }
         catch (Exception excepcion)
         {

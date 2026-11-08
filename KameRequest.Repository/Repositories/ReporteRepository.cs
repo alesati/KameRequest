@@ -50,7 +50,7 @@ public class ReporteRepository(IDbConnectionFactory conexiones)
             """;
         return conexion.Query<TareaReporteDto>(sql, new { idSolicitud, mes, anio }).ToList();
     }
-    public IReadOnlyList<Rpt_FacturacionMes> FacturacionPorMes(int mes, int anio)
+    public IReadOnlyList<Rpt_FacturacionMes> FacturacionPorMes(int mes, int anio, int pagina, int tamano)
     {
         using var conexion = conexiones.CreateConnection();
         const string sql = """
@@ -59,9 +59,35 @@ public class ReporteRepository(IDbConnectionFactory conexiones)
             FROM Solicitudes s
             INNER JOIN DesglosesSolicitud d ON d.IdSolicitud = s.IdSolicitud
             WHERE d.Mes = @mes AND d.Anio = @anio
-            ORDER BY s.ConsecutivoOficio;
+            ORDER BY s.ConsecutivoOficio
+            LIMIT @tamano OFFSET @offset;
             """;
-        return conexion.Query<Rpt_FacturacionMes>(sql, new { mes, anio }).ToList();
+        var offset = (pagina - 1) * tamano;
+        return conexion.Query<Rpt_FacturacionMes>(sql, new { mes, anio, tamano, offset }).ToList();
+    }
+
+    public int ContarFacturacionPorMes(int mes, int anio)
+    {
+        using var conexion = conexiones.CreateConnection();
+        const string sql = """
+            SELECT COUNT(*)
+            FROM DesglosesSolicitud
+            WHERE Mes = @mes AND Anio = @anio;
+            """;
+        return conexion.ExecuteScalar<int>(sql, new { mes, anio });
+    }
+
+    public Rpt_FacturacionMes TotalesFacturacionPorMes(int mes, int anio)
+    {
+        using var conexion = conexiones.CreateConnection();
+        const string sql = """
+            SELECT COALESCE(SUM(Monto), 0) AS Monto,
+                   COALESCE(SUM(Monto) * 0.13, 0) AS Iva,
+                   COALESCE(SUM(Monto) * 1.13, 0) AS Total
+            FROM DesglosesSolicitud
+            WHERE Mes = @mes AND Anio = @anio;
+            """;
+        return conexion.QuerySingle<Rpt_FacturacionMes>(sql, new { mes, anio });
     }
 }
 

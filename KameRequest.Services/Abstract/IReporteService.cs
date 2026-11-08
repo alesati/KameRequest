@@ -8,5 +8,7 @@ public interface IReporteService
     IReadOnlyList<string> ListarUsuariosConTareas();
     IReadOnlyList<TareaReporteDto> TareasPorUsuario(string usuario, int mes, int anio);
     IReadOnlyList<TareaReporteDto> TareasPorSolicitud(int idSolicitud, int mes, int anio);
-    IReadOnlyList<Rpt_FacturacionMes> FacturacionPorMes(int mes, int anio);
+    IReadOnlyList<Rpt_FacturacionMes> FacturacionPorMes(int mes, int anio, int pagina, int tamano);
+    int ContarFacturacionPorMes(int mes, int anio);
+    Rpt_FacturacionMes TotalesFacturacionPorMes(int mes, int anio);
 }
