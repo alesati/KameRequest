@@ -9,7 +9,7 @@
 <div class="container-fluid mt-4 px-4 app-page solicitudes-page gestion-listado participaciones-page">
     @if (!esModal)
     {
-        <a class="btn btn-outline-secondary mb-3" asp-page="/Solicitudes/Index">← Volver a Solicitudes</a>
+        <a class="btn btn-outline-secondary mb-3 volver-solicitudes" asp-page="/Solicitudes/Index">← Volver a Solicitudes</a>
     }
 
     <div class="card solicitud-resumen mb-4 shadow-sm">
@@ -44,7 +44,7 @@
         <a class="btn btn-outline-secondary mb-3" asp-route-id="@Model.Solicitud?.IdSolicitud" asp-route-modal="@(esModal ? "1" : null)">← Regresar a participaciones</a>
         <section class="card shadow-sm gestion-tabla">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="h5 mb-0">Detalle de participación</h2>
+                <h2 class="h5 mb-0 text-white">Proveedor</h2>
                 <span class="estado-solicitud @claseEstadoParticipacion">@estadoParticipacion</span>
             </div>
             <div class="card-body">
@@ -54,6 +54,7 @@
                     <div class="col-md-3"><strong>Representante:</strong> @participacion.NombreRepresentante</div>
                     <div class="col-md-3"><strong>Correo:</strong> @participacion.Correo</div>
                 </div>
+                <h3 class="h5 mb-3">Desglose</h3>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped align-middle">
                         <thead><tr><th>Periodo</th><th>Horas</th><th>Monto</th><th>IVA</th><th>Total</th><th>% cobro</th><th>Observaciones</th></tr></thead>
@@ -96,30 +97,23 @@
     }
     else
     {
-        <section class="card shadow-sm gestion-tabla">
-            <div class="card-header">
-                <h2 class="h5 mb-0">Participaciones de la solicitud</h2>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped align-middle">
-                        <thead><tr><th>Cédula jurídica</th><th>Proveedor</th><th>Fecha</th><th>Estado</th></tr></thead>
-                        <tbody>
-                            @foreach (var participacion in Model.Lista)
-                            {
-                                var estadoParticipacion = string.IsNullOrWhiteSpace(participacion.Estado) ? "Pendiente" : participacion.Estado;
-                                var claseEstadoParticipacion = estadoParticipacion == "Aprobada" ? "publicacion-activa" : "estado-general";
-                                <tr>
-                                    <td><a class="link-participacion" asp-route-id="@Model.Solicitud?.IdSolicitud" asp-route-participacion="@participacion.IdParticipacion" asp-route-modal="@(esModal ? "1" : null)">@participacion.CedulaJuridica</a></td>
-                                    <td>@participacion.NombreProveedor</td>
-                                    <td>@participacion.FechaParticipacion.ToString("dd/MM/yyyy HH:mm")</td>
-                                    <td><span class="estado-solicitud @claseEstadoParticipacion">@estadoParticipacion</span></td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead><tr><th>Cédula jurídica</th><th>Proveedor</th><th>Fecha</th><th>Estado</th></tr></thead>
+                <tbody>
+                    @foreach (var participacion in Model.Lista)
+                    {
+                        var estadoParticipacion = string.IsNullOrWhiteSpace(participacion.Estado) ? "Pendiente" : participacion.Estado;
+                        var claseEstadoParticipacion = estadoParticipacion == "Aprobada" ? "publicacion-activa" : "estado-general";
+                        <tr>
+                            <td><a class="link-participacion" asp-route-id="@Model.Solicitud?.IdSolicitud" asp-route-participacion="@participacion.IdParticipacion" asp-route-modal="@(esModal ? "1" : null)">@participacion.CedulaJuridica</a></td>
+                            <td>@participacion.NombreProveedor</td>
+                            <td>@participacion.FechaParticipacion.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td><span class="estado-solicitud @claseEstadoParticipacion">@estadoParticipacion</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
 </div>
