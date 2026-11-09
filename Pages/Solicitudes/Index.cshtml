@@ -43,7 +43,7 @@
                 <div class="dropdown acciones-solicitud">
                     <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                        Acciones
+                        Opciones
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Desglose", new { id = solicitud.IdSolicitud, modal = 1 })">Desglose</button></li>
@@ -96,9 +96,6 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editarSolicitud-@solicitud.IdSolicitud">Editar</button>
-            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarSolicitud-@solicitud.IdSolicitud">Eliminar</button>
-
             <div class="modal fade modal-solicitud-form" id="editarSolicitud-@solicitud.IdSolicitud" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-scrollable">
                     <div class="modal-content">
