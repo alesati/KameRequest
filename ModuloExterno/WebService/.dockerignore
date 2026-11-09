@@ -1,0 +1,6 @@
+# archivos locales que no se ocupan para compilar la imagen
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+.git/

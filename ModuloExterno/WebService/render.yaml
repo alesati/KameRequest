@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: kamerequest-ws
+    runtime: docker
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /ServicioSolicitudesExternas.svc?wsdl
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      # se agrega desde Render como secreto, no se guarda la clave en Git
+      - key: ConnectionStrings__MariaDb
+        sync: false
