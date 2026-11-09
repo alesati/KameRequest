@@ -55,7 +55,7 @@
                             <div class="modal-body">
                                 @if (Model.PublicacionConError == solicitud.IdSolicitud && !string.IsNullOrWhiteSpace(Model.ErrorPublicacion))
                                 {
-                                    <div class="alert alert-danger" role="alert">@Model.ErrorPublicacion</div>
+                                    <div class="alert alert-danger alerta-publicacion" role="alert">@Model.ErrorPublicacion</div>
                                 }
                                 <input type="hidden" name="IdSolicitudPublicacion" value="@solicitud.IdSolicitud" />
                                 <label class="form-label" for="publicada-@solicitud.IdSolicitud">Disponibilidad en portal externo</label>
