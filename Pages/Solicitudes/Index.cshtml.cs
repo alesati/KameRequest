@@ -18,6 +18,8 @@ public class IndexModel(ISolicitudService solicitudes, IRepresentanteService rep
     public int TotalPaginas { get; private set; }
     public IReadOnlyList<Representante> Representantes { get; private set; } = [];
     public IReadOnlyList<EstadoSolicitud> Estados { get; private set; } = [];
+    public int? PublicacionConError { get; private set; }
+    public string? ErrorPublicacion { get; private set; }
 
     [BindProperty]
     public int IdSolicitudPublicacion { get; set; }
@@ -29,8 +31,10 @@ public class IndexModel(ISolicitudService solicitudes, IRepresentanteService rep
     public DateTime? FechaVencimientoPublicacion { get; set; }
 
     // carga los datos necesarios antes de mostrar la pantalla
-    public void OnGet(int pagina = 1)
+    public void OnGet(int pagina = 1, int? publicacion = null)
     {
+        PublicacionConError = publicacion;
+        ErrorPublicacion = TempData["ErrorPublicacion"] as string;
         bitacora.RegistrarConsulta(User, "solicitudes");
         var total = solicitudes.Contar();
         TotalPaginas = Math.Max(1, (int)Math.Ceiling(total / (double)RegistrosPorPagina));
@@ -82,7 +86,8 @@ public class IndexModel(ISolicitudService solicitudes, IRepresentanteService rep
         }
         catch (ArgumentException error)
         {
-            TempData["Error"] = error.Message;
+            TempData["ErrorPublicacion"] = error.Message;
+            return RedirectToPage(new { publicacion = IdSolicitudPublicacion });
         }
 
         return RedirectToPage();
