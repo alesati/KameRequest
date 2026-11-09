@@ -20,6 +20,19 @@ public class ParticipacionRepository(IDbConnectionFactory conexiones)
         return conexion.Query<ParticipacionSolicitud>(sql, new { idSolicitud }).ToList();
     }
 
+    // revisa si la solicitud ya tiene una propuesta aprobada
+    public bool TieneAprobada(int idSolicitud)
+    {
+        using var conexion = conexiones.CreateConnection();
+        const string sql = """
+            SELECT COUNT(*)
+            FROM ParticipacionesSolicitud
+            WHERE IdSolicitud = @idSolicitud
+              AND Estado = 'Aprobada';
+            """;
+        return conexion.ExecuteScalar<int>(sql, new { idSolicitud }) > 0;
+    }
+
     public IReadOnlyList<DesgloseParticipacion> ListarDesgloses(int idParticipacion)
     {
         using var conexion = conexiones.CreateConnection();
@@ -82,7 +95,14 @@ public class ParticipacionRepository(IDbConnectionFactory conexiones)
                 """, new { idSolicitud, idParticipacion }, transaccion);
 
             conexion.Execute("UPDATE ParticipacionesSolicitud SET Estado = 'Aprobada' WHERE IdParticipacion = @idParticipacion;", new { idParticipacion }, transaccion);
-            conexion.Execute("UPDATE Solicitudes SET IdParticipacionAprobada = @idParticipacion WHERE IdSolicitud = @idSolicitud;", new { idSolicitud, idParticipacion }, transaccion);
+            // al elegir una propuesta se retira la solicitud del portal externo
+            conexion.Execute("""
+                UPDATE Solicitudes
+                SET IdParticipacionAprobada = @idParticipacion,
+                    PublicadaExterna = 0,
+                    FechaVencimientoPublicacion = NULL
+                WHERE IdSolicitud = @idSolicitud;
+                """, new { idSolicitud, idParticipacion }, transaccion);
             transaccion.Commit();
             return true;
         }
