@@ -778,6 +778,16 @@ h1, h2, h3 { color: var(--azul); }
     color: var(--azul);
 }
 
+/* permite que el menu de opciones se muestre completo sobre la tabla */
+.content .solicitudes-page .table-responsive {
+    overflow: visible;
+}
+
+.acciones-solicitud.show {
+    position: relative;
+    z-index: 20;
+}
+
 .content .alert {
     border: 0;
     border-left: 4px solid currentColor;
