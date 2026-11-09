@@ -40,10 +40,21 @@
                 }
             </td>
             <td class="text-nowrap">
-            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Desglose", new { id = solicitud.IdSolicitud, modal = 1 })">Desglose</button>
-            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Tarea", new { id = solicitud.IdSolicitud, modal = 1 })">Tareas</button>
-            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Participaciones", new { id = solicitud.IdSolicitud, modal = 1 })">Participaciones</button>
-            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#publicarSolicitud-@solicitud.IdSolicitud">Portal</button>
+                <div class="dropdown acciones-solicitud">
+                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        Acciones
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Desglose", new { id = solicitud.IdSolicitud, modal = 1 })">Desglose</button></li>
+                        <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Tarea", new { id = solicitud.IdSolicitud, modal = 1 })">Tareas</button></li>
+                        <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalGestionSolicitud" data-modal-url="@Url.Page("/Solicitudes/Participaciones", new { id = solicitud.IdSolicitud, modal = 1 })">Participaciones</button></li>
+                        <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#publicarSolicitud-@solicitud.IdSolicitud">Portal externo</button></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editarSolicitud-@solicitud.IdSolicitud">Editar</button></li>
+                        <li><button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#eliminarSolicitud-@solicitud.IdSolicitud">Eliminar</button></li>
+                    </ul>
+                </div>
             <div class="modal fade" id="publicarSolicitud-@solicitud.IdSolicitud" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
