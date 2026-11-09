@@ -918,6 +918,15 @@ h1, h2, h3 { color: var(--azul); }
     background: var(--fondo);
 }
 
+/* evita que un mensaje largo se corte dentro del modal de portal */
+.alerta-publicacion {
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
 .pagination {
     margin-top: 1rem;
     gap: .25rem;
