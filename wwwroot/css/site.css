@@ -760,6 +760,24 @@ h1, h2, h3 { color: var(--azul); }
     gap: .5rem;
 }
 
+/* menu compacto para las opciones de cada solicitud */
+.acciones-solicitud .dropdown-menu {
+    min-width: 12rem;
+    border-color: var(--borde);
+    box-shadow: 0 .45rem 1rem rgba(16, 45, 84, .16);
+}
+
+.acciones-solicitud .dropdown-item {
+    font-weight: 600;
+    color: var(--texto);
+}
+
+.acciones-solicitud .dropdown-item:hover,
+.acciones-solicitud .dropdown-item:focus {
+    background: #eaf7f9;
+    color: var(--azul);
+}
+
 .content .alert {
     border: 0;
     border-left: 4px solid currentColor;
