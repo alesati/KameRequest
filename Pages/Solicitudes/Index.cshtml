@@ -53,6 +53,10 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                             </div>
                             <div class="modal-body">
+                                @if (Model.PublicacionConError == solicitud.IdSolicitud && !string.IsNullOrWhiteSpace(Model.ErrorPublicacion))
+                                {
+                                    <div class="alert alert-danger" role="alert">@Model.ErrorPublicacion</div>
+                                }
                                 <input type="hidden" name="IdSolicitudPublicacion" value="@solicitud.IdSolicitud" />
                                 <label class="form-label" for="publicada-@solicitud.IdSolicitud">Disponibilidad en portal externo</label>
                                 <select class="form-select mb-3" name="PublicadaExterna" id="publicada-@solicitud.IdSolicitud">
@@ -287,5 +291,17 @@
         modalGestion?.addEventListener('hidden.bs.modal', () => {
             contenidoModalGestion.src = 'about:blank';
         });
+
+        @if (Model.PublicacionConError.HasValue)
+        {
+            <text>
+            document.addEventListener('DOMContentLoaded', () => {
+                const modalPortal = document.getElementById('publicarSolicitud-@Model.PublicacionConError');
+                if (modalPortal) {
+                    bootstrap.Modal.getOrCreateInstance(modalPortal).show();
+                }
+            });
+            </text>
+        }
     </script>
 }
