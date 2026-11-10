@@ -27,15 +27,6 @@
         </div>
     </div>
 
-    @if (TempData["MensajeParticipacion"] is string mensaje)
-    {
-        <div class="alert alert-success" role="alert">@mensaje</div>
-    }
-    @if (TempData["ErrorParticipacion"] is string error)
-    {
-        <div class="alert alert-danger" role="alert">@error</div>
-    }
-
     @if (Model.ParticipacionSeleccionada is not null)
     {
         var participacion = Model.ParticipacionSeleccionada;

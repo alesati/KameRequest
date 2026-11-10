@@ -435,6 +435,40 @@ h1, h2, h3 { color: var(--azul); }
     }
 }
 
+/* mensajes generales para confirmar acciones de los modulos */
+.modal-mensaje-sistema .modal-content {
+    overflow: hidden;
+    border: 0;
+    border-radius: .8rem;
+    box-shadow: 0 12px 32px rgba(16, 45, 84, .24);
+}
+
+.modal-mensaje-sistema .modal-header {
+    color: #fff;
+    border-bottom: 0;
+}
+
+.modal-mensaje-sistema .modal-mensaje-exito {
+    background: var(--turquesa);
+}
+
+.modal-mensaje-sistema .modal-mensaje-error {
+    background: var(--azul);
+    border-left: .35rem solid #d94c63;
+}
+
+.modal-mensaje-sistema .modal-body {
+    padding: 1.5rem;
+    color: var(--texto);
+    font-size: 1rem;
+}
+
+.modal-mensaje-sistema .modal-footer {
+    padding: .9rem 1.5rem;
+    border-top: 1px solid var(--borde);
+    background: var(--fondo);
+}
+
 .solicitudes-page .btn-danger {
     background: #c84f75;
     border-color: #c84f75;

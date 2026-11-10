@@ -86,12 +86,22 @@ public class IndexModel(ISolicitudService solicitudes, IRepresentanteService rep
         }
         catch (ArgumentException error)
         {
-            TempData["ErrorPublicacion"] = error.Message;
-            return RedirectToPage(new { publicacion = IdSolicitudPublicacion });
+            if (DebeMostrarErrorEnPublicacion(error.Message))
+            {
+                TempData["ErrorPublicacion"] = error.Message;
+                return RedirectToPage(new { publicacion = IdSolicitudPublicacion });
+            }
+
+            TempData["Error"] = error.Message;
         }
 
         return RedirectToPage();
     }
+
+    // estas validaciones se muestran dentro del mismo formulario de publicacion
+    private static bool DebeMostrarErrorEnPublicacion(string error) =>
+        error is "Indique una fecha de vencimiento igual o posterior a hoy."
+            or "No se puede publicar una solicitud que ya tiene una participacion aprobada.";
 
     public static DateTime AgregarDiasHabiles(DateTime fechaIngreso, int cantidadDias)
     {

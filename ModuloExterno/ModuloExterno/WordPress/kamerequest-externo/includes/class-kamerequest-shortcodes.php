@@ -55,13 +55,45 @@ class KameRequest_Externos_Shortcodes
         if (empty($solicitudes)) {
             echo '<p>No hay solicitudes publicadas en este momento.</p>';
         } else {
+            // solo muestra diez solicitudes para que el listado no se haga muy largo
+            $registros_por_pagina = 10;
+            $total_paginas = (int) ceil(count($solicitudes) / $registros_por_pagina);
+            $pagina_actual = isset($_GET['kr_pagina']) ? absint($_GET['kr_pagina']) : 1;
+            $pagina_actual = max(1, min($pagina_actual, $total_paginas));
+            $inicio = ($pagina_actual - 1) * $registros_por_pagina;
+            $solicitudes_pagina = array_slice($solicitudes, $inicio, $registros_por_pagina);
+
             echo '<table class="kr-tabla"><thead><tr><th>Oficio</th><th>Título</th><th>Representante</th></tr></thead><tbody>';
-            foreach ($solicitudes as $solicitud) {
+            foreach ($solicitudes_pagina as $solicitud) {
                 $url = $this->url_detalle($solicitud['idSolicitud']);
                 echo '<tr><td><a href="' . esc_url($url) . '">' . esc_html($solicitud['consecutivoOficio']) . '</a></td>';
                 echo '<td>' . esc_html($solicitud['titulo']) . '</td><td>' . $this->texto($solicitud['representante'] ?? null) . '</td></tr>';
             }
             echo '</tbody></table>';
+
+            if ($total_paginas > 1) {
+                // conserva la misma pagina de wordpress al moverse entre resultados
+                $url_base = remove_query_arg(array('solicitud', 'kr_pagina'));
+                echo '<nav class="kr-paginacion" aria-label="Paginación de solicitudes">';
+
+                if ($pagina_actual > 1) {
+                    $url_anterior = add_query_arg('kr_pagina', $pagina_actual - 1, $url_base);
+                    echo '<a class="kr-boton-secundario" href="' . esc_url($url_anterior) . '">Anterior</a>';
+                }
+
+                for ($pagina = 1; $pagina <= $total_paginas; $pagina++) {
+                    $url_pagina = add_query_arg('kr_pagina', $pagina, $url_base);
+                    $clase = $pagina === $pagina_actual ? ' kr-pagina-activa' : '';
+                    echo '<a class="kr-pagina' . $clase . '" href="' . esc_url($url_pagina) . '">' . esc_html($pagina) . '</a>';
+                }
+
+                if ($pagina_actual < $total_paginas) {
+                    $url_siguiente = add_query_arg('kr_pagina', $pagina_actual + 1, $url_base);
+                    echo '<a class="kr-boton-secundario" href="' . esc_url($url_siguiente) . '">Siguiente</a>';
+                }
+
+                echo '</nav>';
+            }
         }
         echo '</div>';
         return ob_get_clean();

@@ -50,6 +50,7 @@ public class TareasModel(ISolicitudService solicitudes, ITareaService tareas, IB
         NuevaTarea.Usuario = User.Identity?.Name ?? "Usuario";
         NuevaTarea.IdTarea = tareas.Crear(NuevaTarea);
         bitacora.RegistrarCreacion(User, "tarea", NuevaTarea);
+        TempData["Mensaje"] = "La tarea se creo correctamente.";
         return VolverAListado(idSolicitud, modal);
     }
 
@@ -71,6 +72,7 @@ public class TareasModel(ISolicitudService solicitudes, ITareaService tareas, IB
 
         tareas.Actualizar(TareaEditar);
         bitacora.RegistrarActualizacion(User, "tarea", anterior, tareas.Obtener(TareaEditar.IdTarea));
+        TempData["Mensaje"] = "La tarea se actualizo correctamente.";
         return VolverAListado(idSolicitud, modal);
     }
 
@@ -88,6 +90,7 @@ public class TareasModel(ISolicitudService solicitudes, ITareaService tareas, IB
 
         tareas.Eliminar(idTarea);
         bitacora.RegistrarEliminacion(User, "tarea", tarea);
+        TempData["Mensaje"] = "La tarea se elimino correctamente.";
         return VolverAListado(idSolicitud, modal);
     }
 

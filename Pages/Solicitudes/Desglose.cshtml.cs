@@ -42,26 +42,15 @@ public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgl
         }
 
         if (desgloses.SumarPorcentajePorSolicitud(idSolicitud) + NuevoDesglose.PorcentajeCobro > 100)
-
-
         {
-
-
             MensajeError = "El porcentaje total de cobro no puede ser mayor a 100%.";
-
-
             return VolverAListado(idSolicitud, modal);
-
-
         }
 
-
-
         NuevoDesglose.IdSolicitud = idSolicitud;
-
-
         NuevoDesglose.IdDesglose = desgloses.Crear(NuevoDesglose);
         bitacora.RegistrarCreacion(User, "desglose", NuevoDesglose);
+        TempData["Mensaje"] = "El desglose se creo correctamente.";
         return VolverAListado(idSolicitud, modal);
     }
 
@@ -76,23 +65,17 @@ public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgl
 
         var anterior = desgloses.Obtener(DesgloseEditar.IdDesglose);
         if (anterior is null || anterior.IdSolicitud != idSolicitud)
-
             return VolverAListado(idSolicitud, modal);
-
 
         if (desgloses.SumarPorcentajePorSolicitud(idSolicitud, DesgloseEditar.IdDesglose) + DesgloseEditar.PorcentajeCobro > 100)
-
         {
-
             MensajeError = "El porcentaje total de cobro no puede ser mayor a 100%.";
-
             return VolverAListado(idSolicitud, modal);
-
         }
-
 
         desgloses.Actualizar(DesgloseEditar);
         bitacora.RegistrarActualizacion(User, "desglose", anterior, desgloses.Obtener(DesgloseEditar.IdDesglose));
+        TempData["Mensaje"] = "El desglose se actualizo correctamente.";
         return VolverAListado(idSolicitud, modal);
     }
 
@@ -106,6 +89,7 @@ public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgl
         {
             desgloses.Eliminar(idDesglose);
             bitacora.RegistrarEliminacion(User, "desglose", eliminado);
+            TempData["Mensaje"] = "El desglose se elimino correctamente.";
         }
         catch (MySqlException e) when (e.Number == 1451)
         {

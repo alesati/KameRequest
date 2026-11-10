@@ -10,13 +10,6 @@
         ← Volver a Solicitudes
     </a>
 
-    @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
-    {
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            @Model.MensajeError
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-        </div>
-    }
     <!-- ENCABEZADO SOLICITUD -->
     @if (Model.SolicitudActual != null)
     {

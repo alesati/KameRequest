@@ -1,0 +1,50 @@
+@{
+    // junta los mensajes que vienen de los mantenimientos y de solicitudes
+    var mensaje = TempData["Mensaje"] as string;
+    var error = TempData["Error"] as string;
+    var mensajeParticipacion = TempData["MensajeParticipacion"] as string;
+    var errorParticipacion = TempData["ErrorParticipacion"] as string;
+    var mensajeGestion = TempData["MensajeError"] as string;
+
+    var esError = !string.IsNullOrWhiteSpace(error)
+        || !string.IsNullOrWhiteSpace(errorParticipacion)
+        || !string.IsNullOrWhiteSpace(mensajeGestion);
+
+    var texto = error
+        ?? errorParticipacion
+        ?? mensajeGestion
+        ?? mensaje
+        ?? mensajeParticipacion;
+
+    var titulo = esError ? "No fue posible completar la acción" : "Operación realizada";
+}
+
+@if (!string.IsNullOrWhiteSpace(texto))
+{
+    <div class="modal fade modal-mensaje-sistema" id="modalMensajeSistema" tabindex="-1" aria-labelledby="tituloMensajeSistema" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header @(esError ? "modal-mensaje-error" : "modal-mensaje-exito")">
+                    <h2 class="modal-title fs-5" id="tituloMensajeSistema">@titulo</h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">@texto</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn @(esError ? "btn-outline-danger" : "btn-primary")" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // muestra un solo mensaje al terminar una accion y evita alertas repetidas
+        document.addEventListener('DOMContentLoaded', () => {
+            const modalMensaje = document.getElementById('modalMensajeSistema');
+            if (modalMensaje && window.bootstrap) {
+                bootstrap.Modal.getOrCreateInstance(modalMensaje).show();
+            }
+        });
+    </script>
+}

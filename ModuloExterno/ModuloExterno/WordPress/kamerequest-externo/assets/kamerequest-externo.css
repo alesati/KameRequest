@@ -85,6 +85,49 @@
     text-underline-offset: 3px;
 }
 
+/* navegacion del listado de solicitudes publicas */
+.kr-paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: 1.25rem;
+}
+
+.kr-pagina {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    padding: .35rem .6rem;
+    color: #102D54;
+    text-decoration: none;
+    font-weight: 700;
+    border: 1px solid #10ADC0;
+    border-radius: .45rem;
+    background: #fff;
+}
+
+.kr-pagina:hover,
+.kr-pagina:focus {
+    color: #102D54;
+    background: #e7f8fa;
+}
+
+.kr-pagina-activa {
+    color: #fff;
+    border-color: #102D54;
+    background: #102D54;
+}
+
+.kr-pagina-activa:hover,
+.kr-pagina-activa:focus {
+    color: #fff;
+    background: #102D54;
+}
+
 .kr-boton,
 .kr-boton-secundario {
     box-sizing: border-box;
