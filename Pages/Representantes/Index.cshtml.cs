@@ -5,7 +5,6 @@ using KameRequest.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MySqlConnector;
 
 namespace KameRequest.Pages.Representantes;
 
@@ -32,16 +31,16 @@ public class IndexModel(IRepresentanteService representantes, IBitacoraService b
     {
         try
         {
-            var eliminado = representantes.Obtener(idRepresentante);
-            if (eliminado is not null && representantes.Eliminar(idRepresentante) == 1)
+            var eliminado = representantes.EliminarSeguro(idRepresentante);
+            if (eliminado is not null)
             {
                 bitacora.RegistrarEliminacion(User, "representante", eliminado);
                 TempData["Mensaje"] = "El representante se elimino correctamente.";
             }
         }
-        catch (MySqlException e) when (e.Number == 1451)
+        catch (InvalidOperationException error)
         {
-            TempData["Error"] = "No se puede eliminar un registro con datos relacionados.";
+            TempData["Error"] = error.Message;
         }
 
         return RedirectToPage();

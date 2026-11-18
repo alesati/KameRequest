@@ -1,4 +1,5 @@
 using KameRequest.Models;
+using System.Security.Claims;
 
 namespace KameRequest.Services.Abstract;
 
@@ -10,7 +11,9 @@ public interface ISolicitudService
     int Contar();
     int Crear(Solicitud solicitud);
     void Actualizar(Solicitud solicitud);
+    (Solicitud Anterior, Solicitud Actual) ActualizarConNotificacion(ClaimsPrincipal usuario, Solicitud solicitud);
     int Eliminar(int id);
+    Solicitud? EliminarSeguro(int id);
     void ActualizarPublicacionExterna(int idSolicitud, bool publicada, DateTime? fechaVencimiento);
     IReadOnlyList<EstadoSolicitud> ListarEstados();
     IReadOnlyList<Solicitud> NuevasSinRespuesta(int idEstadoNueva);

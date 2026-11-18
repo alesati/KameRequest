@@ -1,6 +1,7 @@
 using KameRequest.Models;
 using KameRequest.Repository.Repositories;
 using KameRequest.Services.Abstract;
+using MySqlConnector;
 
 namespace KameRequest.Services;
 
@@ -40,5 +41,22 @@ public class RepresentanteService(RepresentanteRepository repositorio) : IRepres
     public int Eliminar(int id)
     {
         return repositorio.Eliminar(id);
+    }
+
+    // valida que el representante no tenga solicitudes relacionadas
+    public Representante? EliminarSeguro(int id)
+    {
+        var representante = repositorio.Obtener(id);
+        if (representante is null)
+            return null;
+
+        try
+        {
+            return repositorio.Eliminar(id) == 1 ? representante : null;
+        }
+        catch (MySqlException error) when (error.Number == 1451)
+        {
+            throw new InvalidOperationException("No se puede eliminar un registro con datos relacionados.");
+        }
     }
 }

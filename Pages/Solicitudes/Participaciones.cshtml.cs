@@ -40,22 +40,15 @@ public class ParticipacionesModel(
     // aprueba una propuesta y la convierte en el desglose oficial
     public IActionResult OnPostAprobar(int idSolicitud, int idParticipacion, bool modal = false)
     {
-        var anterior = participaciones.ListarPorSolicitud(idSolicitud)
-            .SingleOrDefault(item => item.IdParticipacion == idParticipacion);
-
-        if (anterior is null)
-            return NotFound();
-
         try
         {
-            if (!participaciones.Aprobar(idSolicitud, idParticipacion))
-            {
-                TempData["ErrorParticipacion"] = "Ya existe una propuesta aprobada o la participación no corresponde a la solicitud.";
-                return RedirigirDetalle(idSolicitud, idParticipacion, modal);
-            }
-
+            var anterior = participaciones.AprobarParaSolicitud(idSolicitud, idParticipacion);
             bitacora.RegistrarActualizacion(User, "participacion de solicitud", anterior, new { anterior.IdParticipacion, Estado = "Aprobada" });
             TempData["MensajeParticipacion"] = "La propuesta se aprobó y ahora es el desglose oficial de la solicitud.";
+        }
+        catch (ArgumentException)
+        {
+            return NotFound();
         }
         catch (InvalidOperationException error)
         {

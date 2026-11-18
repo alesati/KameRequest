@@ -39,16 +39,18 @@ public class TareasModel(ISolicitudService solicitudes, ITareaService tareas, IB
             return VolverAListado(idSolicitud, modal);
         }
 
-        if (string.IsNullOrWhiteSpace(NuevaTarea.Descripcion) || NuevaTarea.HorasInvertidas < 0)
-        {
-            MensajeError = "Digite la descripcion y las horas invertidas.";
-            return VolverAListado(idSolicitud, modal);
-        }
-
         NuevaTarea.IdSolicitud = idSolicitud;
         NuevaTarea.IdUsuario = idUsuario;
         NuevaTarea.Usuario = User.Identity?.Name ?? "Usuario";
-        NuevaTarea.IdTarea = tareas.Crear(NuevaTarea);
+        try
+        {
+            NuevaTarea.IdTarea = tareas.CrearParaSolicitud(NuevaTarea);
+        }
+        catch (ArgumentException error)
+        {
+            MensajeError = error.Message;
+            return VolverAListado(idSolicitud, modal);
+        }
         bitacora.RegistrarCreacion(User, "tarea", NuevaTarea);
         TempData["Mensaje"] = "La tarea se creo correctamente.";
         return VolverAListado(idSolicitud, modal);
@@ -57,20 +59,16 @@ public class TareasModel(ISolicitudService solicitudes, ITareaService tareas, IB
     // valida y guarda los cambios del formulario
     public IActionResult OnPostEditar(int idSolicitud, bool modal = false)
     {
-        var anterior = tareas.Obtener(TareaEditar.IdTarea);
-        if (anterior is null || anterior.IdSolicitud != idSolicitud)
+        TareaSolicitud anterior;
+        try
         {
-            MensajeError = "No se encontro la tarea solicitada.";
+            anterior = tareas.ActualizarParaSolicitud(idSolicitud, TareaEditar);
+        }
+        catch (ArgumentException error)
+        {
+            MensajeError = error.Message;
             return VolverAListado(idSolicitud, modal);
         }
-
-        if (string.IsNullOrWhiteSpace(TareaEditar.Descripcion) || TareaEditar.HorasInvertidas < 0)
-        {
-            MensajeError = "Digite la descripcion y las horas invertidas.";
-            return VolverAListado(idSolicitud, modal);
-        }
-
-        tareas.Actualizar(TareaEditar);
         bitacora.RegistrarActualizacion(User, "tarea", anterior, tareas.Obtener(TareaEditar.IdTarea));
         TempData["Mensaje"] = "La tarea se actualizo correctamente.";
         return VolverAListado(idSolicitud, modal);
@@ -79,18 +77,19 @@ public class TareasModel(ISolicitudService solicitudes, ITareaService tareas, IB
     // confirma y procesa la eliminacion del registro
     public IActionResult OnPostEliminar(int idTarea, int idSolicitud, bool modal = false)
     {
-        var tarea = tareas.Obtener(idTarea);
-        if (tarea is null || tarea.IdSolicitud != idSolicitud)
-            return VolverAListado(idSolicitud, modal);
-        if (tarea.IdDesglose is not null)
+        try
         {
-            MensajeError = "No se puede eliminar un registro con datos relacionados.";
-            return VolverAListado(idSolicitud, modal);
+            var tarea = tareas.EliminarDeSolicitud(idSolicitud, idTarea);
+            if (tarea is not null)
+            {
+                bitacora.RegistrarEliminacion(User, "tarea", tarea);
+                TempData["Mensaje"] = "La tarea se elimino correctamente.";
+            }
         }
-
-        tareas.Eliminar(idTarea);
-        bitacora.RegistrarEliminacion(User, "tarea", tarea);
-        TempData["Mensaje"] = "La tarea se elimino correctamente.";
+        catch (InvalidOperationException error)
+        {
+            MensajeError = error.Message;
+        }
         return VolverAListado(idSolicitud, modal);
     }
 

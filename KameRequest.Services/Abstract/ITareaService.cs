@@ -11,4 +11,7 @@ public interface ITareaService
     int Crear(TareaSolicitud tarea);
     void Actualizar(TareaSolicitud tarea);
     int Eliminar(int id);
+    int CrearParaSolicitud(TareaSolicitud tarea);
+    TareaSolicitud ActualizarParaSolicitud(int idSolicitud, TareaSolicitud tarea);
+    TareaSolicitud? EliminarDeSolicitud(int idSolicitud, int idTarea);
 }

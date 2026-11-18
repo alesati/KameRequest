@@ -20,4 +20,20 @@ public class ParticipacionService(ParticipacionRepository repositorio) : IPartic
     {
         return repositorio.Aprobar(idSolicitud, idParticipacion);
     }
+
+    // valida que la propuesta sea de la solicitud antes de convertirla en desglose oficial
+    public ParticipacionSolicitud AprobarParaSolicitud(int idSolicitud, int idParticipacion)
+    {
+        var anterior = repositorio.ListarPorSolicitud(idSolicitud)
+            .SingleOrDefault(item => item.IdParticipacion == idParticipacion)
+            ?? throw new ArgumentException("No se encontro la participacion solicitada.");
+
+        if (!repositorio.Aprobar(idSolicitud, idParticipacion))
+        {
+            throw new InvalidOperationException(
+                "Ya existe una propuesta aprobada o la participación no corresponde a la solicitud.");
+        }
+
+        return anterior;
+    }
 }

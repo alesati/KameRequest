@@ -5,7 +5,6 @@ using KameRequest.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MySqlConnector;
 
 namespace KameRequest.Pages.Solicitudes;
 
@@ -35,21 +34,17 @@ public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgl
     // valida y agrega el nuevo dato relacionado
     public IActionResult OnPostAgregar(int idSolicitud, bool modal = false)
     {
-        if (!DatosValidos(NuevoDesglose))
+        try
         {
-            MensajeError = "Las horas, el monto y el porcentaje de cobro deben ser mayores a 0.";
+            NuevoDesglose.IdDesglose = desgloses.CrearParaSolicitud(idSolicitud, NuevoDesglose);
+            bitacora.RegistrarCreacion(User, "desglose", NuevoDesglose);
+        }
+        catch (ArgumentException error)
+        {
+            MensajeError = error.Message;
             return VolverAListado(idSolicitud, modal);
         }
 
-        if (desgloses.SumarPorcentajePorSolicitud(idSolicitud) + NuevoDesglose.PorcentajeCobro > 100)
-        {
-            MensajeError = "El porcentaje total de cobro no puede ser mayor a 100%.";
-            return VolverAListado(idSolicitud, modal);
-        }
-
-        NuevoDesglose.IdSolicitud = idSolicitud;
-        NuevoDesglose.IdDesglose = desgloses.Crear(NuevoDesglose);
-        bitacora.RegistrarCreacion(User, "desglose", NuevoDesglose);
         TempData["Mensaje"] = "El desglose se creo correctamente.";
         return VolverAListado(idSolicitud, modal);
     }
@@ -57,24 +52,16 @@ public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgl
     // valida y guarda los cambios del formulario
     public IActionResult OnPostEditar(int idSolicitud, bool modal = false)
     {
-        if (!DatosValidos(DesgloseEditar))
+        try
         {
-            MensajeError = "Las horas, el monto y el porcentaje de cobro deben ser mayores a 0.";
+            var anterior = desgloses.ActualizarParaSolicitud(idSolicitud, DesgloseEditar);
+            bitacora.RegistrarActualizacion(User, "desglose", anterior, desgloses.Obtener(DesgloseEditar.IdDesglose));
+        }
+        catch (ArgumentException error)
+        {
+            MensajeError = error.Message;
             return VolverAListado(idSolicitud, modal);
         }
-
-        var anterior = desgloses.Obtener(DesgloseEditar.IdDesglose);
-        if (anterior is null || anterior.IdSolicitud != idSolicitud)
-            return VolverAListado(idSolicitud, modal);
-
-        if (desgloses.SumarPorcentajePorSolicitud(idSolicitud, DesgloseEditar.IdDesglose) + DesgloseEditar.PorcentajeCobro > 100)
-        {
-            MensajeError = "El porcentaje total de cobro no puede ser mayor a 100%.";
-            return VolverAListado(idSolicitud, modal);
-        }
-
-        desgloses.Actualizar(DesgloseEditar);
-        bitacora.RegistrarActualizacion(User, "desglose", anterior, desgloses.Obtener(DesgloseEditar.IdDesglose));
         TempData["Mensaje"] = "El desglose se actualizo correctamente.";
         return VolverAListado(idSolicitud, modal);
     }
@@ -82,18 +69,18 @@ public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgl
     // confirma y procesa la eliminacion del registro
     public IActionResult OnPostEliminar(int idDesglose, int idSolicitud, bool modal = false)
     {
-        var eliminado = desgloses.Obtener(idDesglose);
-        if (eliminado is null || eliminado.IdSolicitud != idSolicitud)
-            return VolverAListado(idSolicitud, modal);
         try
         {
-            desgloses.Eliminar(idDesglose);
-            bitacora.RegistrarEliminacion(User, "desglose", eliminado);
-            TempData["Mensaje"] = "El desglose se elimino correctamente.";
+            var eliminado = desgloses.EliminarDeSolicitud(idSolicitud, idDesglose);
+            if (eliminado is not null)
+            {
+                bitacora.RegistrarEliminacion(User, "desglose", eliminado);
+                TempData["Mensaje"] = "El desglose se elimino correctamente.";
+            }
         }
-        catch (MySqlException e) when (e.Number == 1451)
+        catch (InvalidOperationException error)
         {
-            MensajeError = "No se puede eliminar un registro con datos relacionados.";
+            MensajeError = error.Message;
         }
 
         return VolverAListado(idSolicitud, modal);
@@ -116,12 +103,4 @@ public class DesgloseModel(ISolicitudService solicitudes, IDesgloseService desgl
         return true;
     }
 
-    private static bool DatosValidos(DesgloseSolicitud d)
-    {
-        return d.Mes is >= 1 and <= 12
-            && d.Anio is >= 1000 and <= 9999
-            && d.Horas > 0
-            && d.Monto > 0
-            && d.PorcentajeCobro is > 0 and <= 100;
-    }
 }

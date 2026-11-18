@@ -12,4 +12,7 @@ public interface IDesgloseService
     int Crear(DesgloseSolicitud desglose);
     void Actualizar(DesgloseSolicitud desglose);
     int Eliminar(int id);
+    int CrearParaSolicitud(int idSolicitud, DesgloseSolicitud desglose);
+    DesgloseSolicitud ActualizarParaSolicitud(int idSolicitud, DesgloseSolicitud desglose);
+    DesgloseSolicitud? EliminarDeSolicitud(int idSolicitud, int idDesglose);
 }

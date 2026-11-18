@@ -6,4 +6,5 @@ public interface IParticipacionService
 {
     IReadOnlyList<ParticipacionSolicitud> ListarPorSolicitud(int idSolicitud);
     bool Aprobar(int idSolicitud, int idParticipacion);
+    ParticipacionSolicitud AprobarParaSolicitud(int idSolicitud, int idParticipacion);
 }
