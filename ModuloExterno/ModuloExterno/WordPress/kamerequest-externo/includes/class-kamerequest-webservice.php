@@ -173,7 +173,7 @@ class KameRequest_Externo_WebService
         );
     }
 
-    // EXT2 consulta las solicitudes externas publicadas
+    //  consulta las solicitudes externas publicadas
     public function listar_solicitudes()
     {
         $respuesta = $this->ejecutar('ListarSolicitudesPublicadas', '<ListarSolicitudesPublicadas xmlns="' . self::NAMESPACE_SERVICIO . '" />');
@@ -185,7 +185,7 @@ class KameRequest_Externo_WebService
         return array_map(array($this, 'solicitud_publicada'), $this->lista($datos, 'SolicitudPublicadaDto'));
     }
 
-    // EXT3 consulta los datos completos de una solicitud
+    //  consulta los datos completos de una solicitud
     public function detalle_solicitud($id_solicitud)
     {
         $contenido = '<ObtenerDetalleSolicitud xmlns="' . self::NAMESPACE_SERVICIO . '"><idSolicitud>'
@@ -202,7 +202,7 @@ class KameRequest_Externo_WebService
             : $this->detalle_solicitud_convertido($datos);
     }
 
-    // EXT4 transforma los datos del formulario a XML y registra la participacion
+    //  transforma los datos del formulario a XML y registra la participacion
     public function registrar_participacion($id_solicitud, $datos)
     {
         $proveedor = $datos['proveedor'] ?? array();
@@ -243,7 +243,7 @@ class KameRequest_Externo_WebService
         return array('exito' => true, 'id' => $resultado['Id'] ?? null, 'mensaje' => $resultado['Mensaje'] ?? '');
     }
 
-    // EXT4 revisa si el proveedor ya existe antes de mostrar los campos adicionales
+    //  revisa si el proveedor ya existe antes de mostrar los campos adicionales
     public function consultar_proveedor($cedula_juridica)
     {
         $contenido = '<ConsultarProveedor xmlns="' . self::NAMESPACE_SERVICIO . '"><cedulaJuridica>'
@@ -273,7 +273,7 @@ class KameRequest_Externo_WebService
         );
     }
 
-    // EXT6 consulta las participaciones de un proveedor por cedula juridica
+    // consulta las participaciones de un proveedor por cedula juridica
     public function consultar_participaciones($cedula_juridica)
     {
         $contenido = '<ConsultarParticipacionesProveedor xmlns="' . self::NAMESPACE_SERVICIO . '"><cedulaJuridica>'

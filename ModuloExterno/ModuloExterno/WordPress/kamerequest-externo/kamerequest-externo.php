@@ -116,7 +116,7 @@ function kamerequest_externo_guardar_participacion()
             exit;
         }
     }
-
+    
     // llama al web service para registrar la participacion
     $web_service = new KameRequest_Externo_WebService();
     $resultado = $web_service->registrar_participacion($solicitud, $datos);

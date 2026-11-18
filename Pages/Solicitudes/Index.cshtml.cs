@@ -64,7 +64,7 @@ public class IndexModel(ISolicitudService solicitudes, IRepresentanteService rep
         return RedirectToPage();
     }
 
-    // Guarda si la solicitud aparece en WordPress y hasta que fecha.
+    // Guarda si la solicitud aparece en el modulo externo y hasta que fecha.
     public IActionResult OnPostGuardarPublicacion()
     {
         var anterior = solicitudes.Obtener(IdSolicitudPublicacion);

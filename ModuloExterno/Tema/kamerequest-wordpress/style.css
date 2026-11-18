@@ -1,0 +1,302 @@
+/*
+Theme Name: KameRequest WordPress
+Theme URI: https://kamerequest.local
+Author: Equipo KameRequest
+Description: Tema visual para el portal externo de KameRequest.
+Version: 1.0.0
+Text Domain: kamerequest-wordpress
+*/
+
+:root {
+    --kr-azul: #102d54;
+    --kr-naranja: #ff8a24;
+    --kr-turquesa: #10adc0;
+    --kr-rosa: #f49ab8;
+    --kr-fondo: #f5f7fb;
+    --kr-blanco: #ffffff;
+    --kr-texto: #334155;
+    --kr-borde: #dce3ec;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    color: var(--kr-texto);
+    background: var(--kr-fondo);
+    font-family: "Segoe UI", Arial, sans-serif;
+    line-height: 1.55;
+}
+
+a { color: var(--kr-azul); }
+
+a:hover { color: var(--kr-turquesa); }
+
+.kr-skip-link {
+    position: absolute;
+    top: -50px;
+    left: 1rem;
+    z-index: 10;
+    padding: .65rem 1rem;
+    color: var(--kr-blanco);
+    background: var(--kr-azul);
+}
+
+.kr-skip-link:focus { top: 1rem; }
+
+.kr-header {
+    color: var(--kr-blanco);
+    background: var(--kr-azul);
+    box-shadow: 0 3px 12px rgba(16, 45, 84, .18);
+}
+
+.kr-barra,
+.kr-contenido,
+.kr-footer-contenido {
+    width: min(1180px, calc(100% - 2rem));
+    margin: 0 auto;
+}
+
+.kr-barra {
+    display: flex;
+    min-height: 76px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.kr-marca {
+    display: inline-flex;
+    align-items: center;
+    gap: .7rem;
+}
+
+.kr-marca img,
+.kr-marca .custom-logo-link {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+}
+
+.kr-marca img {
+    padding: 3px;
+    border-radius: 50%;
+    background: var(--kr-blanco);
+}
+
+.kr-marca-texto {
+    color: var(--kr-blanco);
+    font-size: 1.28rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.kr-marca-texto span { color: var(--kr-naranja); }
+
+.kr-navegacion ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.kr-navegacion a {
+    display: block;
+    padding: .55rem .78rem;
+    border-radius: .45rem;
+    color: var(--kr-blanco);
+    font-size: .95rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.kr-navegacion a:hover,
+.kr-navegacion .current-menu-item a {
+    color: var(--kr-blanco);
+    background: rgba(255, 255, 255, .15);
+}
+
+.kr-contenido { padding: 2rem 0 3rem; }
+
+.kr-titulo-pagina {
+    margin: 0 0 1.25rem;
+    color: var(--kr-azul);
+    font-size: clamp(1.65rem, 4vw, 2.35rem);
+}
+
+.kr-articulo,
+.kr-contenedor,
+.entry-content > .wp-block-group {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--kr-borde);
+    border-radius: 1rem;
+    background: var(--kr-blanco);
+    box-shadow: 0 8px 22px rgba(16, 45, 84, .07);
+}
+
+.kr-articulo + .kr-articulo { margin-top: 1.25rem; }
+
+.kr-articulo h1,
+.kr-articulo h2,
+.kr-articulo h3,
+.kr-articulo h4,
+.entry-content h1,
+.entry-content h2,
+.entry-content h3,
+.entry-content h4 {
+    color: var(--kr-azul);
+}
+
+.entry-content h2 { font-size: clamp(1.4rem, 3vw, 1.95rem); }
+
+/* mantiene una misma linea para los formularios y tablas del plugin */
+.kr-contenedor {
+    max-width: none !important;
+    margin: 0 !important;
+    color: var(--kr-texto) !important;
+    background: var(--kr-blanco) !important;
+}
+
+.kr-tabla {
+    width: 100%;
+    overflow: hidden;
+    margin: 1.25rem 0;
+    border: 1px solid var(--kr-borde);
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: .8rem;
+}
+
+.kr-tabla th {
+    padding: .8rem;
+    color: var(--kr-blanco);
+    background: var(--kr-azul);
+    font-size: .85rem;
+    text-align: left;
+}
+
+.kr-tabla td {
+    padding: .8rem;
+    border-bottom: 1px solid var(--kr-borde);
+}
+
+.kr-tabla tr:last-child td { border-bottom: 0; }
+
+.kr-formulario,
+.kr-previsualizacion {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding: 1.35rem;
+    border: 1px solid var(--kr-borde);
+    border-radius: .85rem;
+    background: var(--kr-fondo);
+}
+
+.kr-formulario label {
+    display: grid;
+    gap: .4rem;
+    color: var(--kr-azul);
+    font-weight: 700;
+}
+
+.kr-formulario input,
+.kr-formulario select,
+.kr-formulario textarea {
+    width: 100%;
+    min-height: 42px;
+    padding: .65rem .75rem;
+    border: 1px solid var(--kr-borde);
+    border-radius: .45rem;
+    color: var(--kr-texto);
+    background: var(--kr-blanco);
+    font: inherit;
+}
+
+.kr-formulario input:focus,
+.kr-formulario select:focus,
+.kr-formulario textarea:focus {
+    outline: 3px solid rgba(16, 173, 192, .2);
+    border-color: var(--kr-turquesa);
+}
+
+.kr-boton,
+button,
+input[type="submit"] {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: .65rem 1rem;
+    border: 1px solid var(--kr-naranja);
+    border-radius: .45rem;
+    color: var(--kr-blanco);
+    background: var(--kr-naranja);
+    box-shadow: 0 4px 10px rgba(255, 138, 36, .22);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.kr-boton:hover,
+button:hover,
+input[type="submit"]:hover {
+    color: var(--kr-blanco);
+    background: #e97818;
+}
+
+.kr-boton-secundario {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: .65rem 1rem;
+    border: 1px solid var(--kr-borde);
+    border-radius: .45rem;
+    color: var(--kr-azul);
+    background: var(--kr-blanco);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.kr-boton-secundario:hover { background: #edf2f7; }
+
+.kr-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: .65rem;
+}
+
+.kr-mensaje {
+    padding: .85rem 1rem;
+    border-left: 4px solid var(--kr-turquesa);
+    border-radius: .45rem;
+    background: #eaf8fa;
+}
+
+.kr-error { border-left-color: #b4233c; background: #fff0f3; }
+.kr-exito { border-left-color: #20894a; background: #eaf9ef; }
+
+.kr-footer {
+    padding: 1.3rem 0;
+    color: rgba(255, 255, 255, .88);
+    background: var(--kr-azul);
+}
+
+.kr-footer-contenido { font-size: .92rem; }
+
+@media (max-width: 760px) {
+    .kr-barra { min-height: 64px; align-items: flex-start; flex-direction: column; padding: .85rem 0; }
+    .kr-navegacion { width: 100%; }
+    .kr-navegacion ul { width: 100%; }
+    .kr-navegacion a { padding: .4rem .5rem; }
+    .kr-contenido { padding-top: 1.25rem; }
+    .kr-tabla { display: block; overflow-x: auto; white-space: nowrap; }
+    .kr-acciones > * { flex: 1 1 100%; }
+}

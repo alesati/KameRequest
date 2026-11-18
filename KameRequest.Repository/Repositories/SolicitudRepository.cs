@@ -119,7 +119,7 @@ public class SolicitudRepository(IDbConnectionFactory conexiones)
         });
     }
 
-    // Actualiza la disponibilidad de una solicitud para el portal WordPress.
+    // Actualiza la disponibilidad de una solicitud para el modulo externo.
     public void ActualizarPublicacionExterna(int idSolicitud, bool publicada, DateTime? fechaVencimiento)
     {
         using var conexion = conexiones.CreateConnection();
