@@ -5,7 +5,6 @@ using KameRequest.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MySqlConnector;
 
 namespace KameRequest.Pages.Solicitudes;
 
@@ -33,10 +32,9 @@ public class CrearModel(ISolicitudService solicitudes, IRepresentanteService rep
         {
             Solicitud.IdSolicitud = solicitudes.Crear(Solicitud);
         }
-        catch (MySqlException error) when (error.Number == 1062)
+        catch (ArgumentException error)
         {
-            // evita mostrar el error de MariaDB cuando el consecutivo ya existe
-            ModelState.AddModelError("Solicitud.ConsecutivoOficio", "El consecutivo de oficio ya existe.");
+            ModelState.AddModelError("Solicitud.ConsecutivoOficio", error.Message);
             return Page();
         }
 

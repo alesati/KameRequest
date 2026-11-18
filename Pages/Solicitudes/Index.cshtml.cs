@@ -5,7 +5,6 @@ using KameRequest.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MySqlConnector;
 
 namespace KameRequest.Pages.Solicitudes;
 
@@ -49,16 +48,16 @@ public class IndexModel(ISolicitudService solicitudes, IRepresentanteService rep
     {
         try
         {
-            var eliminada = solicitudes.Obtener(idSolicitud);
-            if (eliminada is not null && solicitudes.Eliminar(idSolicitud) == 1)
+            var eliminada = solicitudes.EliminarSeguro(idSolicitud);
+            if (eliminada is not null)
             {
                 bitacora.RegistrarEliminacion(User, "solicitud", eliminada);
                 TempData["Mensaje"] = "La solicitud se elimino correctamente.";
             }
         }
-        catch (MySqlException e) when (e.Number == 1451)
+        catch (InvalidOperationException error)
         {
-            TempData["Error"] = "No se puede eliminar un registro con datos relacionados.";
+            TempData["Error"] = error.Message;
         }
 
         return RedirectToPage();
@@ -93,19 +92,6 @@ public class IndexModel(ISolicitudService solicitudes, IRepresentanteService rep
         return RedirectToPage();
     }
 
-    public static DateTime AgregarDiasHabiles(DateTime fechaIngreso, int cantidadDias)
-    {
-        var fecha = fechaIngreso.Date;
-        var agregados = 0;
-        while (agregados < cantidadDias)
-        {
-            fecha = fecha.AddDays(1);
-            if (fecha.DayOfWeek is not DayOfWeek.Saturday and not DayOfWeek.Sunday)
-                agregados++;
-        }
-
-        return fecha;
-    }
 }
 
 

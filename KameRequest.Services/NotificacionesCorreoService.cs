@@ -5,6 +5,7 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Security.Claims;
 using KameRequest.Services.Abstract;
+using KameRequest.Repository.Repositories;
 
 namespace KameRequest.Services;
 
@@ -13,7 +14,7 @@ public class NotificacionesCorreoService(
     IConfiguration configuracion,
     IBitacoraService bitacora,
     IWebHostEnvironment entorno,
-    ISolicitudService solicitudes) : INotificacionesCorreoService
+    SolicitudRepository solicitudes) : INotificacionesCorreoService
 {
     // se usa cuando una persona cambia el estado desde la pantalla
     public void EnviarCorreoCambioEstadoManual(

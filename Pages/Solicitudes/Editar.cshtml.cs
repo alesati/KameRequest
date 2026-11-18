@@ -12,8 +12,7 @@ namespace KameRequest.Pages.Solicitudes;
 public class EditarModel(
     ISolicitudService solicitudes,
     IRepresentanteService representantes,
-    IBitacoraService bitacora,
-    INotificacionesCorreoService notificaciones) : PageModel
+    IBitacoraService bitacora) : PageModel
 {
     [BindProperty]
     public Solicitud Solicitud { get; set; } = new();
@@ -35,21 +34,14 @@ public class EditarModel(
         if (!ModelState.IsValid)
             return Page();
 
-        var anterior = solicitudes.Obtener(Solicitud.IdSolicitud);
-        if (anterior is null)
-            return NotFound();
-
-        solicitudes.Actualizar(Solicitud);
-        var actual = solicitudes.Obtener(Solicitud.IdSolicitud);
-        bitacora.RegistrarActualizacion(User, "solicitud", anterior, actual);
-
-        if (actual is not null && actual.IdEstado != anterior.IdEstado)
+        try
         {
-            var representante = Representantes.FirstOrDefault(r => r.IdRepresentante == actual.IdRepresentante);
-            var estadoAnterior = Estados.FirstOrDefault(e => e.IdEstado == anterior.IdEstado)?.Nombre ?? anterior.Estado ?? "Desconocido";
-            var estadoNuevo = Estados.FirstOrDefault(e => e.IdEstado == actual.IdEstado)?.Nombre ?? actual.Estado ?? "Desconocido";
-            if (!string.IsNullOrWhiteSpace(representante?.Email))
-                notificaciones.EnviarCorreoCambioEstadoManual(User, representante.Email, estadoAnterior, estadoNuevo, actual.ConsecutivoOficio);
+            var cambio = solicitudes.ActualizarConNotificacion(User, Solicitud);
+            bitacora.RegistrarActualizacion(User, "solicitud", cambio.Anterior, cambio.Actual);
+        }
+        catch (ArgumentException)
+        {
+            return NotFound();
         }
 
         TempData["Mensaje"] = "La solicitud se actualizo correctamente.";

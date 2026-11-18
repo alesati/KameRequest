@@ -12,4 +12,5 @@ public interface IRepresentanteService
     int Crear(Representante representante);
     void Actualizar(Representante representante);
     int Eliminar(int id);
+    Representante? EliminarSeguro(int id);
 }

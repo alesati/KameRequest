@@ -11,4 +11,5 @@ public interface IEstadoService
     int Crear(Estado estado);
     void Actualizar(Estado estado);
     int Eliminar(int idEstado);
+    Estado? EliminarSeguro(int idEstado);
 }
